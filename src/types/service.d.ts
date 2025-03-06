@@ -55,7 +55,7 @@ export type Service = {
   createdBy?: string; // optional, as it's nullable
   updatedBy?: string; // optional, as it's nullable
   serviceRetrun?: boolean; // optional, as it's nullable
-  dueDate?: Date; // optional, as it's nullable
+  dueDate?: string; // optional, as it's nullable
   remark?: string; // optional, as it's nullable
   price?: number; // optional, as it's nullable
   technician?: string; // optional, as it's nullable
@@ -64,14 +64,16 @@ export type Service = {
   retrieveDate?: Date; // optional, as it's nullable
   condition?: string; // optional, as it's nullable
   paidAmount?: number; // optional, as it's nullable
+  isRetrieved?: string; // optional, as it's nullable
   leftToPay?: number; // optional, as it's nullable
   createdAt: Date;
   updatedAt: Date;
-
+  progress: string;
+  serviceSupplier: string;
   // add in api
-  items?: string; // string = JSON([{name: string, price: number}])
+  items?: { name: string; price: number }[]; // string = JSON([{name: string, price: number}])
   expense: number;
-  paid: number;
+  paidAmount: number;
   profit: number;
   // isRetrieved: boolean;
 };

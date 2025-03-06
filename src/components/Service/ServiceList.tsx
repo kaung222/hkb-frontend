@@ -40,7 +40,7 @@ const CustomTableCell = ({ label }: TableCellProps) => (
 const ServiceList: React.FC<ServiceListProps> = ({ service, form }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { openDialog } = useDialogStore();
-  const { setData } = useDataStore();
+  const { setData, data } = useDataStore();
 
   const handleRowClick = (item: Service) => {
     // form.setValue("serviceDetail", item);
@@ -48,11 +48,26 @@ const ServiceList: React.FC<ServiceListProps> = ({ service, form }) => {
     openDialog(dialogKeys.serviceDetail);
   };
 
-  const getSparePartNames = (item?: string): string => {
-    if (!item) return "";
-    const parsedItems: SparePart[] = JSON.parse(item || "[]");
-    return parsedItems.map((item) => item.name).join(", ");
-  };
+  // const getSparePartNames = (items?: SparePart[]): string => {
+  //   const getSparePartNames = (items?: SparePart[] | string): string => {
+  //     if (!items) return "";
+
+  //     // If items is a string, try to parse it
+  //     if (typeof items === 'string') {
+  //       try {
+  //         items = JSON.parse(items);
+  //       } catch (e) {
+  //         console.error('Error parsing items:', e);
+  //         return "";
+  //       }
+  //     }
+
+  //     // Now items should be an array of SparePart
+  //     return Array.isArray(items)
+  //       ? items.map((item) => item.name).join(", ")
+  //       : "";
+  //   };
+  // };
 
   return (
     <Card className="overflow-hidden shadow-xl">
@@ -111,9 +126,9 @@ const ServiceList: React.FC<ServiceListProps> = ({ service, form }) => {
                     className="border-b hover:bg-opacity-50 transition-colors cursor-pointer duration-200"
                   >
                     <CustomTableCell label={String(index + 1)} />
-                    <CustomTableCell label={item.branchId.toString()} />
+                    <CustomTableCell label={item.branchId?.toString()} />
                     <CustomTableCell label={item.username} />
-                    <CustomTableCell label={item.createdAt.toString()} />
+                    <CustomTableCell label={item.createdAt?.toString()} />
                     <CustomTableCell label={item.code} />
                     <CustomTableCell label={item.username} />
                     <CustomTableCell label={item.phone} />
@@ -122,14 +137,22 @@ const ServiceList: React.FC<ServiceListProps> = ({ service, form }) => {
                     <CustomTableCell label={item.imeiNumber} />
                     <CustomTableCell label={item.color} />
                     <CustomTableCell label={item.warranty} />
-                    <CustomTableCell label={item.serviceRetrun.toString()} />
+                    <CustomTableCell
+                      label={
+                        item.serviceRetrun == true
+                          ? "Yes"
+                          : item.serviceRetrun == false
+                          ? "No"
+                          : ""
+                      }
+                    />
                     <CustomTableCell label={item.error} />
                     <CustomTableCell label={item.remark} />
-                    <CustomTableCell label={item.dueDate.toString()} />
+                    <CustomTableCell label={item.dueDate?.toString()} />
                     <CustomTableCell label={item.technician} />
                     <CustomTableCell label={item.status} />
                     <CustomTableCell label={item.condition} />
-                    <CustomTableCell label={getSparePartNames(item.item)} />
+                    <CustomTableCell label={""} />
                     <CustomTableCell
                       label={Number(item?.price)?.toLocaleString()}
                     />

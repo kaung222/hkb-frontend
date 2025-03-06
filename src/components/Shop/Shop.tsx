@@ -12,13 +12,14 @@ import { PlusCircleIcon } from "lucide-react";
 import VirtualizedTable from "../common/VirtualizedTable";
 import { Branch } from "@/types/branch";
 import { useGerBraches } from "@/api/branch/branch.query";
-import { useCreateBranch } from "@/api/branch/branch.mutation";
+import { useCreateBranch, useDeleteBranch } from "@/api/branch/branch.mutation";
 
 const Shop = () => {
   const { data: shops, isLoading, error } = useGerBraches();
   const { openDialog, closeDialog } = useDialogStore();
   const [dialogKey, setDialogKey] = useState("");
   const { mutate } = useCreateBranch();
+  const { mutate: deleteBranch } = useDeleteBranch();
 
   const form = useForm<ShopFormData>({
     resolver: zodResolver(ShopSchema),
@@ -46,6 +47,7 @@ const Shop = () => {
   const handleDelete = async (id: number) => {
     try {
       // delete shop
+      deleteBranch({ id: id.toString() });
     } catch (err) {
       console.error("Error deleting shop:", err);
     }

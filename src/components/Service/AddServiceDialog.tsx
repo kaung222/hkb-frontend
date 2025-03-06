@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -8,7 +8,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { PlusCircle, Loader2 } from "lucide-react";
-import { FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -26,9 +33,13 @@ import { SparePartsSection } from "./SparePartSection";
 import { useGetUser } from "@/api/user/get-users";
 import { useCurrentUser } from "@/api/user/current-user";
 import { useAddServiceMutation } from "@/api/service/service.mutation";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { formatDate } from "date-fns";
 import { useGerBraches } from "@/api/branch/branch.query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AddServiceSchema, AddServiceValuesType } from "./schema/ServiceSchema";
+import { z } from "zod";
+import { SparePart } from "@/types/service";
 
 function ServiceInput({
   label,
@@ -99,8 +110,8 @@ function ServiceSelect({ label, name, control, options, disabled = false }) {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {options.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                {options.map((option, index) => (
+                  <SelectItem key={index} value={option.value}>
                     {option.label}
                   </SelectItem>
                 ))}
@@ -114,40 +125,70 @@ function ServiceSelect({ label, name, control, options, disabled = false }) {
   );
 }
 
+const initialState = {
+  code: "HKB_SERVICE_2025_03_01",
+  username: "James",
+  branchId: "",
+  brand: "",
+  color: "",
+  condition: "",
+  dueDate: formatDate(new Date(), "yyyy-MM-dd"),
+  error: "",
+  imeiNumber: "",
+  isRetrieved: "",
+  model: "",
+  paid: 0,
+  phone: "",
+  price: 0,
+  progress: "",
+  remark: "",
+  // status: Status.IN_PROGRESS,
+  serviceReturn: "",
+  serviceSupplier: "",
+  technician: "",
+  warranty: "out",
+};
+
 export function AddServiceDialog() {
   const { data: currentUser } = useCurrentUser();
   const { handleDialogChange, isOpen, closeDialog } = useDialogStore();
   const { mutate, isPending } = useAddServiceMutation();
+  const [spareParts, setSparePares] = useState<SparePart[]>([]);
   const { data: users } = useGetUser();
   const { data: user } = useCurrentUser();
+
   const form = useForm({
-    defaultValues: {
-      code: "",
-      username: "James",
-      branch: "",
-      brand: "",
-      color: "",
-      condition: "",
-      dueDate: formatDate(new Date(), "yy-MM-dd"),
-      error: "",
-      imeiNumber: "",
-      isRetrieved: false,
-      model: "",
-      paid: 0,
-      phone: "",
-      price: 0,
-      progress: "",
-      remark: "",
-      // status: Status.IN_PROGRESS,
-      serviceReturn: "No",
-      serviceSupplier: "",
-      technician: "",
-      warranty: "",
-    },
+    resolver: zodResolver(AddServiceSchema),
+    defaultValues: initialState,
   });
+
   const technicians = users?.filter((user) => user.role === "technician") || [];
-  const handleAddService = () => {
-    console.log(form.getValues());
+  const handleAddService = (values: AddServiceValuesType) => {
+    console.log(values);
+    mutate(
+      {
+        ...values,
+        price: Number(values.price),
+        serviceReturn:
+          values.serviceReturn == "yes"
+            ? true
+            : values.serviceReturn == "no"
+            ? false
+            : undefined,
+        items: spareParts.map((field) => ({
+          //@ts-ignore
+          name: field.name,
+          //@ts-ignore
+          price: Number(field.price),
+        })),
+      },
+      {
+        onSuccess: () => {
+          closeDialog(dialogKeys.addService);
+          form.reset();
+        },
+      }
+    );
   };
   return (
     <Dialog
@@ -170,189 +211,195 @@ export function AddServiceDialog() {
             ဆားဗစ်လက်ခံ
           </DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4">
-          {/* Basic Information Section */}
-          <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
-            Basic Information
-          </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleAddService)}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4">
+              {/* Basic Information Section */}
+              <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
+                Basic Information
+              </div>
 
-          {currentUser?.role === "admin" && <BranchSelect form={form} />}
+              {currentUser?.role === "admin" && <BranchSelect form={form} />}
 
-          <ServiceInput
-            label="Brand"
-            placeholder="Brand"
-            name="brand"
-            control={form.control}
-          />
-          <ServiceInput
-            label="Model"
-            placeholder="Model"
-            name="model"
-            control={form.control}
-          />
-          <ServiceInput
-            label="IMEI"
-            placeholder="IMEI"
-            name="imeiNumber"
-            control={form.control}
-          />
-          <ServiceInput
-            label="Color"
-            placeholder="Color"
-            name="color"
-            control={form.control}
-          />
-          <ServiceInput
-            label="Error"
-            placeholder="Error"
-            name="error"
-            control={form.control}
-          />
-          <ServiceTextArea
-            label="မှတ်ချက်"
-            placeholder="Remark"
-            name="remark"
-            control={form.control}
-          />
+              <ServiceInput
+                label="Brand"
+                placeholder="Brand"
+                name="brand"
+                control={form.control}
+              />
+              <ServiceInput
+                label="Model"
+                placeholder="Model"
+                name="model"
+                control={form.control}
+              />
+              <ServiceInput
+                label="IMEI"
+                placeholder="IMEI"
+                name="imeiNumber"
+                control={form.control}
+              />
+              <ServiceInput
+                label="Color"
+                placeholder="Color"
+                name="color"
+                control={form.control}
+              />
+              <ServiceInput
+                label="Error"
+                placeholder="Error"
+                name="error"
+                control={form.control}
+              />
+              <ServiceTextArea
+                label="မှတ်ချက်"
+                placeholder="Remark"
+                name="remark"
+                control={form.control}
+              />
 
-          {/* Voucher Information Section */}
-          <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
-            Voucher Information
-          </div>
-          <ServiceInput
-            label="Voucher ID"
-            placeholder="Voucher ID"
-            name="code"
-            defaultValue="HKB_SERVICE_2025_03_01"
-            control={form.control}
-          />
-          <ServiceInput
-            label="Customer Name"
-            placeholder="Mg Mg"
-            name="username"
-            control={form.control}
-          />
-          <ServiceInput
-            label="Phone Number"
-            placeholder="Phone Number"
-            name="phone"
-            control={form.control}
-          />
-          <ServiceSelect
-            label="Warranty"
-            name="warranty"
-            control={form.control}
-            options={[
-              { label: "Out Warranty", value: "Out" },
-              { label: "In Warranty", value: "In" },
-            ]}
-          />
-          <ServiceSelect
-            label="Service Return"
-            name="serviceReturn"
-            control={form.control}
-            options={[
-              { label: "No", value: "No" },
-              { label: "Yes", value: "Yes" },
-            ]}
-          />
-          <ServiceInput
-            label="ရက်ချိန်း"
-            placeholder="yyyy-mm-dd"
-            name="dueDate"
-            defaultValue={new Date().toString()}
-            type="date"
-            control={form.control}
-          />
+              {/* Voucher Information Section */}
+              <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
+                Voucher Information
+              </div>
+              <ServiceInput
+                label="Voucher ID"
+                placeholder="Voucher ID"
+                name="code"
+                control={form.control}
+              />
+              <ServiceInput
+                label="Customer Name"
+                placeholder="Mg Mg"
+                name="username"
+                control={form.control}
+              />
+              <ServiceInput
+                label="Phone Number"
+                placeholder="Phone Number"
+                name="phone"
+                control={form.control}
+              />
+              <ServiceSelect
+                label="Warranty"
+                name="warranty"
+                control={form.control}
+                options={[
+                  { label: "Out Warranty", value: "Out" },
+                  { label: "In Warranty", value: "In" },
+                ]}
+              />
+              <ServiceSelect
+                label="Service Return"
+                name="serviceReturn"
+                control={form.control}
+                options={[
+                  { label: "No", value: "no" },
+                  { label: "Yes", value: "yes" },
+                ]}
+              />
+              <ServiceInput
+                label="ရက်ချိန်း"
+                placeholder="yyyy-mm-dd"
+                name="dueDate"
+                defaultValue={new Date().toString()}
+                type="date"
+                control={form.control}
+              />
 
-          <ServiceInput
-            label="Total Amount"
-            placeholder="Total Amount"
-            name="price"
-            control={form.control}
-          />
-          <ServiceSelect
-            label="ရွေးပြီး/မရွေးရသေး"
-            name="is_retrieved"
-            control={form.control}
-            options={[
-              { label: "ရွေးပြီး", value: "1" },
-              { label: "မရွေးရသေး", value: "0" },
-            ]}
-          />
+              <ServiceInput
+                label="Total Amount"
+                placeholder="Total Amount"
+                name="price"
+                control={form.control}
+              />
+              <ServiceSelect
+                label="ရွေးပြီး/မရွေးရသေး"
+                name="is_retrieved"
+                control={form.control}
+                options={[
+                  { label: "ရွေးပြီး", value: "1" },
+                  { label: "မရွေးရသေး", value: "0" },
+                ]}
+              />
 
-          {/* Technician and Service Information Section */}
-          <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
-            Technician and Service Information
-          </div>
-          <ServiceSelect
-            label="Technician"
-            name="technician"
-            control={form.control}
-            options={technicians.map((tech) => ({
-              label: tech.name,
-              value: tech.name,
-            }))}
-          />
-          <ServiceSelect
-            label="Progress"
-            name="progress"
-            control={form.control}
-            options={[
-              { label: "မပြင်ရသေး", value: "မပြင်ရသေး" },
-              { label: "ပြင်နေဆဲ", value: "ပြင်နေဆဲ" },
-              { label: "ပြင်ပြီး", value: "ပြင်ပြီး" },
-            ]}
-          />
-          <ServiceSelect
-            label="Condition"
-            name="condition"
-            control={form.control}
-            disabled={
-              currentUser?.role !== "admin" && currentUser?.role !== "reception"
-            }
-            options={[
-              { label: "ပြင်ရ", value: "ပြင်ရ" },
-              { label: "ပြင်မရ", value: "ပြင်မရ" },
-              { label: "မပြင်တော့ပါ", value: "မပြင်တော့ပါ" },
-            ]}
-          />
-          <ServiceInput
-            label="ပစ္စည်း Supplier"
-            placeholder="ပစ္စည်း Supplier"
-            name="serviceSupplier"
-            control={form.control}
-          />
+              {/* Technician and Service Information Section */}
+              <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
+                Technician and Service Information
+              </div>
+              <ServiceSelect
+                label="Technician"
+                name="technician"
+                control={form.control}
+                options={technicians.map((tech) => ({
+                  label: tech.name,
+                  value: tech.name,
+                }))}
+              />
+              <ServiceSelect
+                label="Progress"
+                name="progress"
+                control={form.control}
+                options={[
+                  { label: "မပြင်ရသေး", value: "မပြင်ရသေး" },
+                  { label: "ပြင်နေဆဲ", value: "ပြင်နေဆဲ" },
+                  { label: "ပြင်ပြီး", value: "ပြင်ပြီး" },
+                ]}
+              />
+              <ServiceSelect
+                label="Condition"
+                name="condition"
+                control={form.control}
+                disabled={
+                  currentUser?.role !== "admin" &&
+                  currentUser?.role !== "reception"
+                }
+                options={[
+                  { label: "ပြင်ရ", value: "ပြင်ရ" },
+                  { label: "ပြင်မရ", value: "ပြင်မရ" },
+                  { label: "မပြင်တော့ပါ", value: "မပြင်တော့ပါ" },
+                ]}
+              />
+              <ServiceInput
+                label="ပစ္စည်း Supplier"
+                placeholder="ပစ္စည်း Supplier"
+                name="serviceSupplier"
+                control={form.control}
+              />
 
-          <SparePartsSection control={form.control} />
-          <ServiceInput
-            label="Paid"
-            placeholder="0"
-            name="paid"
-            control={form.control}
-          />
-        </div>
-        <DialogFooter>
-          <Button
-            onClick={() => closeDialog(dialogKeys.addService)}
-            type="button"
-            variant="secondary"
-            className="transition-colors duration-200 rounded-lg shadow-sm"
-          >
-            Close
-          </Button>
-          <Button
-            onClick={handleAddService}
-            type="button"
-            className="transition-colors duration-200 text-white rounded-lg shadow-sm"
-          >
-            {isPending ? (
-              <Loader2 className="animate-spin h-5 w-5" />
-            ) : (
-              "Save Service"
-            )}
-          </Button>
-        </DialogFooter>
+              <SparePartsSection
+                spareParts={spareParts}
+                setSpareParts={setSparePares}
+              />
+              <ServiceInput
+                label="Paid"
+                placeholder="0"
+                name="paid"
+                control={form.control}
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                onClick={() => closeDialog(dialogKeys.addService)}
+                type="button"
+                variant="secondary"
+                className="transition-colors duration-200 rounded-lg shadow-sm"
+              >
+                Close
+              </Button>
+              <Button
+                type="submit"
+                className="transition-colors duration-200 text-white rounded-lg shadow-sm"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin h-5 w-5" />
+                ) : (
+                  "Save Service"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
@@ -362,13 +409,13 @@ export const BranchSelect = ({ form }) => {
   const { data: shops } = useGerBraches();
   const options = shops.map((shop) => ({
     label: shop.name,
-    value: shop.branchNumber.toString(),
+    value: shop.id.toString(),
   }));
   return (
     <ServiceSelect
       control={form.control}
       label={"Branch"}
-      name="branch"
+      name="branchId"
       options={options}
     />
   );

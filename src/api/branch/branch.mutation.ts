@@ -10,11 +10,11 @@ export const useCreateBranch = () => {
   });
 };
 
-export const useDeleteBranch = (id: number) => {
+export const useDeleteBranch = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => {
-      return await api.delete(`/branches/${id}`);
+    mutationFn: async (payload: { id: string }) => {
+      return await api.delete(`/branches/${payload.id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetBranches"] });

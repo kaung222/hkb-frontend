@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -20,14 +20,22 @@ import {
 import { Button } from "../ui/button";
 import { useDialogStore } from "@/stores/dialog/useDialogStore";
 import { dialogKeys } from "@/constants/general.const";
-import { UseFormReturn } from "react-hook-form";
+import { useFieldArray, useForm, UseFormReturn } from "react-hook-form";
 import { Textarea } from "../ui/textarea";
 import { SparePartsSection } from "./SparePartSection";
 import { useCurrentUser } from "@/api/user/current-user";
 import { useGetUser } from "@/api/user/get-users";
 import { User } from "@/types/user";
 import { Branch } from "@/types/branch";
-import { Service } from "@/types/service";
+import { Service, SparePart } from "@/types/service";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AddServiceSchema, AddServiceValuesType } from "./schema/ServiceSchema";
+import {
+  useDeleteService,
+  useUpdateService,
+} from "@/api/service/service.mutation";
+import { Alert } from "../ui/alert";
+import { AlertDialogApp } from "../common/AlertDialogApp";
 
 function ServiceInput({
   label,
@@ -87,7 +95,14 @@ function ServiceTextArea({
   );
 }
 
-function ServiceSelect({ label, name, control, options, disabled = false }) {
+function ServiceSelect({
+  label,
+  name,
+  control,
+  defaultValue = undefined,
+  options,
+  disabled = false,
+}) {
   return (
     <FormField
       control={control}
@@ -98,9 +113,12 @@ function ServiceSelect({ label, name, control, options, disabled = false }) {
           <Select
             disabled={disabled}
             onValueChange={field.onChange}
-            defaultValue={field.value}
+            defaultValue={defaultValue || field.value}
           >
-            <SelectTrigger className="border-gray-300 shadow-sm rounded-lg">
+            <SelectTrigger
+              value={field.value}
+              className="border-gray-300 shadow-sm rounded-lg"
+            >
               <SelectValue placeholder={label} />
             </SelectTrigger>
             <SelectContent>
@@ -120,22 +138,17 @@ function ServiceSelect({ label, name, control, options, disabled = false }) {
   );
 }
 interface ServiceDialogProps {
-  form: UseFormReturn<any, any, undefined>;
+  // form: UseFormReturn<any, any, undefined>;
   technicians: User[];
   shops: Branch[];
   loading: boolean;
-  handleEditService: () => void;
-  handleDeleteService: () => void;
   currentServiceDetail: Service;
 }
 
 export function EditServiceDialog({
-  form,
   technicians,
   shops,
   loading,
-  handleEditService,
-  handleDeleteService,
   currentServiceDetail,
 }: ServiceDialogProps) {
   const { data: currentUser } = useCurrentUser();
@@ -145,14 +158,111 @@ export function EditServiceDialog({
   const handleGetVoucher = () => {
     openDialog(dialogKeys.getVoucher);
   };
-  const { serviceDetail } = form.getValues();
+
+  const [spareParts, setSpareParts] = useState<SparePart[]>([]);
+  const { mutate } = useUpdateService(currentServiceDetail.id);
+  const { mutate: deleteService } = useDeleteService();
+  const form = useForm({
+    resolver: zodResolver(AddServiceSchema),
+    defaultValues: {
+      code: currentServiceDetail.code || undefined,
+      username: currentServiceDetail.username,
+      branchId: currentServiceDetail.branchId.toString(),
+      brand: currentServiceDetail.brand,
+      color: currentServiceDetail.color,
+      condition: currentServiceDetail.condition,
+      dueDate: currentServiceDetail.dueDate,
+      error: currentServiceDetail.error,
+      imeiNumber: currentServiceDetail.imeiNumber,
+      serviceReturn: currentServiceDetail.serviceRetrun ? "yes" : "no",
+      isRetrieved: currentServiceDetail.isRetrieved,
+      model: currentServiceDetail.model,
+      paid: currentServiceDetail.paidAmount,
+      phone: currentServiceDetail.phone,
+      price: currentServiceDetail.price,
+      progress: currentServiceDetail.progress,
+      remark: currentServiceDetail.remark,
+      // status: Status.IN_PROGRESS,
+      serviceSupplier: currentServiceDetail.serviceSupplier,
+      technician: currentServiceDetail.technician,
+      warranty: currentServiceDetail.warranty,
+    },
+  });
 
   useEffect(() => {
-    if (serviceDetail?.item) {
-      const parsed = JSON.parse(serviceDetail.item || "[]");
-      form.setValue("serviceDetail.spareParts", parsed);
+    if (currentServiceDetail) {
+      setSpareParts(currentServiceDetail.items || []);
+      const payload = {
+        code: currentServiceDetail.code || undefined,
+        username: currentServiceDetail.username || undefined,
+        branchId: currentServiceDetail.branchId.toString() || undefined,
+        brand: currentServiceDetail.brand || undefined,
+        color: currentServiceDetail.color || undefined,
+        condition: currentServiceDetail.condition || undefined,
+        dueDate: currentServiceDetail.dueDate || undefined,
+        error: currentServiceDetail.error || undefined,
+        imeiNumber: currentServiceDetail.imeiNumber || undefined,
+        isRetrieved: currentServiceDetail.isRetrieved || undefined,
+        model: currentServiceDetail.model || undefined,
+        paid: currentServiceDetail.paidAmount || undefined,
+        phone: currentServiceDetail.phone || undefined,
+        price: currentServiceDetail.price || undefined,
+        progress: currentServiceDetail.progress || undefined,
+        remark: currentServiceDetail.remark || undefined,
+        paidAmount: currentServiceDetail.paidAmount || undefined,
+        // status: Status.IN_PROGRESS,
+        serviceReturn:
+          currentServiceDetail.serviceRetrun == true
+            ? "yes"
+            : currentServiceDetail.serviceRetrun == false
+            ? "no"
+            : undefined,
+        serviceSupplier: currentServiceDetail.serviceSupplier || undefined,
+        technician: currentServiceDetail.technician || undefined,
+        warranty: currentServiceDetail.warranty || undefined,
+      };
+      form.reset(payload);
     }
-  }, [serviceDetail, form]);
+  }, [currentServiceDetail, form]);
+
+  const handleEditService = (values: AddServiceValuesType) => {
+    mutate(
+      {
+        ...values,
+        price: Number(values.price),
+        serviceReturn:
+          values.serviceReturn == "yes"
+            ? true
+            : values.serviceReturn == "no"
+            ? false
+            : undefined,
+        items: spareParts.map((field) => ({
+          //@ts-ignore
+          name: field.name,
+          //@ts-ignore
+          price: Number(field.price),
+        })),
+      },
+      {
+        onSuccess: () => {
+          closeDialog(dialogKeys.serviceDetail);
+        },
+      }
+    );
+  };
+
+  const handleDeleteService = () => {
+    console.log("delete");
+
+    deleteService(
+      { id: currentServiceDetail.id },
+      {
+        onSuccess: () => {
+          closeDialog(dialogKeys.serviceDetail);
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -169,7 +279,7 @@ export function EditServiceDialog({
             </DialogTitle>
           </DialogHeader>
           <Form {...form}>
-            <form>
+            <form onSubmit={form.handleSubmit(handleEditService)}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4">
                 {/* Basic Information Section */}
                 <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
@@ -178,18 +288,19 @@ export function EditServiceDialog({
                 {currentUser?.role === "admin" && (
                   <ServiceSelect
                     label="Branch"
-                    name="serviceDetail.branch"
+                    name="branchId"
                     control={form.control}
+                    defaultValue={currentServiceDetail.branchId.toString()}
                     options={shops.map((shop) => ({
                       label: shop.name,
-                      value: String(shop.branchNumber),
+                      value: shop.id.toString(),
                     }))}
                   />
                 )}
                 <ServiceInput
                   label="Brand"
                   placeholder="Brand"
-                  name="serviceDetail.brand"
+                  name="brand"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -199,7 +310,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="Model"
                   placeholder="Model"
-                  name="serviceDetail.model"
+                  name="model"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -209,7 +320,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="IMEI"
                   placeholder="IMEI"
-                  name="serviceDetail.imei"
+                  name="imeiNumber"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -219,7 +330,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="Color"
                   placeholder="Color"
-                  name="serviceDetail.color"
+                  name="color"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -229,7 +340,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="Error"
                   placeholder="Error"
-                  name="serviceDetail.error"
+                  name="error"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -239,7 +350,7 @@ export function EditServiceDialog({
                 <ServiceTextArea
                   label="မှတ်ချက်"
                   placeholder="Remark"
-                  name="serviceDetail.remark"
+                  name="remark"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -254,7 +365,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="Voucher ID"
                   placeholder="Voucher ID"
-                  name="serviceDetail.voucher"
+                  name="code"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -262,9 +373,9 @@ export function EditServiceDialog({
                   }
                 />
                 <ServiceInput
-                  label="Name"
-                  placeholder="Name"
-                  name="serviceDetail.customer"
+                  label="Customer Name"
+                  placeholder="Customer name"
+                  name="username"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -274,7 +385,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="Phone Number"
                   placeholder="Phone Number"
-                  name="serviceDetail.phone"
+                  name="phone"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -283,8 +394,9 @@ export function EditServiceDialog({
                 />
                 <ServiceSelect
                   label="Warranty"
-                  name="serviceDetail.warranty"
+                  name="warranty"
                   control={form.control}
+                  defaultValue={currentServiceDetail.warranty}
                   options={[
                     { label: "Out Warranty", value: "Out" },
                     { label: "In Warranty", value: "In" },
@@ -296,11 +408,12 @@ export function EditServiceDialog({
                 />
                 <ServiceSelect
                   label="Service Return"
-                  name="serviceDetail.service_return"
+                  name="serviceReturn"
+                  defaultValue={currentServiceDetail.serviceRetrun}
                   control={form.control}
                   options={[
-                    { label: "No", value: "No" },
-                    { label: "Yes", value: "Yes" },
+                    { label: "No", value: "no" },
+                    { label: "Yes", value: "yes" },
                   ]}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -311,7 +424,7 @@ export function EditServiceDialog({
                   label="ရက်ချိန်း"
                   placeholder="yyyy-mm-dd"
                   type="date"
-                  name="serviceDetail.due_date"
+                  name="dueDate"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -321,7 +434,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="Total Amount"
                   placeholder="Total Amount"
-                  name="serviceDetail.service_charges"
+                  name="price"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -330,7 +443,8 @@ export function EditServiceDialog({
                 />
                 <ServiceSelect
                   label="ရွေးပြီး/မရွေးရသေး"
-                  name="serviceDetail.is_retrieved"
+                  name="isRetrieved"
+                  defaultValue={currentServiceDetail.isRetrieved}
                   control={form.control}
                   options={[
                     { label: "မရွေးရသေး", value: "0" },
@@ -348,7 +462,8 @@ export function EditServiceDialog({
                 </div>
                 <ServiceSelect
                   label="Technician"
-                  name="serviceDetail.engineer"
+                  name="technician"
+                  defaultValue={currentServiceDetail.technician}
                   control={form.control}
                   options={technicians.map((tech) => ({
                     label: tech.name,
@@ -361,7 +476,8 @@ export function EditServiceDialog({
                 />
                 <ServiceSelect
                   label="Progress"
-                  name="serviceDetail.progress"
+                  name="progress"
+                  defaultValue={currentServiceDetail.progress}
                   control={form.control}
                   options={[
                     { label: "မပြင်ရသေး", value: "မပြင်ရသေး" },
@@ -375,11 +491,12 @@ export function EditServiceDialog({
                 />
                 <ServiceSelect
                   label="Condition"
-                  name="serviceDetail.condition"
+                  name="condition"
                   disabled={
                     currentUser?.role !== "admin" &&
                     currentUser?.role !== "reception"
                   }
+                  defaultValue={currentServiceDetail.condition}
                   control={form.control}
                   options={[
                     { label: "ပြင်ရ", value: "ပြင်ရ" },
@@ -390,14 +507,17 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="ပစ္စည်း Supplier"
                   placeholder="ပစ္စည်း Supplier"
-                  name="serviceDetail.service_reply"
+                  name="serviceReturn"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
-                <SparePartsSection control={form.control} />
+                <SparePartsSection
+                  spareParts={spareParts}
+                  setSpareParts={setSpareParts}
+                />
                 {/* <ServiceInput
                   label="Spare Parts ( အပိုပစ္စည်း )"
                   placeholder="Spare Parts"
@@ -413,7 +533,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="Paid"
                   placeholder="0"
-                  name="serviceDetail.paid"
+                  name="paid"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -430,25 +550,35 @@ export function EditServiceDialog({
                 >
                   Close
                 </Button>
-                <Button
-                  onClick={handleDeleteService}
-                  type="button"
-                  variant="destructive"
-                  className="transition-colors duration-200 text-white rounded-lg shadow-sm"
+                <AlertDialogApp
+                  trigger={
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      className="transition-colors duration-200 text-white rounded-lg shadow-sm"
+                    >
+                      {loading ? (
+                        <Loader2 className="animate-spin h-5 w-5" />
+                      ) : (
+                        "Delete"
+                      )}
+                    </Button>
+                  }
+                  onConfirm={() => handleDeleteService()}
+                  buttonText="Delete"
                 >
-                  {loading ? (
-                    <Loader2 className="animate-spin h-5 w-5" />
-                  ) : (
-                    "Delete"
-                  )}
-                </Button>
+                  <p>
+                    This action cannot be undone. This will permanently delete
+                    your service and remove your data from our servers.
+                  </p>
+                </AlertDialogApp>
+
                 <Button
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
                     currentUser?.role !== "admin"
                   }
-                  onClick={handleEditService}
-                  type="button"
+                  type="submit"
                   className="transition-colors duration-200 text-white rounded-lg shadow-sm"
                 >
                   {loading ? (

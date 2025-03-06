@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,21 +33,26 @@ import { SparePart } from "@/types/service";
 //   };
 // }
 
-export function SparePartsSection({ control }) {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "spareParts",
-  });
-
+export function SparePartsSection({
+  spareParts,
+  setSpareParts,
+}: {
+  spareParts: SparePart[];
+  setSpareParts: React.Dispatch<React.SetStateAction<SparePart[]>>;
+}) {
+  // const { fields, append, remove } = useFieldArray({
+  //   control,
+  //   name: "spareParts",
+  // });
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
-  const spareParts: SparePart[] = useWatch({
-    control,
-    name: "spareParts",
-    defaultValue: [],
-  });
-  console.log(spareParts);
+  // const spareParts: SparePart[] = useWatch({
+  //   control,
+  //   name: "spareParts",
+  //   defaultValue: [],
+  // });
+  // console.log(spareParts);
 
   const totalExpense =
     spareParts?.reduce((sum, item) => sum + (Number(item.price) || 0), 0) || 0;
@@ -65,11 +70,24 @@ export function SparePartsSection({ control }) {
     "Speaker",
   ];
 
+  const handlePriceChange = (value: string, index: number) => {
+    setSpareParts(
+      spareParts.map((part, i) =>
+        i === index ? { ...part, price: Number(value) } : part
+      )
+    );
+  };
+
+  const handleRemoveSparePart = (ind: number) => {
+    setSpareParts(spareParts.filter((part, index) => index != ind));
+  };
+
   const handleAddPart = (partName: string) => {
     const existed = spareParts.find((part) => part.name === partName);
     console.log("existest", existed);
     if (partName && !existed) {
-      append({ part: partName, price: 0 });
+      // append({ name: partName, price: 0 });
+      setSpareParts((pre) => [...pre, { name: partName, price: 0 }]);
     }
     setPopoverOpen(false);
     setSearchValue("");
@@ -129,18 +147,35 @@ export function SparePartsSection({ control }) {
 
       {/* Selected Parts List */}
       <div className="space-y-2">
-        {fields.map((field, index) => (
-          <div key={field.id} className="flex items-center gap-2">
+        {spareParts.map((field, index) => (
+          <div key={index} className="flex items-center gap-2">
             <div className="flex-1 grid grid-cols-2 gap-2">
-              <FormField
-                control={control}
+              {/* <FormField
+                // control={control}
                 name={`spareParts.${index}.name`}
                 render={({ field }) => (
-                  <Input {...field} readOnly className="" />
                 )}
+              /> */}
+              <Input value={field.name} readOnly className="" />
+              <Input
+                // {...field}
+                type="number"
+                placeholder="ပစ္စည်းဖိုး"
+                value={field.price || 0}
+                className=""
+                onChange={(e) => handlePriceChange(e.target.value, index)}
+                onWheel={(e) =>
+                  e.target.addEventListener(
+                    "wheel",
+                    function (e) {
+                      e.preventDefault();
+                    },
+                    { passive: false }
+                  )
+                }
               />
-              <FormField
-                control={control}
+              {/* <FormField
+                // control={control}
                 name={`spareParts.${index}.price`}
                 render={({ field }) => (
                   <Input
@@ -160,13 +195,13 @@ export function SparePartsSection({ control }) {
                     }
                   />
                 )}
-              />
+              /> */}
             </div>
             <Button
               type="button"
               variant="destructive"
               size="sm"
-              onClick={() => remove(index)}
+              onClick={() => handleRemoveSparePart(index)}
             >
               Remove
             </Button>
@@ -191,7 +226,7 @@ export function SparePartsSection({ control }) {
       </div>
 
       {/* Hidden Fields for Backend */}
-      <FormField
+      {/* <FormField
         control={control}
         name="item"
         render={({ field }) => (
@@ -204,7 +239,7 @@ export function SparePartsSection({ control }) {
         render={({ field }) => (
           <Input {...field} type="hidden" value={totalExpense} />
         )}
-      />
+      /> */}
     </div>
   );
 }

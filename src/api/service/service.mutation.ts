@@ -1,11 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../api";
+import { ErrorResponse } from "@/types/response";
+import {
+  AddServicePayloadType,
+  AddServiceValuesType,
+} from "@/components/Service/schema/ServiceSchema";
 
 const queryKey = ["GetServices"];
 export const useAddServiceMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (data: any) => {
+  return useMutation<any, ErrorResponse, AddServicePayloadType>({
+    mutationFn: async (data: AddServicePayloadType) => {
       return api.post(`services`, data).then((res) => res.data);
     },
     onSuccess: async () => {
@@ -44,8 +49,8 @@ export const useDeleteService = () => {
 
 export const useUpdateService = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (data: any) =>
+  return useMutation<any, ErrorResponse, AddServicePayloadType>({
+    mutationFn: async (data: AddServicePayloadType) =>
       await api.patch(`/services/` + id, data).then((res) => res.data),
     onSuccess: async () => {
       return await queryClient.invalidateQueries({

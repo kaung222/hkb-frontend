@@ -26,6 +26,11 @@ import { useForm } from "react-hook-form";
 import { useCurrentUser } from "@/api/user/current-user";
 import { useGetServiceQuery } from "@/api/service/service.query";
 import BranchFilter from "./branch-filter";
+import { EditServiceDialog } from "./ServiceDetailDialog";
+import { useGetUser } from "@/api/user/get-users";
+import { useGerBraches } from "@/api/branch/branch.query";
+import { useDataStore } from "@/stores/useDataStore";
+import VoucherDialog from "./VoucherDialog";
 
 export default function Service() {
   const [date, setDate] = useQueryState(
@@ -40,7 +45,10 @@ export default function Service() {
 
   const form = useForm();
   const { data: user } = useCurrentUser();
+  const { data: technicians, isLoading: isTechnicianLoading } = useGetUser();
+  const { data: branches, isLoading: isBranchLoading } = useGerBraches();
   const { data: services } = useGetServiceQuery();
+  const { data: detailService } = useDataStore();
   // const { services, user, form, isLoading } = useService();
 
   return (
@@ -99,42 +107,41 @@ export default function Service() {
                   )}
                 />
               </div>
-
-              {/* Actions */}
-              <div className="flex justify-between items-center">
-                <div className="flex gap-x-2">
-                  <AddServiceDialog />
-                  <ServiceSummaryDialog service={services} />
-                </div>
-                <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
-                    <SelectValue placeholder="Filter By" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">all</SelectItem>
-                    <SelectItem value="retrived">ရွေးပြီး</SelectItem>
-                    <SelectItem value="completed">မရွေးရသေး</SelectItem>
-                    <SelectItem value="pending">မရွေးရသေး</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
             </form>
           </Form>
+
+          {/* Actions */}
+          <div className="flex justify-between items-center">
+            <div className="flex gap-x-2">
+              <AddServiceDialog />
+              <ServiceSummaryDialog service={services} />
+            </div>
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
+                <SelectValue placeholder="Filter By" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">all</SelectItem>
+                <SelectItem value="retrived">ရွေးပြီး</SelectItem>
+                <SelectItem value="completed">မရွေးရသေး</SelectItem>
+                <SelectItem value="pending">မရွေးရသေး</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </CardContent>
       </Card>
 
       {/* Scrollable Service List */}
       <ServiceList service={services} form={form} />
-      {/* <EditServiceDialog
-        form={form}
-        technicians={technicians}
-        shops={shops}
-        loading={loading}
-        handleEditService={handleAddService}
-        handleDeleteService={handleDeleteService}
-        currentServiceDetail={serviceDetail}
-      /> */}
-      {/* <VoucherDialog serviceDetail={serviceDetail} /> */}
+      {detailService && (
+        <EditServiceDialog
+          technicians={technicians}
+          shops={branches}
+          loading={isTechnicianLoading || isBranchLoading}
+          currentServiceDetail={detailService}
+        />
+      )}
+      <VoucherDialog serviceDetail={detailService} />
     </motion.div>
   );
 }

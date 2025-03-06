@@ -1,4 +1,4 @@
-// import { z } from "zod";
+import { z } from "zod";
 
 // export const ServiceFormSchema = z.object({
 //   filterDate: z.string(),
@@ -33,3 +33,57 @@
 // });
 
 // export type ServiceFormValues = z.infer<typeof ServiceFormSchema>;
+
+export const AddServiceSchema = z.object({
+  branchId: z.string().optional(),
+  username: z.string().optional(),
+  name: z.string().optional(),
+  code: z.string().optional(),
+  imeiNumber: z.string().optional(),
+  brand: z.string().optional(),
+  model: z.string().optional(),
+  phone: z.string().optional(),
+  color: z.string().optional(),
+  warranty: z.string().optional(),
+  error: z.string().optional(),
+  dueDate: z.string().optional(),
+  remark: z.string().optional(),
+  price: z
+    .preprocess((val) => {
+      // Convert input to a number if it's a string
+      if (typeof val === "string") return parseFloat(val);
+      return val;
+    }, z.number())
+    .optional(),
+  technician: z.string().optional(),
+  status: z.enum(["retrieved", "pending", "other"]).optional(), // Update with possible statuses
+  expense: z.string().optional(),
+  condition: z.string().optional(),
+  paidAmount: z.string().optional(),
+  serviceReturn: z.string().optional(),
+  leftToPay: z.string().optional(),
+  retrieveDate: z.string().datetime().optional(),
+  items: z
+    .array(
+      z.object({
+        name: z.string(),
+        price: z
+          .preprocess((val) => {
+            if (typeof val === "string") return parseFloat(val);
+            return val;
+          }, z.number())
+          .default(0),
+      })
+    )
+    .optional(),
+  isRetrieved: z.string().optional(),
+});
+
+export type AddServiceValuesType = z.infer<typeof AddServiceSchema>;
+
+export type AddServicePayloadType = Omit<
+  AddServiceValuesType,
+  "serviceReturn"
+> & {
+  serviceReturn: boolean | string;
+};
