@@ -3043,7 +3043,7 @@ const Inventory = (props) => {
                       }
                       setVoucherLoad(voucherLoad - 1);
                     }}
-                    ref={s11}
+                    // ref={s11}
                     value={
                       multiSale.paid
                         ? multiSale.paid.reduce((a, b) => a + b, 0)
