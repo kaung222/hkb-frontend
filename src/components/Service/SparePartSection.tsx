@@ -79,7 +79,7 @@ export function SparePartsSection({
   };
 
   const handleRemoveSparePart = (ind: number) => {
-    setSpareParts(spareParts.filter((part, index) => index != ind));
+    setSpareParts(spareParts.filter((_, index) => index != ind));
   };
 
   const handleAddPart = (partName: string) => {

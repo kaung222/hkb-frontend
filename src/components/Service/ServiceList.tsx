@@ -37,7 +37,7 @@ const CustomTableCell = ({ label }: TableCellProps) => (
   <TableCell className="py-4 w-auto text-center">{label}</TableCell>
 );
 
-const ServiceList: React.FC<ServiceListProps> = ({ service, form }) => {
+const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { openDialog } = useDialogStore();
   const { setData, data } = useDataStore();
