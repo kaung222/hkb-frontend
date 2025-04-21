@@ -31,17 +31,43 @@ import { useGetUser } from "@/api/user/get-users";
 import { useGerBraches } from "@/api/branch/branch.query";
 import { useDataStore } from "@/stores/useDataStore";
 import VoucherDialog from "./VoucherDialog";
+import { DatePickerDemo } from "../common/DatePicker";
+import { format } from "date-fns";
 
 export default function Service() {
   const [date, setDate] = useQueryState(
     "date",
-    parseAsString.withDefault("today")
+    parseAsString.withDefault(format(new Date(), "yyyy-MM-dd"))
+  );
+  const [month, setMonth] = useQueryState(
+    "month",
+    parseAsString.withDefault("01")
+  );
+
+  const [filterMode, setFilterMode] = useQueryState(
+    "filterMode",
+    parseAsString.withDefault("day")
   );
 
   const [status, setStatus] = useQueryState(
     "status",
     parseAsString.withDefault("all")
   );
+
+  const monthOptions = [
+    { label: "January", value: "01" },
+    { label: "February", value: "02" },
+    { label: "March", value: "03" },
+    { label: "April", value: "04" },
+    { label: "May", value: "05" },
+    { label: "June", value: "06" },
+    { label: "July", value: "07" },
+    { label: "August", value: "08" },
+    { label: "September", value: "09" },
+    { label: "October", value: "10" },
+    { label: "November", value: "11" },
+    { label: "December", value: "12" },
+  ];
 
   const form = useForm();
   const { data: user } = useCurrentUser();
@@ -50,6 +76,12 @@ export default function Service() {
   const { data: services } = useGetServiceQuery();
   const { data: detailService } = useDataStore();
   // const { services, user, form, isLoading } = useService();
+
+  const handleDateChange = (newDate: Date) => {
+    // Convert the new date to a string format (e.g., "YYYY-MM-DD")
+    const formattedDate = format(newDate, "yyyy-MM-dd");
+    setDate(formattedDate);
+  };
 
   return (
     <motion.div
@@ -65,31 +97,98 @@ export default function Service() {
             <form className="space-y-4">
               {/* Filter and Branch Select */}
               <div className="flex flex-wrap gap-4">
-                <FormField
-                  control={form.control}
-                  name="filterDate"
-                  render={({ field }) => (
-                    <FormItem className="flex-1 min-w-[200px]">
-                      <FormLabel>Date Filter</FormLabel>
-                      <Select
-                        {...field}
-                        value={date}
-                        onValueChange={(e) => {
-                          field.onChange(e);
-                          setDate(e);
-                        }}
-                      >
-                        <SelectTrigger className="w-full rounded-lg border-gray-300 shadow-sm">
-                          <SelectValue placeholder="Filter by Date" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="today">Today</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
+                <div className="flex flex-row gap-2 min-w-[200px]">
+                  <FormField
+                    control={form.control}
+                    name="filterMode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Filter Mode</FormLabel>
+                        <Select
+                          value={filterMode}
+                          onValueChange={(e) => {
+                            field.onChange(e);
+                            setFilterMode(e);
+                            // Reset date when changing mode
+                            e === "day"
+                              ? setDate(format(new Date(), "yyyy-MM-dd"))
+                              : setMonth("01");
+                          }}
+                        >
+                          <SelectTrigger className="w-full rounded-lg border-gray-300 shadow-sm">
+                            <SelectValue placeholder="Select Mode" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="day">Day</SelectItem>
+                            <SelectItem value="month">Month</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {filterMode === "day" ? (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="filterDate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Date Filter</FormLabel>
+                            <div>
+                              <DatePickerDemo
+                                date={new Date(date)}
+                                onChange={(e) => {
+                                  field.onChange(e);
+                                  handleDateChange(e);
+                                }}
+                              />
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="monthFilter"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Date Filter</FormLabel>
+
+                            <Select
+                              {...field}
+                              value={month}
+                              onValueChange={(e) => {
+                                field.onChange(e);
+                                setMonth(e);
+                              }}
+                            >
+                              <SelectTrigger className="w-[160px] rounded-lg border-gray-300 shadow-sm">
+                                <SelectValue placeholder="Select Month" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {monthOptions.map((month) => (
+                                  <SelectItem
+                                    key={month.value}
+                                    value={month.value}
+                                  >
+                                    {month.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
                   )}
-                />
+                </div>
 
                 {user?.role === "admin" && <BranchFilter />}
 

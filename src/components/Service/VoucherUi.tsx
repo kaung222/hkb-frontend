@@ -137,7 +137,7 @@ export default function ServiceVoucher({
             <div className="flex items-center gap-1">
               <span className="font-bold text-xs">Name :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
-                {service.name}
+                {service.username}
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -182,7 +182,8 @@ export default function ServiceVoucher({
           <div className="p-2 border-b grid grid-cols-6 items-center">
             <span className="font-bold col-span-1 text-xs">Color:</span>
             <div className="col-span-5">
-              <RadioGroup
+              {service.color}
+              {/* <RadioGroup
                 value={"pink"}
                 onValueChange={setSelectedColor}
                 className="flex flex-wrap gap-2"
@@ -198,7 +199,7 @@ export default function ServiceVoucher({
                     </Label>
                   </div>
                 ))}
-              </RadioGroup>
+              </RadioGroup> */}
             </div>
           </div>
 
@@ -206,7 +207,8 @@ export default function ServiceVoucher({
           <div className="p-2 border-b grid grid-cols-6 items-center">
             <span className="font-bold col-span-1 text-xs">Accessories:</span>
             <div className="col-span-5 flex flex-wrap gap-2">
-              {defaultParts.map((accessory) => (
+              {service.items.map((i) => i.name).join(", ")}
+              {/* {defaultParts.map((accessory) => (
                 <div key={accessory} className="flex items-center space-x-1">
                   <Checkbox
                     id={accessory.toLowerCase().replace(" ", "-")}
@@ -221,18 +223,18 @@ export default function ServiceVoucher({
                     {accessory}
                   </Label>
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
 
           {/* Pattern Lock */}
           <div className="grid grid-cols-3 border-b">
-            <div className="col-span-2 p-2 border-r">
+            <div className="col-span-3 p-2 ">
               <div className="h-16 flex items-center justify-center">
                 <span className="text-xs">{service.remark}</span>
               </div>
             </div>
-            <div className="col-span-1 p-2">
+            {/* <div className="col-span-1 p-2">
               <div className="flex flex-col items-center justify-center h-full">
                 <span className="mb-1 text-xs">Pattern Lock</span>
                 <div className="grid grid-cols-3 gap-2">
@@ -244,7 +246,7 @@ export default function ServiceVoucher({
                   ))}
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Service Fee & Password */}

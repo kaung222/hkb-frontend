@@ -159,7 +159,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                     <CustomTableCell
                       label={Number(item?.expense).toLocaleString()}
                     />
-                    <CustomTableCell label={Number("4000").toLocaleString()} />
+                    <CustomTableCell label={item.toLocaleString()} />
                     <CustomTableCell label={Number("3000").toLocaleString()} />
                     <CustomTableCell label={Number("3000").toLocaleString()} />
                     <CustomTableCell label={"2000"} />
