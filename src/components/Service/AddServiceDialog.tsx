@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -8,14 +8,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { PlusCircle, Loader2 } from "lucide-react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -38,8 +31,15 @@ import { formatDate } from "date-fns";
 import { useGerBraches } from "@/api/branch/branch.query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddServiceSchema, AddServiceValuesType } from "./schema/ServiceSchema";
-import { z } from "zod";
 import { SparePart } from "@/types/service";
+
+enum Status {
+  RETRIEVED = "retrieved",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+  PENDING = "pending",
+}
 
 function ServiceInput({
   label,
@@ -137,7 +137,7 @@ const initialState = {
   imeiNumber: "",
   isRetrieved: "",
   model: "",
-  paid: 0,
+  paidAmount: 0,
   phone: "",
   price: 0,
   progress: "",
@@ -155,14 +155,26 @@ export function AddServiceDialog() {
   const { mutate, isPending } = useAddServiceMutation();
   const [spareParts, setSparePares] = useState<SparePart[]>([]);
   const { data: users } = useGetUser();
-  const { data: user } = useCurrentUser();
+  const { data } = useCurrentUser();
+
+  console.log(data);
 
   const form = useForm({
     resolver: zodResolver(AddServiceSchema),
     defaultValues: initialState,
   });
 
-  const technicians = users?.filter((user) => user.role === "technician") || [];
+  const technicians =
+    users?.filter((user) => {
+      const branchId =
+        data.role !== "admin" ? data.branchId : form.getValues("branchId");
+      if (user.role === "technician" && user.branchId === branchId) {
+        return true;
+      }
+    }) || [];
+
+  console.log(technicians, "technicians");
+
   const handleAddService = (values: AddServiceValuesType) => {
     console.log(values);
     mutate(
@@ -218,9 +230,7 @@ export function AddServiceDialog() {
               <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
                 Basic Information
               </div>
-
               {currentUser?.role === "admin" && <BranchSelect form={form} />}
-
               <ServiceInput
                 label="Brand"
                 placeholder="Brand"
@@ -317,9 +327,10 @@ export function AddServiceDialog() {
                 label="ရွေးပြီး/မရွေးရသေး"
                 name="is_retrieved"
                 control={form.control}
+                disabled
                 options={[
-                  { label: "ရွေးပြီး", value: "1" },
-                  { label: "မရွေးရသေး", value: "0" },
+                  { label: "ရွေးပြီး", value: Status.RETRIEVED },
+                  { label: "မရွေးရသေး", value: false },
                 ]}
               />
 
@@ -332,18 +343,20 @@ export function AddServiceDialog() {
                 name="technician"
                 control={form.control}
                 options={technicians.map((tech) => ({
-                  label: tech.name,
-                  value: tech.name,
+                  label: tech?.name,
+                  value: tech?.name,
                 }))}
               />
               <ServiceSelect
                 label="Progress"
-                name="progress"
+                name="status"
                 control={form.control}
                 options={[
-                  { label: "မပြင်ရသေး", value: "မပြင်ရသေး" },
-                  { label: "ပြင်နေဆဲ", value: "ပြင်နေဆဲ" },
-                  { label: "ပြင်ပြီး", value: "ပြင်ပြီး" },
+                  { label: "မပြင်ရသေး", value: Status.PENDING },
+                  { label: "ပြင်နေဆဲ", value: Status.IN_PROGRESS },
+                  { label: "ပြင်ပြီး", value: Status.COMPLETED },
+                  { label: "ywayပြီး", value: Status.RETRIEVED },
+                  // { label: "canceled", value: Status.CANCELLED },
                 ]}
               />
               <ServiceSelect
@@ -374,7 +387,7 @@ export function AddServiceDialog() {
               <ServiceInput
                 label="Paid"
                 placeholder="0"
-                name="paid"
+                name="paidAmount"
                 control={form.control}
               />
             </div>

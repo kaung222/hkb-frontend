@@ -56,10 +56,18 @@ export const AddServiceSchema = z.object({
     }, z.number())
     .optional(),
   technician: z.string().optional(),
-  status: z.enum(["retrieved", "pending", "other"]).optional(), // Update with possible statuses
-  expense: z.string().optional(),
+  status: z
+    .enum(["retrieved", "pending", "completed", "in_progress"])
+    .optional(), // Update with possible statuses
+  expense: z.number().optional(),
   condition: z.string().optional(),
-  paidAmount: z.string().optional(),
+  paidAmount: z
+    .preprocess((val) => {
+      // Convert input to a number if it's a string
+      if (typeof val === "string") return parseFloat(val);
+      return val;
+    }, z.number())
+    .optional(),
   serviceReturn: z.string().optional(),
   leftToPay: z.string().optional(),
   retrieveDate: z.string().datetime().optional(),

@@ -213,7 +213,7 @@ export default function Service() {
           <div className="flex justify-between items-center">
             <div className="flex gap-x-2">
               <AddServiceDialog />
-              <ServiceSummaryDialog service={services} />
+              <ServiceSummaryDialog services={services} />
             </div>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">

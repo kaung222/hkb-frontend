@@ -4,7 +4,7 @@ export type User = {
   email: string;
   phone: string;
   password: string;
-  branch?: string;
+  branchId?: string;
   role: "admin" | "technician" | "reception";
   address: string;
 };

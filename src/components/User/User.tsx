@@ -36,7 +36,7 @@ const Users = () => {
     form.reset({
       name: user.name,
       email: user.email,
-      branchId: user.branch,
+      branchId: user.branchId,
       role: user.role,
       phone: user.phone,
       password: user.password,
@@ -67,7 +67,7 @@ const Users = () => {
     },
     {
       label: "Branch",
-      renderCell: (user: User) => user.branch,
+      renderCell: (user: User) => user.branchId,
     },
     {
       label: "Role",

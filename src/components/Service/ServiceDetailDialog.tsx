@@ -24,7 +24,6 @@ import { useFieldArray, useForm, UseFormReturn } from "react-hook-form";
 import { Textarea } from "../ui/textarea";
 import { SparePartsSection } from "./SparePartSection";
 import { useCurrentUser } from "@/api/user/current-user";
-import { useGetUser } from "@/api/user/get-users";
 import { User } from "@/types/user";
 import { Branch } from "@/types/branch";
 import { Service, SparePart } from "@/types/service";
@@ -34,8 +33,15 @@ import {
   useDeleteService,
   useUpdateService,
 } from "@/api/service/service.mutation";
-import { Alert } from "../ui/alert";
 import { AlertDialogApp } from "../common/AlertDialogApp";
+
+enum Status {
+  RETRIEVED = "retrieved",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+  PENDING = "pending",
+}
 
 function ServiceInput({
   label,
@@ -177,13 +183,13 @@ export function EditServiceDialog({
       serviceReturn: currentServiceDetail.serviceRetrun ? "yes" : "no",
       isRetrieved: currentServiceDetail.isRetrieved,
       model: currentServiceDetail.model,
-      paid: currentServiceDetail.paidAmount,
+      paidAmount: currentServiceDetail.paidAmount,
       phone: currentServiceDetail.phone,
       price: currentServiceDetail.price,
       progress: currentServiceDetail.progress,
       remark: currentServiceDetail.remark,
-      // status: Status.IN_PROGRESS,
-      serviceSupplier: currentServiceDetail.serviceSupplier,
+      status: currentServiceDetail.status,
+      serviceSupplier: currentServiceDetail.supplier,
       technician: currentServiceDetail.technician,
       warranty: currentServiceDetail.warranty,
     },
@@ -204,20 +210,19 @@ export function EditServiceDialog({
         imeiNumber: currentServiceDetail.imeiNumber || undefined,
         isRetrieved: currentServiceDetail.isRetrieved || undefined,
         model: currentServiceDetail.model || undefined,
-        paid: currentServiceDetail.paidAmount || undefined,
+        paidAmount: currentServiceDetail.paidAmount || undefined,
         phone: currentServiceDetail.phone || undefined,
         price: currentServiceDetail.price || undefined,
         progress: currentServiceDetail.progress || undefined,
         remark: currentServiceDetail.remark || undefined,
-        paidAmount: currentServiceDetail.paidAmount || undefined,
-        // status: Status.IN_PROGRESS,
+        status: currentServiceDetail.status,
         serviceReturn:
           currentServiceDetail.serviceRetrun == true
             ? "yes"
             : currentServiceDetail.serviceRetrun == false
             ? "no"
             : undefined,
-        serviceSupplier: currentServiceDetail.serviceSupplier || undefined,
+        serviceSupplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
       };
@@ -229,18 +234,17 @@ export function EditServiceDialog({
     mutate(
       {
         ...values,
-        price: Number(values.price),
+        price: values.price,
         serviceReturn:
           values.serviceReturn == "yes"
             ? true
             : values.serviceReturn == "no"
             ? false
             : undefined,
-        items: spareParts.map((field) => ({
-          //@ts-ignore
-          name: field.name,
-          //@ts-ignore
-          price: Number(field.price),
+        items: spareParts.map((item) => ({
+          name: item.name,
+
+          price: item.price,
         })),
       },
       {
@@ -476,13 +480,14 @@ export function EditServiceDialog({
                 />
                 <ServiceSelect
                   label="Progress"
-                  name="progress"
+                  name="status"
                   defaultValue={currentServiceDetail.progress}
                   control={form.control}
                   options={[
-                    { label: "မပြင်ရသေး", value: "မပြင်ရသေး" },
-                    { label: "ပြင်နေဆဲ", value: "ပြင်နေဆဲ" },
-                    { label: "ပြင်ပြီး", value: "ပြင်ပြီး" },
+                    { label: "မပြင်ရသေး", value: Status.PENDING },
+                    { label: "ပြင်နေဆဲ", value: Status.IN_PROGRESS },
+                    { label: "ပြင်ပြီး", value: Status.COMPLETED },
+                    { label: "ywayပြီး", value: Status.RETRIEVED },
                   ]}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -494,7 +499,8 @@ export function EditServiceDialog({
                   name="condition"
                   disabled={
                     currentUser?.role !== "admin" &&
-                    currentUser?.role !== "reception"
+                    // currentUser?.role !== "reception"
+                    currentServiceDetail.retrieveDate !== null
                   }
                   defaultValue={currentServiceDetail.condition}
                   control={form.control}
@@ -533,7 +539,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="Paid"
                   placeholder="0"
-                  name="paid"
+                  name="paidAmount"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&

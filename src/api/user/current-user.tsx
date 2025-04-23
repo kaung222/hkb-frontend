@@ -3,7 +3,7 @@ import api from "../api";
 import { User } from "@/types/user";
 
 export const useCurrentUser = () => {
-  return useQuery({
+  return useQuery<User>({
     queryKey: ["GetProfile"],
     queryFn: async () => {
       return await api.get("/users/my/profile").then((res) => res.data);

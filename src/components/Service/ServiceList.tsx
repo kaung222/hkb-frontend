@@ -14,6 +14,7 @@ import { useDialogStore } from "@/stores/dialog/useDialogStore";
 import { dialogKeys } from "@/constants/general.const";
 import { useDataStore } from "@/stores/useDataStore";
 import { customFormatDate } from "@/lib/utils";
+import { formatDate } from "date-fns";
 
 interface ServiceListProps {
   service: Service[];
@@ -31,7 +32,7 @@ const CustomTableHead = ({ label }: TableHeadProps) => (
 );
 
 interface TableCellProps {
-  label: string;
+  label: string | number;
 }
 const CustomTableCell = ({ label }: TableCellProps) => (
   <TableCell className="py-4 w-auto text-center">{label}</TableCell>
@@ -126,9 +127,11 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                     className="border-b hover:bg-opacity-50 transition-colors cursor-pointer duration-200"
                   >
                     <CustomTableCell label={String(index + 1)} />
-                    <CustomTableCell label={item.branchId?.toString()} />
+                    <CustomTableCell label={item.branchId} />
                     <CustomTableCell label={item.username} />
-                    <CustomTableCell label={item.createdAt?.toString()} />
+                    <CustomTableCell
+                      label={formatDate(item.createdAt, "yy-MM-dd")}
+                    />
                     <CustomTableCell label={item.code} />
                     <CustomTableCell label={item.username} />
                     <CustomTableCell label={item.phone} />
@@ -148,27 +151,28 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                     />
                     <CustomTableCell label={item.error} />
                     <CustomTableCell label={item.remark} />
-                    <CustomTableCell label={item.dueDate?.toString()} />
+                    <CustomTableCell
+                      label={formatDate(item.dueDate, "yy-MM-dd")}
+                    />
                     <CustomTableCell label={item.technician} />
                     <CustomTableCell label={item.status} />
                     <CustomTableCell label={item.condition} />
-                    <CustomTableCell label={""} />
                     <CustomTableCell
-                      label={Number(item?.price)?.toLocaleString()}
+                      label={item.items.map((i) => i.name).join(",")}
                     />
-                    <CustomTableCell
-                      label={Number(item?.expense).toLocaleString()}
-                    />
-                    <CustomTableCell label={item.toLocaleString()} />
-                    <CustomTableCell label={Number("3000").toLocaleString()} />
-                    <CustomTableCell label={Number("3000").toLocaleString()} />
-                    <CustomTableCell label={"2000"} />
+                    <CustomTableCell label={item?.price} />
+                    <CustomTableCell label={item?.expense} />
+                    <CustomTableCell label={item.paidAmount} />
+                    <CustomTableCell label={item.leftToPay} />
+                    <CustomTableCell label={item.profit} />
+                    <CustomTableCell label={item.supplier ?? "No"} />
                     {/* <CustomTableCell label={item.return_date} /> */}
                     <CustomTableCell
                       label={
                         item.retrieveDate !== null
-                          ? `ရွေးပြီး, (${customFormatDate(
-                              item.retrieveDate.toDateString()
+                          ? `ရွေးပြီး, (${formatDate(
+                              item.retrieveDate,
+                              "yy-MM-dd"
                             )}) `
                           : "မရွေးရသေး"
                       }

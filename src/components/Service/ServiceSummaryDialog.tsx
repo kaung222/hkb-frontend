@@ -17,31 +17,37 @@ import {
   SelectValue,
 } from "../ui/select";
 import { parseAsString, useQueryState } from "nuqs";
+import { Service } from "@/types/service";
 
-export default function ServiceSummaryDialog({ service = [] }) {
+export default function ServiceSummaryDialog({
+  services = [],
+}: {
+  services: Service[];
+}) {
   const [isRetrieved, setIsRetrived] = useQueryState(
     "is_retrived",
     parseAsString.withDefault("all")
   );
-  const totalServiceCharges = service
-    .reduce((a, b) => a + (Number(b.service_charges) || 0), 0)
-    .toLocaleString();
+  const filteredServices = () => {
+    if (isRetrieved === "all") {
+      return services;
+    } else if (isRetrieved === "1") {
+      return services.filter((data) => data.retrieveDate !== null);
+    } else {
+      return services.filter((data) => data.retrieveDate === null);
+    }
+  };
 
-  const totalExpense = service
-    .reduce((a, b) => a + (Number(b.expense) || 0), 0)
-    .toLocaleString();
+  console.log(filteredServices());
+  const totalPrice = filteredServices().reduce((a, b) => a + b.price, 0);
 
-  const totalPaid = service
-    .reduce((a, b) => a + (Number(b.paid) || 0), 0)
-    .toLocaleString();
+  const totalExpense = filteredServices().reduce((a, b) => a + b.expense, 0);
 
-  const totalRemain = service
-    .reduce((a, b) => a + (Number(b.remain) || 0), 0)
-    .toLocaleString();
+  const totalPaid = filteredServices().reduce((a, b) => a + b.paidAmount, 0);
 
-  const totalProfit = service
-    .reduce((a, b) => a + (Number(b.profit) || 0), 0)
-    .toLocaleString();
+  const totalRemain = filteredServices().reduce((a, b) => a + b.leftToPay, 0);
+
+  const totalProfit = filteredServices().reduce((a, b) => a + b.profit, 0);
 
   // const retrievdTotalExpense = service
   //   .filter((data) => data.is_retrieved === "1")
@@ -85,7 +91,9 @@ export default function ServiceSummaryDialog({ service = [] }) {
               }}
             >
               <span className="">စုစုပေါင်းဆားဗစ်:</span>
-              <span className=" font-semibold">{service?.length}</span>
+              <span className=" font-semibold">
+                {filteredServices()?.length}
+              </span>
             </div>
             <div
               className="flex justify-between items-center p-4"
@@ -96,7 +104,7 @@ export default function ServiceSummaryDialog({ service = [] }) {
               }}
             >
               <span className="">ကျသင့်ငွေ:</span>
-              <span className=" font-semibold">{totalServiceCharges}</span>
+              <span className=" font-semibold">{totalPrice}</span>
             </div>
 
             <div

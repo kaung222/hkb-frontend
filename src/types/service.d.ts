@@ -69,7 +69,7 @@ export type Service = {
   createdAt: Date;
   updatedAt: Date;
   progress: string;
-  serviceSupplier: string;
+  supplier: string;
   // add in api
   items?: { name: string; price: number }[]; // string = JSON([{name: string, price: number}])
   expense: number;
