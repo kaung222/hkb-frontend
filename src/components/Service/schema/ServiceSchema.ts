@@ -57,7 +57,7 @@ export const AddServiceSchema = z.object({
     .optional(),
   technician: z.string().optional(),
   status: z
-    .enum(["retrieved", "pending", "completed", "in_progress"])
+    .enum(["retrieved", "pending", "completed", "in_progress", "cancelled"])
     .optional(), // Update with possible statuses
   expense: z.number().optional(),
   condition: z.string().optional(),
