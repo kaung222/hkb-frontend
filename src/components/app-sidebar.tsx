@@ -48,18 +48,18 @@ const items = [
     icon: Inbox,
     role: ["admin", "technician", "reception"],
   },
-  {
-    title: "Cash Book",
-    url: CASH_BOOK,
-    icon: BadgeDollarSignIcon,
-    role: ["admin"],
-  },
-  {
-    title: "Inventory",
-    url: INVENTORY,
-    icon: PackagePlusIcon,
-    role: ["admin"],
-  },
+  // {
+  //   title: "Cash Book",
+  //   url: CASH_BOOK,
+  //   icon: BadgeDollarSignIcon,
+  //   role: ["admin"],
+  // },
+  // {
+  //   title: "Inventory",
+  //   url: INVENTORY,
+  //   icon: PackagePlusIcon,
+  //   role: ["admin"],
+  // },
   {
     title: "Shop",
     url: SHOP,

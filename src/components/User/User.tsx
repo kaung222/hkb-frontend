@@ -11,13 +11,15 @@ import UserDialog from "./UserDialog";
 import { PlusCircleIcon } from "lucide-react";
 import VirtualizedTable from "../common/VirtualizedTable";
 import { User } from "@/types/user";
-import { checkRole } from "@/lib/utils";
 import { useGetUser } from "@/api/user/get-users";
+import { useDeleteUser } from "@/api/user/delete-user";
+import { useUpdateUser } from "@/api/user/update-user";
+import { useGerBraches } from "@/api/branch/branch.query";
 
 const Users = () => {
   const { openDialog } = useDialogStore();
   const { data: users, isLoading, isError, error } = useGetUser();
-  const [user, setUser] = useState();
+  const { data: shops } = useGerBraches();
   const [dialogKey, setDialogKey] = useState("");
   const form = useForm<UserFormData>({
     resolver: zodResolver(UserSchema),
@@ -30,23 +32,24 @@ const Users = () => {
   const onSubmit = async (data: UserFormData) => {
     console.log(data);
   };
-
+  const { mutate: deleteUser } = useDeleteUser();
+  const { mutate: updateUser } = useUpdateUser();
   const handleEdit = (user: User) => {
     // setSelectedUser(user);
     form.reset({
       name: user.name,
       email: user.email,
-      branchId: user.branchId,
+      // branchId: user.branchId,
       role: user.role,
       phone: user.phone,
       password: user.password,
     });
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     try {
       // delete user
-      console.log(id);
+      deleteUser(id);
     } catch (err) {
       console.error("Error deleting user:", err);
     }
@@ -67,7 +70,8 @@ const Users = () => {
     },
     {
       label: "Branch",
-      renderCell: (user: User) => user.branchId,
+      renderCell: (user: User) =>
+        shops.find((shop) => shop.id === user.branchId)?.name,
     },
     {
       label: "Role",
@@ -103,6 +107,7 @@ const Users = () => {
         onClick={() => {
           setDialogKey(dialogKeys.addNewUser);
           openDialog(dialogKeys.addNewUser);
+          form.reset();
         }}
       >
         <PlusCircleIcon />

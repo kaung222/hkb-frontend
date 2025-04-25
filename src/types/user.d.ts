@@ -1,10 +1,10 @@
 export type User = {
-  id: string;
+  id: number;
   name: string;
   email: string;
   phone: string;
   password: string;
-  branchId?: string;
+  branchId: number;
   role: "admin" | "technician" | "reception";
   address: string;
 };

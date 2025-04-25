@@ -2,14 +2,10 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -30,18 +26,25 @@ import {
 } from "../ui/select";
 import { useCreateUser } from "@/api/user/create-user";
 import { useGerBraches } from "@/api/branch/branch.query";
+import { dialogKeys } from "@/constants/general.const";
 
 interface Props {
   form: UseFormReturn<UserFormData, any, undefined>;
   dialogKey: string;
 }
 export default function ShopDialog({ form, dialogKey }: Props) {
-  const { isOpen, handleDialogChange } = useDialogStore();
+  const { isOpen, handleDialogChange, closeDialog } = useDialogStore();
   const { data: shops, isLoading } = useGerBraches();
   const { mutate, isPending } = useCreateUser();
   const onSubmit = (data: any) => {
     console.log(data);
-    mutate(data);
+    mutate(data, {
+      onSuccess: () => {
+        console.log("success user created");
+        closeDialog(dialogKeys.addNewUser);
+        form.reset();
+      },
+    });
   };
   return (
     <Dialog
@@ -158,7 +161,7 @@ export default function ShopDialog({ form, dialogKey }: Props) {
                     <FormLabel>Branch</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value?.toString()}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -169,12 +172,12 @@ export default function ShopDialog({ form, dialogKey }: Props) {
                         <div>loading...</div>
                       ) : (
                         <SelectContent>
-                          <SelectItem value="all">All</SelectItem>
+                          {/* <SelectItem value="all">All</SelectItem> */}
                           {shops?.length > 0 &&
                             shops?.map((branch) => (
                               <SelectItem
                                 key={branch.id}
-                                value={branch.branchNumber.toString()}
+                                value={branch.id.toString()}
                               >
                                 {branch.name}
                               </SelectItem>
