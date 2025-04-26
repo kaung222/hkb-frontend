@@ -41,10 +41,7 @@ const BranchFilter = () => {
               <SelectContent>
                 <SelectItem value="all">All Branches</SelectItem>
                 {shops?.map((shopItem) => (
-                  <SelectItem
-                    key={shopItem.branchNumber}
-                    value={shopItem.branchNumber.toString()}
-                  >
+                  <SelectItem key={shopItem.id} value={shopItem.id.toString()}>
                     {shopItem.name}
                   </SelectItem>
                 ))}

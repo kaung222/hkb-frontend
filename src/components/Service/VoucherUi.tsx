@@ -87,7 +87,7 @@ export default function ServiceVoucher({
 
   const { data: shops } = useGerBraches();
 
-  const shop = shops?.find((shop) => shop.branchNumber === service.branchId);
+  const shop = shops?.find((shop) => shop.id === service.branchId);
 
   return (
     <div className="flex flex-col items-center">

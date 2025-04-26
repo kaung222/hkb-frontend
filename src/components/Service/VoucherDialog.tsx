@@ -21,9 +21,7 @@ export default function VoucherDialog({ serviceDetail }: Props) {
   const { isOpen, handleDialogChange } = useDialogStore();
   const { clearData } = useDataStore();
   const { data: shops, isLoading: shopInfoLoading } = useGerBraches();
-  const shopInfo = shops?.find(
-    (shop) => shop?.branchNumber === serviceDetail?.branchId
-  );
+  const shopInfo = shops?.find((shop) => shop?.id === serviceDetail?.branchId);
   const voucherRef = useRef<HTMLDivElement>(null);
 
   const handleSaveAsImage = async () => {

@@ -60,7 +60,7 @@ const Shop = () => {
     },
     {
       label: "Branch",
-      renderCell: (shop: Branch) => shop.branchNumber,
+      renderCell: (shop: Branch) => shop.name,
     },
     {
       label: "Phone Number",
