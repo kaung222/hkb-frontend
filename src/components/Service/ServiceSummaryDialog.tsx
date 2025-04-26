@@ -75,7 +75,7 @@ export default function ServiceSummaryDialog({
               <SelectValue placeholder="Filter By" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">all</SelectItem>
+              <SelectItem value="all">အားလုံး</SelectItem>
               <SelectItem value="1">ရွေးပြီး</SelectItem>
               <SelectItem value="0">မရွေးရသေး</SelectItem>
             </SelectContent>

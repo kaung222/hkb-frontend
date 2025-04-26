@@ -13,16 +13,25 @@ import {
   startOfMonth,
   subDays,
 } from "date-fns";
+import { useGerBraches } from "../branch/branch.query";
+import { useCurrentUser } from "../user/current-user";
 interface GetServiceProps {
   queryKey: any;
   filterDate: any;
 }
 
 export const useGetServiceQuery = () => {
+  const { data: shops } = useGerBraches();
+  const { data: user } = useCurrentUser();
   const year = new Date().getFullYear();
   const [date, setDate] = useQueryState(
     "date",
     parseAsString.withDefault(format(new Date(), "yyyy-MM-dd"))
+  );
+
+  const [branch, setBranch] = useQueryState(
+    "branch",
+    parseAsString.withDefault("1")
   );
   const [month, setMonth] = useQueryState(
     "month",
@@ -38,9 +47,13 @@ export const useGetServiceQuery = () => {
   const endDate = endOfMonth(new Date(year, parseInt(month) - 1));
 
   // const { startDate, endDate } = dateFilter(date);
+  const branchId =
+    user?.role === "admin"
+      ? shops?.find((shop) => shop.branchNumber.toString() === branch)?.id
+      : user?.branchId;
 
   return useQuery<Service[]>({
-    queryKey: ["GetServices", startDate, endDate, date, filterMode],
+    queryKey: ["GetServices", startDate, endDate, date, filterMode, branch],
     queryFn: async () => {
       return api
         .get(`/services/by/created-date`, {
@@ -51,6 +64,7 @@ export const useGetServiceQuery = () => {
               filterMode === "day"
                 ? format(addDays(new Date(date), 1), "yyyy-MM-dd")
                 : format(endDate, "yyyy-MM-dd"),
+            branchId,
           },
         })
         .then((res) => res.data);

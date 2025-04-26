@@ -15,6 +15,7 @@ import { dialogKeys } from "@/constants/general.const";
 import { useDataStore } from "@/stores/useDataStore";
 import { customFormatDate } from "@/lib/utils";
 import { formatDate } from "date-fns";
+import { useGerBraches } from "@/api/branch/branch.query";
 
 interface ServiceListProps {
   service: Service[];
@@ -69,7 +70,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
   //       : "";
   //   };
   // };
-
+  const { data: shops } = useGerBraches();
   return (
     <Card className="overflow-hidden shadow-xl">
       <CardContent className="p-0">
@@ -127,7 +128,12 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                     className="border-b hover:bg-opacity-50 transition-colors cursor-pointer duration-200"
                   >
                     <CustomTableCell label={String(index + 1)} />
-                    <CustomTableCell label={item.branchId} />
+                    <CustomTableCell
+                      label={
+                        shops.find((shop) => shop.id === item.branchId)
+                          .branchNumber
+                      }
+                    />
                     <CustomTableCell label={item.username} />
                     <CustomTableCell
                       label={formatDate(item.createdAt, "yy-MM-dd")}

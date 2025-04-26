@@ -34,6 +34,14 @@ import VoucherDialog from "./VoucherDialog";
 import { DatePickerDemo } from "../common/DatePicker";
 import { format } from "date-fns";
 
+export enum Status {
+  RETRIEVED = "retrieved",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+  PENNDING = "pending",
+}
+
 export default function Service() {
   const [date, setDate] = useQueryState(
     "date",
@@ -76,6 +84,19 @@ export default function Service() {
   const { data: services } = useGetServiceQuery();
   const { data: detailService } = useDataStore();
   // const { services, user, form, isLoading } = useService();
+
+  const filterService = () => {
+    switch (status) {
+      case "retrived":
+        return services?.filter(
+          (service) => service.status === Status.RETRIEVED
+        );
+      case "completed":
+        return services?.filter((service) => service.retrieveDate === null);
+      default:
+        return services;
+    }
+  };
 
   const handleDateChange = (newDate: Date) => {
     // Convert the new date to a string format (e.g., "YYYY-MM-DD")
@@ -220,10 +241,10 @@ export default function Service() {
                 <SelectValue placeholder="Filter By" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">all</SelectItem>
+                <SelectItem value="all">အားလုံး</SelectItem>
                 <SelectItem value="retrived">ရွေးပြီး</SelectItem>
                 <SelectItem value="completed">မရွေးရသေး</SelectItem>
-                <SelectItem value="pending">မရွေးရသေး</SelectItem>
+                {/* <SelectItem value="pending">မရွေးရသေး</SelectItem> */}
               </SelectContent>
             </Select>
           </div>
@@ -231,7 +252,7 @@ export default function Service() {
       </Card>
 
       {/* Scrollable Service List */}
-      <ServiceList service={services} form={form} />
+      <ServiceList service={filterService()} form={form} />
       {detailService && (
         <EditServiceDialog
           technicians={technicians}

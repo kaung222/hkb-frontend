@@ -1,4 +1,3 @@
-import React from "react";
 import { FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import {
   Select,
@@ -16,7 +15,7 @@ const BranchFilter = () => {
   const { data: shops } = useGerBraches();
   const [branch, setBranch] = useQueryState(
     "branch",
-    parseAsString.withDefault("all")
+    parseAsString.withDefault("1")
   );
   return (
     <>
@@ -39,9 +38,12 @@ const BranchFilter = () => {
                 <SelectValue placeholder="Branch" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Branches</SelectItem>
+                {/* <SelectItem value="all">All Branches</SelectItem> */}
                 {shops?.map((shopItem) => (
-                  <SelectItem key={shopItem.id} value={shopItem.id.toString()}>
+                  <SelectItem
+                    key={shopItem.id}
+                    value={shopItem.branchNumber.toString()}
+                  >
                     {shopItem.name}
                   </SelectItem>
                 ))}

@@ -487,7 +487,7 @@ export function EditServiceDialog({
                     { label: "မပြင်ရသေး", value: Status.PENDING },
                     { label: "ပြင်နေဆဲ", value: Status.IN_PROGRESS },
                     { label: "ပြင်ပြီး", value: Status.COMPLETED },
-                    { label: "ywayပြီး", value: Status.RETRIEVED },
+                    { label: "ရွေးပြီး", value: Status.RETRIEVED },
                   ]}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
