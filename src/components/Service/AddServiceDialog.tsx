@@ -125,30 +125,6 @@ function ServiceSelect({ label, name, control, options, disabled = false }) {
   );
 }
 
-const initialState = {
-  code: "HKB_SERVICE_2025_03_01",
-  username: "James",
-  branchId: "",
-  brand: "",
-  color: "",
-  condition: "",
-  dueDate: formatDate(new Date(), "yyyy-MM-dd"),
-  error: "",
-  imeiNumber: "",
-  isRetrieved: "",
-  model: "",
-  paidAmount: 0,
-  phone: "",
-  price: 0,
-  progress: "",
-  remark: "",
-  // status: Status.IN_PROGRESS,
-  serviceReturn: "",
-  serviceSupplier: "",
-  technician: "",
-  warranty: "out",
-};
-
 export function AddServiceDialog() {
   const { data: currentUser } = useCurrentUser();
   const { handleDialogChange, isOpen, closeDialog } = useDialogStore();
@@ -156,6 +132,30 @@ export function AddServiceDialog() {
   const [spareParts, setSparePares] = useState<SparePart[]>([]);
   const { data: users } = useGetUser();
   const { data } = useCurrentUser();
+  const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_0001`;
+  const initialState = {
+    code,
+    username: "",
+    branchId: currentUser?.branchId.toString(),
+    brand: "",
+    color: "",
+    condition: "",
+    dueDate: formatDate(new Date(), "yyyy-MM-dd"),
+    error: "",
+    imeiNumber: "",
+    isRetrieved: "",
+    model: "",
+    paidAmount: 0,
+    phone: "",
+    price: 0,
+    progress: "",
+    remark: "",
+    // status: Status.IN_PROGRESS,
+    serviceReturn: "",
+    serviceSupplier: "",
+    technician: "",
+    warranty: "out",
+  };
 
   console.log(data);
 
@@ -355,7 +355,7 @@ export function AddServiceDialog() {
                   { label: "မပြင်ရသေး", value: Status.PENDING },
                   { label: "ပြင်နေဆဲ", value: Status.IN_PROGRESS },
                   { label: "ပြင်ပြီး", value: Status.COMPLETED },
-                  { label: "ywayပြီး", value: Status.RETRIEVED },
+                  { label: "ရွေးပြီး", value: Status.RETRIEVED },
                   // { label: "canceled", value: Status.CANCELLED },
                 ]}
               />
@@ -400,6 +400,7 @@ export function AddServiceDialog() {
               >
                 Close
               </Button>
+
               <Button
                 type="submit"
                 className="transition-colors duration-200 text-white rounded-lg shadow-sm"

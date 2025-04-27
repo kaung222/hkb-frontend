@@ -26,7 +26,7 @@ import {
   SHOP,
   USER,
 } from "@/constants/pathname.const";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { auth } from "@/configs/firebase";
@@ -126,9 +126,12 @@ export function AppSidebar() {
   const { pathname } = useLocation();
   const { data: user, isLoading, error } = useCurrentUser();
   const [signOut] = useSignOut(auth);
+  const navigate = useNavigate();
 
   async function handleSignOut() {
     const res = await signOut();
+    localStorage.clear();
+    navigate("/login");
     if (res) {
       toast.success(SUCCESS_MSG);
     }

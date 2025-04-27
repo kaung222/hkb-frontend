@@ -447,12 +447,12 @@ export function EditServiceDialog({
                 />
                 <ServiceSelect
                   label="ရွေးပြီး/မရွေးရသေး"
-                  name="isRetrieved"
-                  defaultValue={currentServiceDetail.isRetrieved}
+                  name="status"
                   control={form.control}
                   options={[
-                    { label: "မရွေးရသေး", value: "0" },
-                    { label: "ရွေးပြီး", value: "1" },
+                    { label: "မရွေးရသေး", value: Status.IN_PROGRESS },
+                    { label: "ရွေးပြီး", value: Status.RETRIEVED },
+                    //  { label: "ရွေးပြီး", value: Status.RETRIEVED },
                   ]}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -487,7 +487,7 @@ export function EditServiceDialog({
                     { label: "မပြင်ရသေး", value: Status.PENDING },
                     { label: "ပြင်နေဆဲ", value: Status.IN_PROGRESS },
                     { label: "ပြင်ပြီး", value: Status.COMPLETED },
-                    { label: "ရွေးပြီး", value: Status.RETRIEVED },
+                    // { label: "ရွေးပြီး", value: Status.RETRIEVED },
                   ]}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -555,6 +555,15 @@ export function EditServiceDialog({
                   className="transition-colors duration-200 rounded-lg shadow-sm"
                 >
                   Close
+                </Button>
+                <Button
+                  //@ts-expect-error
+                  onClick={() => form.setValue("status", "retrieved")}
+                  type="button"
+                  variant="ghost"
+                  className="transition-colors border border-black duration-200 rounded-lg shadow-sm"
+                >
+                  ယခုရွေးမည်
                 </Button>
                 <AlertDialogApp
                   trigger={
