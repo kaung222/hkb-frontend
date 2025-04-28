@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,14 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { parseAsString, useQueryState } from "nuqs";
 import { Service } from "@/types/service";
 
 export default function ServiceSummaryDialog({
@@ -24,41 +15,15 @@ export default function ServiceSummaryDialog({
 }: {
   services: Service[];
 }) {
-  const [isRetrieved, setIsRetrived] = useQueryState(
-    "is_retrived",
-    parseAsString.withDefault("all")
-  );
-  const filteredServices = () => {
-    if (isRetrieved === "all") {
-      return services;
-    } else if (isRetrieved === "1") {
-      return services.filter((data) => data.retrieveDate !== null);
-    } else {
-      return services.filter((data) => data.retrieveDate === null);
-    }
-  };
+  const totalPrice = services.reduce((a, b) => a + b.price, 0);
 
-  console.log(filteredServices());
-  const totalPrice = filteredServices().reduce((a, b) => a + b.price, 0);
+  const totalExpense = services.reduce((a, b) => a + b.expense, 0);
 
-  const totalExpense = filteredServices().reduce((a, b) => a + b.expense, 0);
+  const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
 
-  const totalPaid = filteredServices().reduce((a, b) => a + b.paidAmount, 0);
+  const totalRemain = services.reduce((a, b) => a + b.leftToPay, 0);
 
-  const totalRemain = filteredServices().reduce((a, b) => a + b.leftToPay, 0);
-
-  const totalProfit = filteredServices().reduce((a, b) => a + b.profit, 0);
-
-  // const retrievdTotalExpense = service
-  //   .filter((data) => data.is_retrieved === "1")
-  //   .reduce((a, b) => a + (Number(b.expense) || 0), 0);
-
-  // const retrivedTotalPaid = service
-  //   .filter((data) => data.is_retrieved === "1")
-  //   .reduce((a, b) => a + (Number(b.paid) || 0), 0);
-
-  // const retrievedTotalPaidWithoutExpense =
-  //   retrivedTotalPaid - retrievdTotalExpense;
+  const totalProfit = services.reduce((a, b) => a + b.profit, 0);
 
   return (
     <Dialog>
@@ -70,7 +35,7 @@ export default function ServiceSummaryDialog({
           <DialogTitle>Service Summary</DialogTitle>
         </DialogHeader>
         <div className="">
-          <Select value={isRetrieved} onValueChange={setIsRetrived}>
+          {/* <Select value={isRetrieved} onValueChange={setIsRetrived}>
             <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
               <SelectValue placeholder="Filter By" />
             </SelectTrigger>
@@ -79,7 +44,7 @@ export default function ServiceSummaryDialog({
               <SelectItem value="1">ရွေးပြီး</SelectItem>
               <SelectItem value="0">မရွေးရသေး</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
           <div className="grid gap-4 py-4">
             {/* Each row */}
             <div
@@ -91,9 +56,7 @@ export default function ServiceSummaryDialog({
               }}
             >
               <span className="">စုစုပေါင်းဆားဗစ်:</span>
-              <span className=" font-semibold">
-                {filteredServices()?.length}
-              </span>
+              <span className=" font-semibold">{services?.length}</span>
             </div>
             <div
               className="flex justify-between items-center p-4"

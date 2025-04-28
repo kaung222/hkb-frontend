@@ -50,7 +50,6 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
     openDialog(dialogKeys.serviceDetail);
   };
 
-  // const getSparePartNames = (items?: SparePart[]): string => {
   //   const getSparePartNames = (items?: SparePart[] | string): string => {
   //     if (!items) return "";
 

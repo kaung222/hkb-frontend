@@ -33,6 +33,7 @@ import { useDataStore } from "@/stores/useDataStore";
 import VoucherDialog from "./VoucherDialog";
 import { DatePickerDemo } from "../common/DatePicker";
 import { format } from "date-fns";
+import { useState } from "react";
 
 export enum Status {
   RETRIEVED = "retrieved",
@@ -83,18 +84,30 @@ export default function Service() {
   const { data: branches, isLoading: isBranchLoading } = useGerBraches();
   const { data: services } = useGetServiceQuery();
   const { data: detailService } = useDataStore();
-  // const { services, user, form, isLoading } = useService();
+  const [search, setSearch] = useState("");
 
   const filterService = () => {
+    const searchServices = services?.filter((service) => {
+      const searchTerm = search.toLowerCase();
+      return (
+        service.code.toLowerCase().includes(searchTerm) ||
+        service.username.toLowerCase().includes(searchTerm) ||
+        service.phone.toLowerCase().includes(searchTerm) ||
+        service.brand.toLowerCase().includes(searchTerm) ||
+        service.model.toLowerCase().includes(searchTerm)
+      );
+    });
     switch (status) {
       case "retrived":
-        return services?.filter(
+        return searchServices?.filter(
           (service) => service.status === Status.RETRIEVED
         );
       case "completed":
-        return services?.filter((service) => service.retrieveDate === null);
+        return searchServices?.filter(
+          (service) => service.retrieveDate === null
+        );
       default:
-        return services;
+        return searchServices;
     }
   };
 
@@ -213,19 +226,17 @@ export default function Service() {
 
                 {user?.role === "admin" && <BranchFilter />}
 
-                <FormField
-                  control={form.control}
-                  name="search"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Search</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Search Everything" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <FormItem className="flex-1">
+                  <FormLabel>Search</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Search Everything"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               </div>
             </form>
           </Form>
@@ -234,7 +245,7 @@ export default function Service() {
           <div className="flex justify-between items-center">
             <div className="flex gap-x-2">
               <AddServiceDialog />
-              <ServiceSummaryDialog services={services} />
+              <ServiceSummaryDialog services={filterService()} />
             </div>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">

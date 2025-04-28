@@ -75,7 +75,7 @@ const Users = () => {
     },
     {
       label: "Role",
-      renderCell: (user: User) => user.role,
+      renderCell: (user: User) => user?.role,
     },
     {
       label: "Actions",
