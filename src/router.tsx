@@ -17,6 +17,7 @@ import CashBookPage from "./pages/CashBookPage.tsx";
 import InventoryPage from "./pages/InventoryPage.tsx";
 import ShopPage from "./pages/ShopPage.tsx";
 import UserPage from "./pages/UserPage.tsx";
+import ServiceDetails from "./components/Service/service-detail-for-user.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
   {
     path: LOGIN,
     element: <LoginPage />,
+  },
+  {
+    path: "services/:id/for/user",
+    element: <ServiceDetails />,
   },
   {
     path: "*",
