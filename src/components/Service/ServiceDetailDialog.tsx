@@ -449,9 +449,10 @@ export function EditServiceDialog({
                   label="ရွေးပြီး/မရွေးရသေး"
                   name="status"
                   control={form.control}
+                  defaultValue={currentServiceDetail.status}
                   options={[
                     { label: "မရွေးရသေး", value: Status.IN_PROGRESS },
-                    { label: "ရွေးပြီး", value: Status.RETRIEVED },
+                    { label: "ရွေးပြီး", value: "retrieved" },
                     //  { label: "ရွေးပြီး", value: Status.RETRIEVED },
                   ]}
                   disabled={
@@ -524,18 +525,7 @@ export function EditServiceDialog({
                   spareParts={spareParts}
                   setSpareParts={setSpareParts}
                 />
-                {/* <ServiceInput
-                  label="Spare Parts ( အပိုပစ္စည်း )"
-                  placeholder="Spare Parts"
-                  name="serviceDetail.item"
-                  control={form.control}
-                />
-                <ServiceInput
-                  label="Expense"
-                  placeholder="0"
-                  name="serviceDetail.expense"
-                  control={form.control}
-                /> */}
+
                 <ServiceInput
                   label="Paid"
                   placeholder="0"

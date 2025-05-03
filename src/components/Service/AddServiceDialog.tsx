@@ -126,12 +126,11 @@ function ServiceSelect({ label, name, control, options, disabled = false }) {
 }
 
 export function AddServiceDialog() {
-  const { data: currentUser } = useCurrentUser();
   const { handleDialogChange, isOpen, closeDialog } = useDialogStore();
   const { mutate, isPending } = useAddServiceMutation();
   const [spareParts, setSparePares] = useState<SparePart[]>([]);
   const { data: users } = useGetUser();
-  const { data } = useCurrentUser();
+  const { data: currentUser } = useCurrentUser();
   const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_0001`;
   const initialState = {
     code,
@@ -154,10 +153,8 @@ export function AddServiceDialog() {
     serviceReturn: "",
     serviceSupplier: "",
     technician: "",
-    warranty: "out",
+    warranty: "Out",
   };
-
-  console.log(data);
 
   const form = useForm({
     resolver: zodResolver(AddServiceSchema),
@@ -167,8 +164,11 @@ export function AddServiceDialog() {
   const technicians =
     users?.filter((user) => {
       const branchId =
-        data.role !== "admin" ? data.branchId : form.getValues("branchId");
-      if (user.role === "technician" && user.branchId === branchId) {
+        currentUser.role !== "admin"
+          ? currentUser.branchId
+          : form.getValues("branchId");
+      console.log(branchId, "branchId");
+      if (user.role === "technician" && user.branchId == branchId) {
         return true;
       }
     }) || [];
@@ -327,10 +327,10 @@ export function AddServiceDialog() {
                 label="ရွေးပြီး/မရွေးရသေး"
                 name="is_retrieved"
                 control={form.control}
-                disabled
+                // disabled
                 options={[
-                  { label: "ရွေးပြီး", value: Status.RETRIEVED },
-                  { label: "မရွေးရသေး", value: false },
+                  { label: "ရွေးပြီး", value: "retrieved" },
+                  { label: "မရွေးရသေး", value: Status.IN_PROGRESS },
                 ]}
               />
 
