@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { QrCode } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,6 +10,7 @@ import PrintSaveButtons from "./PrintSaveButton";
 import { Service } from "@/types/service";
 import { Branch } from "@/types/branch";
 import { useGerBraches } from "@/api/branch/branch.query";
+import QRCode from "react-qr-code";
 
 type ServiceVoucherProps = {
   service: Service;
@@ -98,7 +98,7 @@ export default function ServiceVoucher({
         <CardContent className="p-0 text-sm">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center w-full gap-2">
               <div className="relative h-12 w-12">
                 <img
                   src={"/hkb-logo2.png"}
@@ -116,6 +116,7 @@ export default function ServiceVoucher({
                   Mobile Service Professional Team
                 </p>
               </div>
+              {/* <div className="  ms-auto"></div> */}
             </div>
           </div>
 
@@ -292,9 +293,14 @@ export default function ServiceVoucher({
           </div>
 
           {/* QR Code */}
-          {/* <div className="p-2 flex justify-end">
-            <QrCode size={60} />
-          </div> */}
+          <div className="p-2 flex justify-end">
+            <QRCode
+              value={`${import.meta.env.VITE_BASE_URL}/services/${
+                service.id
+              }/for/user`}
+              size={60}
+            />
+          </div>
         </CardContent>
       </Card>
       <PrintSaveButtons voucherRef={voucherRef} />

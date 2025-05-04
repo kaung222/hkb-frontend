@@ -164,8 +164,8 @@ export function AddServiceDialog() {
   const technicians =
     users?.filter((user) => {
       const branchId =
-        currentUser.role !== "admin"
-          ? currentUser.branchId
+        currentUser?.role !== "admin"
+          ? currentUser?.branchId
           : form.getValues("branchId");
       console.log(branchId, "branchId");
       if (user.role === "technician" && user.branchId == branchId) {
