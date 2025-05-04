@@ -15,6 +15,7 @@ import {
 } from "date-fns";
 import { useGerBraches } from "../branch/branch.query";
 import { useCurrentUser } from "../user/current-user";
+import { useParams } from "react-router-dom";
 interface GetServiceProps {
   queryKey: any;
   filterDate: any;
@@ -68,6 +69,16 @@ export const useGetServiceQuery = () => {
           },
         })
         .then((res) => res.data);
+    },
+  });
+};
+
+export const useGetSingleService = () => {
+  const { id } = useParams();
+  return useQuery<Service>({
+    queryKey: ["GetService"],
+    queryFn: async () => {
+      return api.get(`/services/${id}`).then((res) => res.data);
     },
   });
 };
