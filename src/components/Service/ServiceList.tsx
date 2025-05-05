@@ -129,7 +129,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                     <CustomTableCell label={String(index + 1)} />
                     <CustomTableCell
                       label={
-                        shops.find((shop) => shop.id === item.branchId)
+                        shops?.find((shop) => shop.id === item.branchId)
                           .branchNumber
                       }
                     />
