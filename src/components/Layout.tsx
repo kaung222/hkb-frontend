@@ -25,8 +25,9 @@ const Layout = () => {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
   const { data: user, isLoading } = useCurrentUser();
+  console.log(user, accessToken, "login state");
   useEffect(() => {
-    if (!accessToken || user) {
+    if (!accessToken) {
       navigate(LOGIN);
     }
   }, [accessToken, navigate]);

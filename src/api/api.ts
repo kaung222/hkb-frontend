@@ -1,11 +1,12 @@
 import axios from "axios";
 
-// const baseURL = "http://localhost:8080/api/v1";
-const baseURL = "https://hkb-api.baranie.com/api/v1";
+const baseURL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
-  baseURL,
+  baseURL: `${baseURL}/api/v1`,
 });
+
+console.log(baseURL);
 
 api.interceptors.request.use(
   (config) => {

@@ -161,7 +161,7 @@ export default function ShopDialog({ form, dialogKey }: Props) {
                     <FormLabel>Branch</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value?.toString()}
+                      defaultValue={form.getValues("branchId")}
                     >
                       <FormControl>
                         <SelectTrigger>

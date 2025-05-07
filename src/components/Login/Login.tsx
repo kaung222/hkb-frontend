@@ -43,9 +43,9 @@ export default function LogIn() {
   const login = async (data: z.infer<typeof LoginFormSchema>) => {
     mutate(data, {
       onSuccess(res) {
-        toast.success(SUCCESS_MSG);
         localStorage.setItem("accessToken", res.accessToken);
-        navigate(HOME);
+        toast.success(SUCCESS_MSG);
+        navigate("/");
       },
     });
   };
