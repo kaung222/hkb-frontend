@@ -122,7 +122,7 @@ export default function ServiceVoucher({
 
           {/* Branch Info */}
           <div className="p-2 bg-black text-white flex items-center gap-2 text-xs">
-            <span className="font-bold">{currentShop.name}</span>
+            <span className="font-bold">{shop.name}</span>
             <div className="flex items-center">
               {[1, 2, 3, 4].map((_, i) => (
                 <div
@@ -136,7 +136,7 @@ export default function ServiceVoucher({
           {/* Contact Info */}
           <div className="p-2 text-xs">
             <p>
-              {currentShop.address}, {currentShop.phone}
+              {shop.address} {shop.phone}
             </p>
           </div>
 
