@@ -6,3 +6,4 @@ export const CASH_BOOK = `/cashbook`;
 export const INVENTORY = `/inventory`;
 export const SHOP = `/shop`;
 export const USER = `/user`;
+export const SETTINGS = "/settings";

@@ -3,6 +3,7 @@ import {
   Home,
   Inbox,
   PackagePlusIcon,
+  Settings,
   ShoppingBagIcon,
   UserPlusIcon,
 } from "lucide-react";
@@ -23,6 +24,7 @@ import {
   HOME,
   INVENTORY,
   SERVICE,
+  SETTINGS,
   SHOP,
   USER,
 } from "@/constants/pathname.const";
@@ -70,6 +72,12 @@ const items = [
     title: "User",
     url: USER,
     icon: UserPlusIcon,
+    role: ["admin"],
+  },
+  {
+    title: "Settings",
+    url: SETTINGS,
+    icon: Settings,
     role: ["admin"],
   },
   // {

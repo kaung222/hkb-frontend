@@ -159,7 +159,7 @@ const Users = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            {shops.map((shop) => {
+            {shops?.map((shop) => {
               return (
                 <SelectItem key={shop.id} value={shop.id.toString()}>
                   {shop.name}

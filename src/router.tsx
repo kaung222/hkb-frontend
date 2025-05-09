@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import {
   CASH_BOOK,
-  // DASHBOARD,
   HOME,
   INVENTORY,
   LOGIN,
   SERVICE,
+  SETTINGS,
   SHOP,
   USER,
 } from "./constants/pathname.const.ts";
@@ -18,6 +18,7 @@ import InventoryPage from "./pages/InventoryPage.tsx";
 import ShopPage from "./pages/ShopPage.tsx";
 import UserPage from "./pages/UserPage.tsx";
 import ServiceDetails from "./components/Service/service-detail-for-user.tsx";
+import SettingsPage from "./pages/SettingsPage";
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
       {
         element: <UserPage />,
         path: USER,
+      },
+      {
+        element: <SettingsPage />,
+        path: SETTINGS,
       },
     ],
   },
