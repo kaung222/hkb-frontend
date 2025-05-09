@@ -68,10 +68,7 @@ const defaultParts = [
   "Usbcom",
   "Speaker",
 ];
-export default function ServiceVoucher({
-  service,
-  currentShop,
-}: ServiceVoucherProps) {
+export default function ServiceVoucher({ service }: ServiceVoucherProps) {
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedAccessories, setSelectedAccessories] = useState<string[]>([]);
   const voucherRef = useRef<HTMLDivElement>(null);

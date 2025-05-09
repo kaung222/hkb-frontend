@@ -24,7 +24,7 @@ import { useLogin } from "@/api/auth/login";
 
 export const LoginFormSchema = z.object({
   email: z.string().email().min(3, "Invalid Email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(2, "Password must be at least 6 characters"),
 });
 
 export default function LogIn() {
