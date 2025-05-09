@@ -247,8 +247,8 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
             </div>
             <div className="p-2">
               <div className="flex items-center">
-                <span className="font-extrabold mr-1 text-xs">Password :</span>
-                <div className="flex-1"></div>
+                <span className="font-extrabold mr-1 text-xs">Error :</span>
+                <div className="flex-1">{service.error}</div>
               </div>
             </div>
           </div>
