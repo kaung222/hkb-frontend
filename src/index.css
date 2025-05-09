@@ -77,8 +77,15 @@
 }
 
 @layer base {
-  :root {
-    font-family: "Padauk", sans-serif;
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .primary-gradient {
+    @apply bg-gradient-to-r from-primary to-primary/60 dark:from-primary dark:to-purple-800;
   }
 }
 
