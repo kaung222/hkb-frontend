@@ -24,7 +24,7 @@ const PrintSaveButtons: React.FC<PrintSaveButtonsProps> = ({ voucherRef }) => {
 
   const handleSaveAsPNG = async () => {
     if (voucherRef.current) {
-      const canvas = await html2canvas(voucherRef.current);
+      const canvas = await html2canvas(voucherRef.current, { scale: 2 });
       const image = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = image;

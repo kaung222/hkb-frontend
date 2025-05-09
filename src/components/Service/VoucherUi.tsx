@@ -11,6 +11,7 @@ import { Service } from "@/types/service";
 import { Branch } from "@/types/branch";
 import { useGerBraches } from "@/api/branch/branch.query";
 import QRCode from "react-qr-code";
+import { formatDate } from "date-fns";
 
 type ServiceVoucherProps = {
   service: Service;
@@ -48,7 +49,7 @@ const rules = [
   },
   {
     id: "၈",
-    text: "Passward, Pattern Lock, i cloud, Mi cloud ş E-mail semm",
+    text: "Passward, Pattern Lock, i cloud, Mi cloud and E-mail semm",
   },
   {
     id: "၉",
@@ -92,7 +93,7 @@ export default function ServiceVoucher({
   return (
     <div className="flex flex-col items-center">
       <Card
-        className="w-full max-w-2xl bg-white shadow-sm px-4"
+        className="w-full max-w-2xl bg-white shadow-sm px-14 py-4 font-semibold"
         ref={voucherRef}
       >
         <CardContent className="p-0 text-sm">
@@ -109,7 +110,7 @@ export default function ServiceVoucher({
                 />
               </div>
               <div>
-                <h1 className="text-xl font-bold tracking-tight">
+                <h1 className="text-xl font-extrabold tracking-tight">
                   {shop.name}
                 </h1>
                 <p className="text-xs text-muted-foreground">
@@ -122,7 +123,7 @@ export default function ServiceVoucher({
 
           {/* Branch Info */}
           <div className="p-2 bg-black text-white flex items-center gap-2 text-xs">
-            <span className="font-bold">{shop.name}</span>
+            <span className="font-extrabold">{shop.name}</span>
             <div className="flex items-center">
               {[1, 2, 3, 4].map((_, i) => (
                 <div
@@ -143,49 +144,49 @@ export default function ServiceVoucher({
           {/* Customer Info */}
           <div className="grid grid-cols-2 gap-2 p-2 gap-y-5">
             <div className="flex items-center gap-1">
-              <span className="font-bold text-xs">Name :</span>
+              <span className="font-extrabold text-xs">Name :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
                 {service.username}
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-bold text-xs">Invoice No :</span>
+              <span className="font-extrabold text-xs">Invoice No :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
                 {service.code}
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-bold text-xs">PH No :</span>
+              <span className="font-extrabold text-xs">PH No :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
                 {service.phone}
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-bold text-xs">Date :</span>
+              <span className="font-extrabold text-xs">Date :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
-                {service.dueDate}
+                {formatDate(service.dueDate, "dd/MM/yyyy")}
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-bold text-xs">Brand :</span>
+              <span className="font-extrabold text-xs">Brand :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
                 {service.brand}
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-bold text-xs">Model :</span>
+              <span className="font-extrabold text-xs">Model :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
                 {service.model}
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-bold text-xs">IMEI :</span>
+              <span className="font-extrabold text-xs">IMEI :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
                 {service.imeiNumber}
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <span className="font-bold text-xs">Color :</span>
+              <span className="font-extrabold text-xs">Color :</span>
               <div className="flex-1 border-b border-dashed border-gray-400">
                 {service.color}
               </div>
@@ -196,11 +197,11 @@ export default function ServiceVoucher({
           {/* <div className="p-2 border-t border-b">
             <div className="grid grid-cols-2 gap-2 border border-gray-300">
               <div className="p-1 border-r border-gray-300 flex items-center">
-                <span className="font-bold mr-1 text-xs">Model:</span>
+                <span className="font-extrabold mr-1 text-xs">Model:</span>
                 <Input readOnly value={service.model} className="h-6 text-xs" />
               </div>
               <div className="p-1 flex items-center">
-                <span className="font-bold mr-1 text-xs">IMEI:</span>
+                <span className="font-extrabold mr-1 text-xs">IMEI:</span>
                 <Input
                   value={service.imeiNumber}
                   readOnly
@@ -212,7 +213,7 @@ export default function ServiceVoucher({
 
           {/* Color Options */}
           {/* <div className="p-2 border-b grid grid-cols-6 items-center">
-            <span className="font-bold col-span-1 text-xs">Color:</span>
+            <span className="font-extrabold col-span-1 text-xs">Color:</span>
             <div className="col-span-5">
               {service.color}
             </div>
@@ -220,7 +221,9 @@ export default function ServiceVoucher({
 
           {/* Accessories */}
           <div className="p-2 border-b grid grid-cols-6 items-center">
-            <span className="font-bold col-span-1 text-xs">Accessories:</span>
+            <span className="font-extrabold col-span-1 text-xs">
+              Accessories:
+            </span>
             <div className="col-span-5 flex flex-wrap gap-2">
               {service.items.map((i) => i.name).join(", ")}
             </div>
@@ -239,13 +242,15 @@ export default function ServiceVoucher({
           <div className="grid grid-cols-2 border-b">
             <div className="p-2 border-r">
               <div className="flex items-center">
-                <span className="font-bold mr-1 text-xs">Service Fee :</span>
-                <div className="flex-1">{service.price} MMK</div>
+                <span className="font-extrabold  mr-1 text-xs">
+                  Service Fee :
+                </span>
+                <div className="flex-1">{service?.price} MMK</div>
               </div>
             </div>
             <div className="p-2">
               <div className="flex items-center">
-                <span className="font-bold mr-1 text-xs">Password :</span>
+                <span className="font-extrabold mr-1 text-xs">Password :</span>
                 <div className="flex-1"></div>
               </div>
             </div>
@@ -284,10 +289,10 @@ export default function ServiceVoucher({
           <div className="p-2 text-[10px] space-y-1 border-b">
             {rules.map((rule, index) => (
               <div key={index} className="flex gap-1">
-                <span className="flex items-center justify-center bg-black text-white rounded-full w-4 h-4 shrink-0">
+                <span className="flex items-center justify-center bg-black text-white rounded-full w-4 h-4 shrink-0 ">
                   {rule.id}
                 </span>
-                <p>{rule.text}</p>
+                <p className=" font-medium">{rule.text}</p>
               </div>
             ))}
           </div>
