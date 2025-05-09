@@ -45,7 +45,7 @@ const items = [
     role: ["admin", "technician", "reception"],
   },
   {
-    title: "Service",
+    title: "Services",
     url: SERVICE,
     icon: Inbox,
     role: ["admin", "technician", "reception"],
@@ -63,13 +63,13 @@ const items = [
   //   role: ["admin"],
   // },
   {
-    title: "Shop",
+    title: "Shops",
     url: SHOP,
     icon: ShoppingBagIcon,
     role: ["admin"],
   },
   {
-    title: "User",
+    title: "Users",
     url: USER,
     icon: UserPlusIcon,
     role: ["admin"],
@@ -78,7 +78,7 @@ const items = [
     title: "Settings",
     url: SETTINGS,
     icon: Settings,
-    role: ["admin"],
+    role: ["admin", "technician", "reception"],
   },
   // {
   //   title: "CashBook",

@@ -70,6 +70,21 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
   //   };
   // };
   const { data: shops } = useGerBraches();
+
+  const getStatus = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "မပြင်ရသေး";
+      case "retrieved":
+        return "ရွေးပြီး";
+      case "in_progress":
+        return "ပြင်နေဆဲ";
+      case "completed":
+        return "ပြင်ပြီး";
+      default:
+        return "ပြင်နေဆဲ";
+    }
+  };
   return (
     <Card className="overflow-hidden shadow-xl">
       <CardContent className="p-0">
@@ -130,7 +145,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                     <CustomTableCell
                       label={
                         shops?.find((shop) => shop.id === item.branchId)
-                          .branchNumber
+                          ?.branchNumber
                       }
                     />
                     <CustomTableCell label={item.username} />
@@ -160,7 +175,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                       label={formatDate(item.dueDate, "yy-MM-dd")}
                     />
                     <CustomTableCell label={item.technician} />
-                    <CustomTableCell label={item.status} />
+                    <CustomTableCell label={getStatus(item.status)} />
                     <CustomTableCell label={item.condition} />
                     <CustomTableCell
                       label={item.items.map((i) => i.name).join(",")}

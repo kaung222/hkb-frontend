@@ -22,11 +22,15 @@ export const useDeleteBranch = () => {
   });
 };
 
-export const useUpdateBranch = (id: number) => {
+export const useUpdateBranch = () => {
   const queryClient = useQueryClient();
+  type Payload = {
+    id: string;
+    payload: Partial<Branch>;
+  };
   return useMutation({
-    mutationFn: async (payload) => {
-      return await api.patch(`/branches/${id}`, payload);
+    mutationFn: async (payload: Payload) => {
+      return await api.patch(`/branches/${payload.id}`, payload.payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["GetBranches"] });

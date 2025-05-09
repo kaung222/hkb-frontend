@@ -12,13 +12,18 @@ import { PlusCircleIcon } from "lucide-react";
 import VirtualizedTable from "../common/VirtualizedTable";
 import { Branch } from "@/types/branch";
 import { useGerBraches } from "@/api/branch/branch.query";
-import { useCreateBranch, useDeleteBranch } from "@/api/branch/branch.mutation";
+import {
+  useCreateBranch,
+  useDeleteBranch,
+  useUpdateBranch,
+} from "@/api/branch/branch.mutation";
 
 const Shop = () => {
   const { data: shops, isLoading, error } = useGerBraches();
   const { openDialog, closeDialog } = useDialogStore();
   const [dialogKey, setDialogKey] = useState("");
   const { mutate } = useCreateBranch();
+  const { mutate: updateBranch } = useUpdateBranch();
   const { mutate: deleteBranch } = useDeleteBranch();
 
   const form = useForm<ShopFormData>({
@@ -27,6 +32,7 @@ const Shop = () => {
       name: "",
       address: "",
       phone: "",
+      // branchNumber: "",
     },
   });
 
@@ -40,8 +46,13 @@ const Shop = () => {
     }
   };
 
-  const handleEdit = (shop: any) => {
-    console.log(shop);
+  const handleEdit = (shop: Branch) => {
+    form.reset({
+      name: shop.name,
+      address: shop.address,
+      phone: shop.phone,
+      branchNumber: shop.branchNumber,
+    });
   };
 
   const handleDelete = async (id: number) => {

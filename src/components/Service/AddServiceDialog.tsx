@@ -32,6 +32,7 @@ import { useGerBraches } from "@/api/branch/branch.query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddServiceSchema, AddServiceValuesType } from "./schema/ServiceSchema";
 import { SparePart } from "@/types/service";
+import { useGetServiceQuery } from "@/api/service/service.query";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -131,7 +132,12 @@ export function AddServiceDialog() {
   const [spareParts, setSparePares] = useState<SparePart[]>([]);
   const { data: users } = useGetUser();
   const { data: currentUser } = useCurrentUser();
-  const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_0001`;
+  const { data: services } = useGetServiceQuery();
+
+  const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_${
+    Math.floor(Math.random() * 1000000) + 1
+  }`;
+
   const initialState = {
     code,
     username: "",
