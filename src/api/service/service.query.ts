@@ -44,6 +44,11 @@ export const useGetServiceQuery = () => {
     parseAsString.withDefault("day")
   );
 
+  const [queryMode, setQueryMode] = useQueryState(
+    "queryMode",
+    parseAsString.withDefault("createdDate")
+  );
+
   const startDate = startOfMonth(new Date(year, parseInt(month) - 1));
   const endDate = endOfMonth(new Date(year, parseInt(month) - 1));
 
@@ -52,12 +57,23 @@ export const useGetServiceQuery = () => {
     user?.role === "admin"
       ? shops?.find((shop) => shop.branchNumber.toString() === branch)?.id
       : user?.branchId;
-
+  const endPoint =
+    queryMode === "createdDate"
+      ? "/services/by/created-date"
+      : "/services/by/retrived-date";
   return useQuery<Service[]>({
-    queryKey: ["GetServices", startDate, endDate, date, filterMode, branch],
+    queryKey: [
+      "GetServices",
+      startDate,
+      endDate,
+      date,
+      filterMode,
+      branch,
+      queryMode,
+    ],
     queryFn: async () => {
       return api
-        .get(`/services/by/created-date`, {
+        .get(endPoint, {
           params: {
             startDate:
               filterMode === "day" ? date : format(startDate, "yyyy-MM-dd"),
@@ -70,6 +86,7 @@ export const useGetServiceQuery = () => {
         })
         .then((res) => res.data);
     },
+    staleTime: 1000 * 60 * 5,
   });
 };
 

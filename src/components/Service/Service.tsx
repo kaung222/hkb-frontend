@@ -53,6 +53,11 @@ export default function Service() {
     parseAsString.withDefault("01")
   );
 
+  const [queryMode, setQueryMode] = useQueryState(
+    "queryMode",
+    parseAsString.withDefault("createdDate")
+  );
+
   const [filterMode, setFilterMode] = useQueryState(
     "filterMode",
     parseAsString.withDefault("day")
@@ -247,17 +252,29 @@ export default function Service() {
               <AddServiceDialog />
               <ServiceSummaryDialog services={filterService()} />
             </div>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
-                <SelectValue placeholder="Filter By" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">အားလုံး</SelectItem>
-                <SelectItem value="retrived">ရွေးပြီး</SelectItem>
-                <SelectItem value="completed">မရွေးရသေး</SelectItem>
-                {/* <SelectItem value="pending">မရွေးရသေး</SelectItem> */}
-              </SelectContent>
-            </Select>
+            <div className="flex gap-x-3">
+              <Select value={status} onValueChange={setStatus}>
+                <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
+                  <SelectValue placeholder="Filter By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">အားလုံး</SelectItem>
+                  <SelectItem value="retrived">ရွေးပြီး</SelectItem>
+                  <SelectItem value="completed">မရွေးရသေး</SelectItem>
+                  {/* <SelectItem value="pending">မရွေးရသေး</SelectItem> */}
+                </SelectContent>
+              </Select>
+              <Select value={queryMode} onValueChange={setQueryMode}>
+                <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
+                  <SelectValue placeholder="Created Date" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="createdDate">Created Date</SelectItem>
+                  <SelectItem value="retrievedDate">Retrieved Date</SelectItem>
+                  {/* <SelectItem value="pending">မရွေးရသေး</SelectItem> */}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -133,7 +133,6 @@ export function AddServiceDialog() {
   const { data: users } = useGetUser();
   const { data: currentUser } = useCurrentUser();
   const { data: services } = useGetServiceQuery();
-
   const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_${
     Math.floor(Math.random() * 1000000) + 1
   }`;
@@ -148,14 +147,14 @@ export function AddServiceDialog() {
     dueDate: formatDate(new Date(), "yyyy-MM-dd"),
     error: "",
     imeiNumber: "",
-    isRetrieved: "",
+    isRetrieved: Status.IN_PROGRESS,
     model: "",
     paidAmount: 0,
     phone: "",
     price: 0,
     progress: "",
     remark: "",
-    // status: Status.IN_PROGRESS,
+    status: Status.PENDING,
     serviceReturn: "",
     serviceSupplier: "",
     technician: "",
@@ -331,7 +330,7 @@ export function AddServiceDialog() {
               />
               <ServiceSelect
                 label="ရွေးပြီး/မရွေးရသေး"
-                name="is_retrieved"
+                name="isRetrieved"
                 control={form.control}
                 // disabled
                 options={[

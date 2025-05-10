@@ -3,9 +3,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../api";
 
 export const useCreateBranch = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: Partial<Branch>) => {
       return await api.post("branches", payload).then((res) => res.data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["GetBranches"] });
     },
   });
 };
