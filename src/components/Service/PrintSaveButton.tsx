@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
 import { Printer, Download } from "lucide-react";
 
@@ -24,12 +24,18 @@ const PrintSaveButtons: React.FC<PrintSaveButtonsProps> = ({ voucherRef }) => {
 
   const handleSaveAsPNG = async () => {
     if (voucherRef.current) {
-      const canvas = await html2canvas(voucherRef.current, { scale: 2 });
-      const image = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = "service_voucher.png";
-      link.click();
+      try {
+        const dataUrl = await toPng(voucherRef.current, {
+          quality: 1.0,
+          pixelRatio: 2,
+        });
+        const link = document.createElement("a");
+        link.download = "service_voucher.png";
+        link.href = dataUrl;
+        link.click();
+      } catch (err) {
+        console.error("Error generating PNG:", err);
+      }
     }
   };
 

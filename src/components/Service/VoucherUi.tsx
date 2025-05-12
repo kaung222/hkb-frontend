@@ -142,49 +142,49 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
           <div className="grid grid-cols-2 gap-2 p-2 gap-y-5">
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-xs">Name :</span>
-              <div className="flex-1 border-b border-dashed border-gray-400">
+              <div className="flex-1 border-b min-h-4 border-dashed border-gray-400">
                 {service.username}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-xs">Invoice No :</span>
-              <div className="flex-1 border-b border-dashed border-gray-400">
+              <div className="flex-1 border-b border-dashed min-h-4 border-gray-400">
                 {service.code}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-xs">PH No :</span>
-              <div className="flex-1 border-b border-dashed border-gray-400">
+              <div className="flex-1 border-b border-dashed min-h-4 border-gray-400">
                 {service.phone}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-xs">Date :</span>
-              <div className="flex-1 border-b border-dashed border-gray-400">
+              <div className="flex-1 border-b border-dashed min-h-4 border-gray-400">
                 {formatDate(service.dueDate, "dd/MM/yyyy")}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-xs">Brand :</span>
-              <div className="flex-1 border-b border-dashed border-gray-400">
+              <div className="flex-1 border-b border-dashed min-h-4 border-gray-400">
                 {service.brand}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-xs">Model :</span>
-              <div className="flex-1 border-b border-dashed border-gray-400">
+              <div className="flex-1 border-b border-dashed min-h-4 border-gray-400">
                 {service.model}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-xs">IMEI :</span>
-              <div className="flex-1 border-b border-dashed border-gray-400">
+              <div className="flex-1 border-b border-dashed min-h-4 border-gray-400">
                 {service.imeiNumber}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <span className="font-extrabold text-xs">Color :</span>
-              <div className="flex-1 border-b border-dashed border-gray-400">
+              <div className="flex-1 border-b border-dashed min-h-4 border-gray-400">
                 {service.color}
               </div>
             </div>
@@ -227,8 +227,9 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
           </div>
 
           {/* Pattern Lock */}
-          <div className="grid grid-cols-3 border-b">
-            <div className="col-span-3 p-2 ">
+          <div className="grid grid-cols-5 border-b">
+            <div className=" col-span-1 p-2 ">Remark:</div>
+            <div className="col-span-4 p-2 ">
               <div className="h-16 ">
                 <span className="text-xs">{service.remark}</span>
               </div>
@@ -237,7 +238,13 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
 
           {/* Service Fee & Password */}
           <div className="grid grid-cols-2 border-b">
-            <div className="p-2 border-r">
+            <div className="p-2">
+              <div className="flex items-center">
+                <span className="font-extrabold mr-1 text-xs">Error :</span>
+                <div className="flex-1">{service.error}</div>
+              </div>
+            </div>
+            <div className="p-2 ">
               <div className="flex items-center">
                 <span className="font-extrabold  mr-1 text-xs">
                   Service Fee :
@@ -245,39 +252,33 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
                 <div className="flex-1">{service?.price} MMK</div>
               </div>
             </div>
-            <div className="p-2">
-              <div className="flex items-center">
-                <span className="font-extrabold mr-1 text-xs">Error :</span>
-                <div className="flex-1">{service.error}</div>
-              </div>
-            </div>
           </div>
 
           {/* Service Center Note */}
-          <div className="p-2 text-center text-xs border-b">
+          {/* <div className="p-2 text-center text-xs border-b">
             <p>Error တစ်ခုခုဖြစ်ပါက Service Center သို့ ဆက်သွယ်ဆောင်ရွက်ပါ။</p>
-          </div>
+          </div> */}
 
           {/* Signature Lines */}
           <div className="grid grid-cols-2 gap-2 p-2 border-b">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <span className="text-xs">Customer Signature:</span>
-                <div className="flex-1 border-b border-dashed border-gray-400"></div>
+                <div className="flex-1 border-b border-dashed h-4  border-gray-400"></div>
               </div>
               <div className="flex items-center gap-1 mt-2">
                 <span className="text-xs">Date:</span>
-                <div className="flex-1 border-b border-dashed border-gray-400"></div>
+                <div className="flex-1 border-b h-4 border-dashed border-gray-400"></div>
               </div>
             </div>
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1">
                 <span className="text-xs">Technician Signature:</span>
-                <div className="flex-1 border-b border-dashed border-gray-400"></div>
+                <div className="flex-1 border-b border-dashed h-4 border-gray-400"></div>
               </div>
               <div className="flex items-center gap-1 mt-2">
                 <span className="text-xs">Service Completed:</span>
-                <div className="flex-1 border-b border-dashed border-gray-400"></div>
+                <div className="flex-1 border-b border-dashed h-4 border-gray-400"></div>
               </div>
             </div>
           </div>
@@ -286,12 +287,16 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
           <div className="p-2 text-[10px] space-y-1 border-b">
             {rules.map((rule, index) => (
               <div key={index} className="flex gap-1">
-                <span className="flex items-center justify-center bg-black text-white rounded-full w-4 h-4 shrink-0 ">
+                <span className="flex items-center text-[9px] justify-center bg-black text-white rounded-full w-4 h-4 shrink-0 ">
                   {rule.id}
                 </span>
                 <p className=" font-medium">{rule.text}</p>
               </div>
             ))}
+          </div>
+          {/* Service Center Note */}
+          <div className="p-2 text-center text-xs border-b">
+            <p>Error တစ်ခုခုဖြစ်ပါက Service Center သို့ ဆက်သွယ်ဆောင်ရွက်ပါ။</p>
           </div>
 
           {/* QR Code */}

@@ -133,9 +133,14 @@ export function AddServiceDialog() {
   const { data: users } = useGetUser();
   const { data: currentUser } = useCurrentUser();
   const { data: services } = useGetServiceQuery();
-  const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_${
-    Math.floor(Math.random() * 1000000) + 1
-  }`;
+  const generateRandomSixDigits = () => {
+    return Math.floor(100000 + Math.random() * 900000);
+  };
+
+  const code = `${generateRandomSixDigits()}`;
+  // const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_${
+  //   Math.floor(Math.random() * 1000000) + 1
+  // }`;
 
   const initialState = {
     code,
