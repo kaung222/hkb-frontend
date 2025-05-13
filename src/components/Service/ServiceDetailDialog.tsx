@@ -34,6 +34,7 @@ import {
   useUpdateService,
 } from "@/api/service/service.mutation";
 import { AlertDialogApp } from "../common/AlertDialogApp";
+import { format } from "date-fns";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -173,11 +174,11 @@ export function EditServiceDialog({
     defaultValues: {
       code: currentServiceDetail.code || undefined,
       username: currentServiceDetail.username,
-      branchId: currentServiceDetail.branchId.toString(),
+      branchId: currentServiceDetail.branchId?.toString(),
       brand: currentServiceDetail.brand,
       color: currentServiceDetail.color,
       condition: currentServiceDetail.condition,
-      dueDate: currentServiceDetail.dueDate,
+      dueDate: format(new Date(currentServiceDetail.dueDate), "yyyy-MM-dd"),
       error: currentServiceDetail.error,
       imeiNumber: currentServiceDetail.imeiNumber,
       serviceReturn: currentServiceDetail.serviceRetrun ? "yes" : "no",
@@ -189,7 +190,7 @@ export function EditServiceDialog({
       progress: currentServiceDetail.progress,
       remark: currentServiceDetail.remark,
       status: currentServiceDetail.status,
-      serviceSupplier: currentServiceDetail.supplier,
+      supplier: currentServiceDetail.supplier,
       technician: currentServiceDetail.technician,
       warranty: currentServiceDetail.warranty,
     },
@@ -201,11 +202,13 @@ export function EditServiceDialog({
       const payload = {
         code: currentServiceDetail.code || undefined,
         username: currentServiceDetail.username || undefined,
-        branchId: currentServiceDetail.branchId.toString() || undefined,
+        branchId: currentServiceDetail.branchId?.toString() || undefined,
         brand: currentServiceDetail.brand || undefined,
         color: currentServiceDetail.color || undefined,
         condition: currentServiceDetail.condition || undefined,
-        dueDate: currentServiceDetail.dueDate || undefined,
+        dueDate:
+          format(new Date(currentServiceDetail.dueDate), "yyyy-MM-dd") ||
+          undefined,
         error: currentServiceDetail.error || undefined,
         imeiNumber: currentServiceDetail.imeiNumber || undefined,
         isRetrieved: currentServiceDetail.isRetrieved || undefined,
@@ -222,7 +225,7 @@ export function EditServiceDialog({
             : currentServiceDetail.serviceRetrun == false
             ? "no"
             : undefined,
-        serviceSupplier: currentServiceDetail.supplier || undefined,
+        supplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
       };
@@ -256,8 +259,6 @@ export function EditServiceDialog({
   };
 
   const handleDeleteService = () => {
-    console.log("delete");
-
     deleteService(
       { id: currentServiceDetail.id },
       {
@@ -294,10 +295,10 @@ export function EditServiceDialog({
                     label="Branch"
                     name="branchId"
                     control={form.control}
-                    defaultValue={currentServiceDetail.branchId.toString()}
+                    defaultValue={currentServiceDetail.branchId?.toString()}
                     options={shops.map((shop) => ({
                       label: shop.name,
-                      value: shop.id.toString(),
+                      value: shop.id?.toString(),
                     }))}
                   />
                 )}
@@ -447,9 +448,13 @@ export function EditServiceDialog({
                 />
                 <ServiceSelect
                   label="ရွေးပြီး/မရွေးရသေး"
-                  name="status"
+                  name="progress"
                   control={form.control}
-                  defaultValue={currentServiceDetail.status}
+                  defaultValue={
+                    currentServiceDetail.status !== "retrieved"
+                      ? "in_progress"
+                      : currentServiceDetail.status
+                  }
                   options={[
                     { label: "မရွေးရသေး", value: Status.IN_PROGRESS },
                     { label: "ရွေးပြီး", value: "retrieved" },
@@ -482,13 +487,13 @@ export function EditServiceDialog({
                 <ServiceSelect
                   label="Progress"
                   name="status"
-                  defaultValue={currentServiceDetail.progress}
+                  defaultValue={currentServiceDetail.status}
                   control={form.control}
                   options={[
                     { label: "မပြင်ရသေး", value: Status.PENDING },
                     { label: "ပြင်နေဆဲ", value: Status.IN_PROGRESS },
                     { label: "ပြင်ပြီး", value: Status.COMPLETED },
-                    // { label: "ရွေးပြီး", value: Status.RETRIEVED },
+                    { label: "ရွေးပြီး", value: Status.RETRIEVED },
                   ]}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&
@@ -514,7 +519,7 @@ export function EditServiceDialog({
                 <ServiceInput
                   label="ပစ္စည်း Supplier"
                   placeholder="ပစ္စည်း Supplier"
-                  name="serviceReturn"
+                  name="supplier"
                   control={form.control}
                   disabled={
                     currentServiceDetail?.retrieveDate !== null &&

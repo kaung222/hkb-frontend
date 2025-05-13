@@ -161,7 +161,7 @@ export function AddServiceDialog() {
     remark: "",
     status: Status.PENDING,
     serviceReturn: "",
-    serviceSupplier: "",
+    supplier: "",
     technician: "",
     warranty: "Out",
   };
@@ -177,16 +177,13 @@ export function AddServiceDialog() {
         currentUser?.role !== "admin"
           ? currentUser?.branchId
           : form.getValues("branchId");
-      console.log(branchId, "branchId");
+      // console.log(branchId, "branchId");
       if (user.role === "technician" && user.branchId == branchId) {
         return true;
       }
     }) || [];
 
-  console.log(technicians, "technicians");
-
   const handleAddService = (values: AddServiceValuesType) => {
-    console.log(values);
     mutate(
       {
         ...values,
@@ -197,6 +194,7 @@ export function AddServiceDialog() {
             : values.serviceReturn == "no"
             ? false
             : undefined,
+        supplier: values.supplier,
         items: spareParts.map((field) => ({
           //@ts-ignore
           name: field.name,
@@ -212,6 +210,7 @@ export function AddServiceDialog() {
       }
     );
   };
+
   return (
     <Dialog
       open={isOpen(dialogKeys.addService)}
@@ -386,7 +385,7 @@ export function AddServiceDialog() {
               <ServiceInput
                 label="ပစ္စည်း Supplier"
                 placeholder="ပစ္စည်း Supplier"
-                name="serviceSupplier"
+                name="supplier"
                 control={form.control}
               />
 

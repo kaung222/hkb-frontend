@@ -48,6 +48,7 @@ export const AddServiceSchema = z.object({
   error: z.string().optional(),
   dueDate: z.string().optional(),
   remark: z.string().optional(),
+  supplier: z.string().optional(),
   price: z
     .preprocess((val) => {
       // Convert input to a number if it's a string
