@@ -61,6 +61,7 @@ export const useGetServiceQuery = () => {
     queryMode === "createdDate"
       ? "/services/by/created-date"
       : "/services/by/retrived-date";
+
   return useQuery<Service[]>({
     queryKey: [
       "GetServices",
@@ -69,10 +70,11 @@ export const useGetServiceQuery = () => {
       date,
       filterMode,
       branch,
+      branchId,
       queryMode,
     ],
     queryFn: async () => {
-      return api
+      return await api
         .get(endPoint, {
           params: {
             startDate:

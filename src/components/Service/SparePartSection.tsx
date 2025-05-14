@@ -161,7 +161,7 @@ export function SparePartsSection({
                 // {...field}
                 type="number"
                 placeholder="ပစ္စည်းဖိုး"
-                value={field.price || 0}
+                value={field.price || ""}
                 className=""
                 onChange={(e) => handlePriceChange(e.target.value, index)}
                 onWheel={(e) =>
