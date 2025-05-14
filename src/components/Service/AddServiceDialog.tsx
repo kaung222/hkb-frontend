@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -133,17 +133,13 @@ export function AddServiceDialog() {
   const { data: users } = useGetUser();
   const { data: currentUser } = useCurrentUser();
   const { data: services } = useGetServiceQuery();
-  const generateRandomSixDigits = () => {
-    return Math.floor(100000 + Math.random() * 900000);
-  };
 
-  const code = `${generateRandomSixDigits()}`;
   // const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_${
   //   Math.floor(Math.random() * 1000000) + 1
   // }`;
 
   const initialState = {
-    code,
+    code: `${Math.floor(100000 + Math.random() * 900000)}`,
     username: "",
     branchId: currentUser?.branchId.toString(),
     brand: "",
@@ -206,6 +202,10 @@ export function AddServiceDialog() {
         onSuccess: () => {
           closeDialog(dialogKeys.addService);
           form.reset();
+          form.setValue(
+            "code",
+            `${Math.floor(100000 + Math.random() * 900000)}`
+          );
         },
       }
     );
@@ -214,9 +214,9 @@ export function AddServiceDialog() {
   return (
     <Dialog
       open={isOpen(dialogKeys.addService)}
-      onOpenChange={(isOpen) =>
-        handleDialogChange(dialogKeys.addService, isOpen)
-      }
+      onOpenChange={(isOpen) => {
+        handleDialogChange(dialogKeys.addService, isOpen);
+      }}
     >
       <DialogTrigger asChild>
         <Button
