@@ -34,6 +34,8 @@ import VoucherDialog from "./VoucherDialog";
 import { DatePickerDemo } from "../common/DatePicker";
 import { format } from "date-fns";
 import { useState } from "react";
+import { Button } from "../ui/button";
+import { RefreshCcw } from "lucide-react";
 
 export enum Status {
   RETRIEVED = "retrieved",
@@ -87,9 +89,19 @@ export default function Service() {
   const { data: user } = useCurrentUser();
   const { data: technicians, isLoading: isTechnicianLoading } = useGetUser();
   const { data: branches, isLoading: isBranchLoading } = useGerBraches();
-  const { data: services } = useGetServiceQuery();
+  const { data: services, refetch, isPending } = useGetServiceQuery();
   const { data: detailService } = useDataStore();
   const [search, setSearch] = useState("");
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const handleRefresh = async () => {
+    setIsSpinning(true);
+    refetch();
+    // Ensure spinning animation lasts at least 500ms
+    setTimeout(() => {
+      setIsSpinning(false);
+    }, 500);
+  };
 
   const filterService = () => {
     const searchServices = services?.filter((service) => {
@@ -274,6 +286,17 @@ export default function Service() {
                   {/* <SelectItem value="pending">မရွေးရသေး</SelectItem> */}
                 </SelectContent>
               </Select>
+              {/* <Button
+                variant="outline"
+                title="refresh"
+                onClick={() => handleRefresh()}
+              >
+                <RefreshCcw
+                  className={`size-6  ${
+                    isSpinning ? " animate-spin" : ""
+                  } duration-500`}
+                />
+              </Button> */}
             </div>
           </div>
         </CardContent>

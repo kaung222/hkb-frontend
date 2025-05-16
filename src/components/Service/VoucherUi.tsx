@@ -49,7 +49,7 @@ const rules = [
   },
   {
     id: "၈",
-    text: "Passward, Pattern Lock, i cloud, Mi cloud and E-mail semm",
+    text: "Passward, Pattern Lock, i cloud, Mi cloud နှင့် E-mail အကောင့်များလိုအပ်ပါက သေချာစွာပြောပြပေးပါရန်။",
   },
   {
     id: "၉",
@@ -96,8 +96,8 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
         <CardContent className="p-0 text-sm">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
-            <div className="flex items-center w-full gap-2">
-              <div className="relative h-12 w-12">
+            <div className="flex items-center w-full gap-2 ">
+              <div className="relative h-28 w-28">
                 <img
                   src={"/hkb-logo2.png"}
                   alt="HLAKABAR Logo"
@@ -114,7 +114,16 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
                   Mobile Service Professional Team
                 </p>
               </div>
-              {/* <div className="  ms-auto"></div> */}
+              <div className="  ms-auto">
+                <div className=" flex justify-end">
+                  <QRCode
+                    value={`${import.meta.env.VITE_BASE_URL}/services/${
+                      service.id
+                    }/for/user`}
+                    size={60}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -300,14 +309,6 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
           </div>
 
           {/* QR Code */}
-          <div className="p-2 flex justify-end">
-            <QRCode
-              value={`${import.meta.env.VITE_BASE_URL}/services/${
-                service.id
-              }/for/user`}
-              size={60}
-            />
-          </div>
         </CardContent>
       </Card>
       <PrintSaveButtons voucherRef={voucherRef} />
