@@ -193,8 +193,14 @@ export function EditServiceDialog({
       supplier: currentServiceDetail.supplier,
       technician: currentServiceDetail.technician,
       warranty: currentServiceDetail.warranty,
+      retrieveDate: currentServiceDetail.retrieveDate,
     },
   });
+
+  const filterTechnicians = technicians.filter(
+    (t) =>
+      t.branchId === currentServiceDetail.branchId && t.role === "technician"
+  );
 
   useEffect(() => {
     if (currentServiceDetail) {
@@ -228,6 +234,8 @@ export function EditServiceDialog({
         supplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
+        retrieveDate: currentServiceDetail.retrieveDate || undefined,
+        createdAt: currentServiceDetail.createdAt || undefined,
       };
       form.reset(payload);
     }
@@ -446,7 +454,7 @@ export function EditServiceDialog({
                     currentUser?.role !== "admin"
                   }
                 />
-                <ServiceSelect
+                {/* <ServiceSelect
                   label="ရွေးပြီး/မရွေးရသေး"
                   name="progress"
                   control={form.control}
@@ -464,7 +472,30 @@ export function EditServiceDialog({
                     currentServiceDetail?.retrieveDate !== null &&
                     currentUser?.role !== "admin"
                   }
-                />
+                /> */}
+
+                {currentUser.role === "admin" && (
+                  <ServiceInput
+                    label="ပစ္စည်းအပ်နေ့"
+                    placeholder="ပစ္စည်းအပ်နေ့"
+                    name="createdAt"
+                    control={form.control}
+                    disabled={currentUser?.role !== "admin"}
+                  />
+                )}
+
+                {currentUser.role === "admin" && (
+                  <ServiceInput
+                    label="ပစ္စည်းရွေးနေ့"
+                    placeholder="ပစ္စည်းရွေးနေ့"
+                    name="retrieveDate"
+                    control={form.control}
+                    disabled={
+                      currentServiceDetail?.retrieveDate !== null &&
+                      currentUser?.role !== "admin"
+                    }
+                  />
+                )}
 
                 {/* Technician and Service Information Section */}
                 <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
@@ -475,7 +506,7 @@ export function EditServiceDialog({
                   name="technician"
                   defaultValue={currentServiceDetail.technician}
                   control={form.control}
-                  options={technicians.map((tech) => ({
+                  options={filterTechnicians.map((tech) => ({
                     label: tech.name,
                     value: tech.name,
                   }))}
