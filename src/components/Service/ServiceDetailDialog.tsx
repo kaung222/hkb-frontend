@@ -242,7 +242,10 @@ export function EditServiceDialog({
   }, [currentServiceDetail, form]);
 
   const handleEditService = (values: AddServiceValuesType) => {
-    const retrieveDate = new Date(values.retrieveDate);
+    const retrieveDate = values.retrieveDate
+      ? new Date(values.retrieveDate)
+      : new Date();
+    console.log(retrieveDate, "retrieve date");
     mutate(
       {
         ...values,
