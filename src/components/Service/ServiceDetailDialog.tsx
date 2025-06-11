@@ -34,7 +34,7 @@ import {
   useUpdateService,
 } from "@/api/service/service.mutation";
 import { AlertDialogApp } from "../common/AlertDialogApp";
-import { format } from "date-fns";
+import { format, formatDate } from "date-fns";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -242,6 +242,7 @@ export function EditServiceDialog({
   }, [currentServiceDetail, form]);
 
   const handleEditService = (values: AddServiceValuesType) => {
+    const retrieveDate = new Date(values.retrieveDate);
     mutate(
       {
         ...values,
@@ -254,9 +255,9 @@ export function EditServiceDialog({
             : undefined,
         items: spareParts.map((item) => ({
           name: item.name,
-
           price: item.price,
         })),
+        retrieveDate,
       },
       {
         onSuccess: () => {
