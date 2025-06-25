@@ -51,7 +51,12 @@ export const useUpdateService = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<any, ErrorResponse, AddServicePayloadType>({
     mutationFn: async (data: AddServicePayloadType) =>
-      await api.patch(`/services/` + id, data).then((res) => res.data),
+      await api
+        .patch(`/services/` + id, {
+          ...data,
+          retrieveDate: data.retrievedDate || undefined,
+        })
+        .then((res) => res.data),
     onSuccess: async () => {
       return await queryClient.invalidateQueries({
         queryKey,
