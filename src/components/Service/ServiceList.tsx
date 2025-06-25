@@ -189,9 +189,9 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                     {/* <CustomTableCell label={item.return_date} /> */}
                     <CustomTableCell
                       label={
-                        item.retrieveDate !== null
+                        item.retrievedDate !== null
                           ? `ရွေးပြီး, (${formatDate(
-                              item.retrieveDate,
+                              item.retrievedDate,
                               "yy-MM-dd"
                             )}) `
                           : "မရွေးရသေး"

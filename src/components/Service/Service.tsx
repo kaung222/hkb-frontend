@@ -121,7 +121,7 @@ export default function Service() {
         );
       case "completed":
         return searchServices?.filter(
-          (service) => service.retrieveDate === null
+          (service) => service.retrievedDate === null
         );
       default:
         return searchServices;

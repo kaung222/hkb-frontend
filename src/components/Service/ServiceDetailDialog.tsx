@@ -193,7 +193,7 @@ export function EditServiceDialog({
       supplier: currentServiceDetail.supplier,
       technician: currentServiceDetail.technician,
       warranty: currentServiceDetail.warranty,
-      retrieveDate: currentServiceDetail.retrieveDate,
+      retrievedDate: currentServiceDetail.retrievedDate,
     },
   });
 
@@ -234,7 +234,7 @@ export function EditServiceDialog({
         supplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
-        retrieveDate: currentServiceDetail.retrieveDate || undefined,
+        retrievedDate: currentServiceDetail.retrievedDate || undefined,
         createdAt: currentServiceDetail.createdAt || undefined,
       };
       form.reset(payload);
@@ -242,10 +242,10 @@ export function EditServiceDialog({
   }, [currentServiceDetail, form]);
 
   const handleEditService = (values: AddServiceValuesType) => {
-    const retrieveDate = values.retrieveDate
-      ? new Date(values.retrieveDate)
+    const retrievedDate = values.retrievedDate
+      ? new Date(values.retrievedDate)
       : new Date();
-    console.log(retrieveDate, "retrieve date");
+    console.log(retrievedDate, "retrieve date");
     mutate(
       {
         ...values,
@@ -260,7 +260,7 @@ export function EditServiceDialog({
           name: item.name,
           price: item.price,
         })),
-        retrieveDate,
+        retrievedDate,
       },
       {
         onSuccess: () => {
@@ -320,7 +320,7 @@ export function EditServiceDialog({
                   name="brand"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -330,7 +330,7 @@ export function EditServiceDialog({
                   name="model"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -340,7 +340,7 @@ export function EditServiceDialog({
                   name="imeiNumber"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -350,7 +350,7 @@ export function EditServiceDialog({
                   name="color"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -360,7 +360,7 @@ export function EditServiceDialog({
                   name="error"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -370,7 +370,7 @@ export function EditServiceDialog({
                   name="remark"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -385,7 +385,7 @@ export function EditServiceDialog({
                   name="code"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -395,7 +395,7 @@ export function EditServiceDialog({
                   name="username"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -405,7 +405,7 @@ export function EditServiceDialog({
                   name="phone"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -419,7 +419,7 @@ export function EditServiceDialog({
                     { label: "In Warranty", value: "In" },
                   ]}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -433,7 +433,7 @@ export function EditServiceDialog({
                     { label: "Yes", value: "yes" },
                   ]}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -444,7 +444,7 @@ export function EditServiceDialog({
                   name="dueDate"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -454,7 +454,7 @@ export function EditServiceDialog({
                   name="price"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -473,7 +473,7 @@ export function EditServiceDialog({
                     //  { label: "ရွေးပြီး", value: Status.RETRIEVED },
                   ]}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 /> */}
@@ -492,10 +492,10 @@ export function EditServiceDialog({
                   <ServiceInput
                     label="ပစ္စည်းရွေးနေ့"
                     placeholder="ပစ္စည်းရွေးနေ့"
-                    name="retrieveDate"
+                    name="retrievedDate"
                     control={form.control}
                     disabled={
-                      currentServiceDetail?.retrieveDate !== null &&
+                      currentServiceDetail?.retrievedDate !== null &&
                       currentUser?.role !== "admin"
                     }
                   />
@@ -515,7 +515,7 @@ export function EditServiceDialog({
                     value: tech.name,
                   }))}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -531,7 +531,7 @@ export function EditServiceDialog({
                     { label: "ရွေးပြီး", value: Status.RETRIEVED },
                   ]}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -541,7 +541,7 @@ export function EditServiceDialog({
                   disabled={
                     currentUser?.role !== "admin" &&
                     // currentUser?.role !== "reception"
-                    currentServiceDetail.retrieveDate !== null
+                    currentServiceDetail.retrievedDate !== null
                   }
                   defaultValue={currentServiceDetail.condition}
                   control={form.control}
@@ -557,7 +557,7 @@ export function EditServiceDialog({
                   name="supplier"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -572,7 +572,7 @@ export function EditServiceDialog({
                   name="paidAmount"
                   control={form.control}
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                 />
@@ -620,7 +620,7 @@ export function EditServiceDialog({
 
                 <Button
                   disabled={
-                    currentServiceDetail?.retrieveDate !== null &&
+                    currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
                   type="submit"

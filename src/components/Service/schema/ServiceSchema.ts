@@ -28,7 +28,7 @@ import { z } from "zod";
 //     serviceReturn: z.boolean().optional(),
 //     branchId: z.string().optional(),
 //     items: z.string().optional(),
-//     retrieveDate: z.date().optional(),
+//     retrievedDate: z.date().optional(),
 //   }),
 // });
 
@@ -49,7 +49,7 @@ export const AddServiceSchema = z.object({
   dueDate: z.string().optional(),
   remark: z.string().optional(),
   supplier: z.string().optional(),
-  retrieveDate: z.any().optional(),
+  retrievedDate: z.any().optional(),
   price: z
     .preprocess((val) => {
       // Convert input to a number if it's a string
