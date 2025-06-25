@@ -68,6 +68,8 @@ export function SparePartsSection({
     "Touch+oca",
     "Usbcom",
     "Speaker",
+    "IC",
+    "Others",
   ];
 
   const handlePriceChange = (value: string, index: number) => {
