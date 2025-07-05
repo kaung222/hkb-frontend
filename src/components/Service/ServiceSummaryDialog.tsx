@@ -25,6 +25,10 @@ export default function ServiceSummaryDialog({
 
   const totalProfit = services.reduce((a, b) => a + b.profit, 0);
 
+  const partFees = services
+    .filter((service) => service.status !== "retrieved")
+    .reduce((a, b) => a + b.expense, 0);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -116,6 +120,18 @@ export default function ServiceSummaryDialog({
             >
               <span className="">အမြတ်ငွေ:</span>
               <span className=" font-semibold">{totalProfit}</span>
+            </div>
+
+            <div
+              className="flex justify-between items-center p-4"
+              style={{
+                backgroundColor: "#6836838f",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+              }}
+            >
+              <span className="">လက်ကျန်ငွေ:</span>
+              <span className=" font-semibold">{partFees + totalProfit}</span>
             </div>
           </div>
         </div>
