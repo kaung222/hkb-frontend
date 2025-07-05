@@ -70,6 +70,7 @@ export type Service = {
   updatedAt: Date;
   progress: string;
   supplier: string;
+  partsPurchaseDate?: string;
   // add in api
   items?: { name: string; price: number }[]; // string = JSON([{name: string, price: number}])
   expense: number;

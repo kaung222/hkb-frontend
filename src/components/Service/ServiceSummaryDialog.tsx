@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Service } from "@/types/service";
+import { formatDate } from "date-fns";
 
 export default function ServiceSummaryDialog({
   services = [],
@@ -25,8 +26,12 @@ export default function ServiceSummaryDialog({
 
   const totalProfit = services.reduce((a, b) => a + b.profit, 0);
 
-  const partFees = services
-    .filter((service) => service.status !== "retrieved")
+  const partsFees = services
+    .filter(
+      (service) =>
+        formatDate(service.createdAt, "yyyy-MM-dd") !==
+        formatDate(new Date(), "yyyy-MM-dd")
+    )
     .reduce((a, b) => a + b.expense, 0);
 
   return (
@@ -121,7 +126,6 @@ export default function ServiceSummaryDialog({
               <span className="">အမြတ်ငွေ:</span>
               <span className=" font-semibold">{totalProfit}</span>
             </div>
-
             <div
               className="flex justify-between items-center p-4"
               style={{
@@ -131,7 +135,7 @@ export default function ServiceSummaryDialog({
               }}
             >
               <span className="">လက်ကျန်ငွေ:</span>
-              <span className=" font-semibold">{partFees + totalProfit}</span>
+              <span className=" font-semibold">{totalProfit + partsFees}</span>
             </div>
           </div>
         </div>
