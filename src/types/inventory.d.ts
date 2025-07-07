@@ -1,5 +1,5 @@
 export type Item = {
-  id: number;
+  id?: number;
 
   name: string;
 
@@ -11,11 +11,11 @@ export type Item = {
 
   note: string;
 
-  serviceId: number;
+  serviceId?: number;
 
   branchId: number;
 
-  createdAt: Date;
+  createdAt?: Date;
 };
 
 export type Sale = {

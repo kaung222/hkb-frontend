@@ -18,156 +18,123 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { SUCCESS_MSG } from "@/constants/general.const";
+import { dialogKeys, SUCCESS_MSG } from "@/constants/general.const";
 import { parseAsString, useQueryState } from "nuqs";
+import { useCurrentUser } from "@/api/user/current-user";
+import { useDataStore } from "@/stores/useDataStore";
+import { useDialogStore } from "@/stores/dialog/useDialogStore";
+import { Item } from "@/types/inventory";
+import { useCreateItem } from "./hooks/item.mutation";
 
-const ItemDialog: React.FC = () => {
-  const { selectedItem, dialogOpen, setDialogOpen } = useInventoryStore();
-  const { mutate: saveItem } = useSaveItemMutation();
-  const [branch] = useQueryState("branch", parseAsString.withDefault("all"));
+const ItemDialog: React.FC = ({
+  form,
+  dialogKey,
+}: {
+  form: any;
+  dialogKey: string;
+}) => {
+  const { setData, data } = useDataStore();
+  const { data: user } = useCurrentUser();
+  const { closeDialog, openDialog, isOpen } = useDialogStore();
+  const { mutate: saveItem } = useCreateItem();
+  const [dialogOpen, setDialogOpen] = useState(isOpen(dialogKeys.addItem));
 
-  const [itemDetails, setItemDetails] = useState({
-    user: "Aung Min Thann", // Replace with actual user data
-    itemCode: "",
-    itemName: "",
-    lot: "",
-    category: "T+L",
-    purchasePrice: null,
-    sellPrice: null,
+  console.log(form, dialogKey);
+
+  const [itemDetails, setItemDetails] = useState<Item>({
+    branchId: user?.branchId,
+    name: "",
+    price: 0,
+    quantity: 1,
+    total: 0,
     note: "",
-    branch: branch === "all" ? ["all"] : branch,
+    serviceId: undefined,
   });
 
   useEffect(() => {
-    if (selectedItem) {
-      setItemDetails(selectedItem);
-    } else {
-      setItemDetails({
-        user: "Aung Min Thann", // Replace with actual user data
-        itemCode: "",
-        itemName: "",
-        lot: "",
-        category: "T+L",
-        purchasePrice: null,
-        sellPrice: null,
-        note: "",
-        branch: branch === "all" ? ["all"] : branch,
-      });
+    if (data) {
+      setItemDetails(data);
     }
-  }, [selectedItem]);
+  }, [data]);
 
   const handleSave = () => {
-    if (!itemDetails.itemCode) {
+    if (!itemDetails.name) {
       toast.error("Item Code is required");
       return;
     }
-    if (!itemDetails.itemName) {
+    if (!itemDetails.price) {
       toast.error("Item Name is required");
       return;
     }
 
-    saveItem(
-      {
-        ...itemDetails,
-        branch: Array.isArray(itemDetails.branch)
-          ? itemDetails.branch
-          : [itemDetails.branch], // Ensure branch is always an array
+    saveItem(itemDetails, {
+      onSuccess: () => {
+        toast.success(SUCCESS_MSG);
+        setDialogOpen(false);
       },
-      {
-        onSuccess: () => {
-          toast.success(SUCCESS_MSG);
-          setDialogOpen(false);
-        },
-        onError: (error) => {
-          toast.error(
-            error?.message || "An error occurred while saving the item"
-          );
-        },
-      }
-    );
+      onError: (error) => {
+        toast.error(
+          error?.message || "An error occurred while saving the item"
+        );
+      },
+    });
   };
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {selectedItem ? "Edit Item" : "Add New Item"}
-          </DialogTitle>
+          <DialogTitle>{data ? "Edit Item" : "Add New Item"}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <Input
-            placeholder="Item Code"
-            value={itemDetails.itemCode}
+            placeholder="Name"
+            value={itemDetails.name}
             onChange={(e) =>
-              setItemDetails({ ...itemDetails, itemCode: e.target.value })
+              setItemDetails({ ...itemDetails, name: e.target.value })
             }
           />
           <Input
-            placeholder="Item Name"
-            value={itemDetails.itemName}
-            onChange={(e) =>
-              setItemDetails({ ...itemDetails, itemName: e.target.value })
-            }
-          />
-          <Input
-            placeholder="Lot No."
-            value={itemDetails.lot}
-            onChange={(e) =>
-              setItemDetails({ ...itemDetails, lot: e.target.value })
-            }
-          />
-          <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">
-              Category
-            </label>
-            <Select
-              value={itemDetails.category}
-              onValueChange={(value) =>
-                setItemDetails({ ...itemDetails, category: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="T+L">T+L</SelectItem>
-                <SelectItem value="Battery">Battery</SelectItem>
-                <SelectItem value="Glass">Glass</SelectItem>
-                <SelectItem value="Touch">Touch</SelectItem>
-                <SelectItem value="LCD">LCD</SelectItem>
-                <SelectItem value="Cover">Cover</SelectItem>
-                <SelectItem value="BodyCover">Body Cover</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Input
-            placeholder="Purchase Price"
-            type="number"
-            value={itemDetails.purchasePrice}
+            placeholder="Price"
+            value={itemDetails.price}
             onChange={(e) =>
               setItemDetails({
                 ...itemDetails,
-                purchasePrice: parseFloat(e.target.value),
+                price: parseInt(e.target.value),
               })
             }
           />
           <Input
-            placeholder="Sell Price"
-            type="number"
-            value={itemDetails.sellPrice}
+            placeholder="Quantity"
+            value={itemDetails.quantity}
             onChange={(e) =>
               setItemDetails({
                 ...itemDetails,
-                sellPrice: parseFloat(e.target.value),
+                quantity: parseInt(e.target.value),
+              })
+            }
+          />
+
+          <Input
+            placeholder="Purchase Price"
+            type="number"
+            value={itemDetails.total}
+            onChange={(e) =>
+              setItemDetails({
+                ...itemDetails,
+                total: parseFloat(e.target.value),
               })
             }
           />
           <Input
             placeholder="Note"
+            type="text"
             value={itemDetails.note}
             onChange={(e) =>
-              setItemDetails({ ...itemDetails, note: e.target.value })
+              setItemDetails({
+                ...itemDetails,
+                note: e.target.value,
+              })
             }
           />
         </div>
@@ -175,9 +142,7 @@ const ItemDialog: React.FC = () => {
           <Button variant="outline" onClick={() => setDialogOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>
-            {selectedItem ? "Update" : "Add"}
-          </Button>
+          <Button onClick={handleSave}>{data ? "Update" : "Add"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

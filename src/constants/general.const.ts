@@ -32,6 +32,8 @@ export const dialogKeys = {
   addNewUser: "addNewUser",
   editUser: "editUser",
   getVoucher: "getVoucher",
+  addItem: "addItem",
+  editItem: "editItem",
 };
 
 export const screenList = ["sale", "item", "stock", "purchase"];

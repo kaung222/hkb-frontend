@@ -3,7 +3,7 @@ import { useGerBraches } from "@/api/branch/branch.query";
 import { useCurrentUser } from "@/api/user/current-user";
 import { Item } from "@/types/inventory";
 import { useQuery } from "@tanstack/react-query";
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import { addDays, endOfMonth, format, startOfMonth } from "date-fns";
 import { parseAsString, useQueryState } from "nuqs";
 
 export const useGetItem = () => {
@@ -38,11 +38,22 @@ export const useGetItem = () => {
       ? shops?.find((shop) => shop.branchNumber.toString() === branch)?.id
       : user?.branchId;
   return useQuery<Item[]>({
-    queryKey: ["items"],
+    queryKey: ["items", startDate, endDate, branchId, filterMode],
     queryFn: async () => {
-      return await api.get(`/items`, {
-        params: { startDate, endDate, branchId },
-      });
+      return await api
+        .get(`/items`, {
+          params: {
+            startDate:
+              filterMode === "day" ? date : format(startDate, "yyyy-MM-dd"),
+            endDate:
+              filterMode === "day"
+                ? format(addDays(new Date(date), 1), "yyyy-MM-dd")
+                : format(endDate, "yyyy-MM-dd"),
+            branchId,
+          },
+        })
+        .then((res) => res.data);
     },
+    staleTime: 1000 * 60 * 10,
   });
 };
