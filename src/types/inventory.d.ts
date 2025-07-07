@@ -1,15 +1,21 @@
 export type Item = {
-  id: string;
-  branch: string;
-  itemCode: string;
-  itemName: string;
-  lot: string;
-  category: string;
-  purchasePrice: number;
-  sellPrice: number;
-  user: string;
-  date: string;
+  id: number;
+
+  name: string;
+
+  price: number;
+
+  quantity: number;
+
+  total: number;
+
   note: string;
+
+  serviceId: number;
+
+  branchId: number;
+
+  createdAt: Date;
 };
 
 export type Sale = {

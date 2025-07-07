@@ -393,12 +393,12 @@ export function AddServiceDialog() {
                 spareParts={spareParts}
                 setSpareParts={setSparePares}
               />
-              <ServiceInput
+              {/* <ServiceInput
                 label="Paid"
                 placeholder="0"
                 name="paidAmount"
                 control={form.control}
-              />
+              /> */}
             </div>
             <DialogFooter>
               <Button

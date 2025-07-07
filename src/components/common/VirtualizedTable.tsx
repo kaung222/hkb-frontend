@@ -62,7 +62,7 @@ const VirtualizedTable = <T,>({
 
   const throttledScrollHandler = useThrottle(() => handleScroll(), 300);
 
-  const displayedData = data.slice(startIndex, startIndex + visibleRows);
+  const displayedData = data?.slice(startIndex, startIndex + visibleRows);
   const topSpacerHeight = startIndex * ROW_HEIGHT;
   const bottomSpacerHeight =
     (data.length - (startIndex + visibleRows)) * ROW_HEIGHT;

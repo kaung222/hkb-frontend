@@ -566,7 +566,7 @@ export function EditServiceDialog({
                   setSpareParts={setSpareParts}
                 />
 
-                <ServiceInput
+                {/* <ServiceInput
                   label="Paid"
                   placeholder="0"
                   name="paidAmount"
@@ -575,7 +575,7 @@ export function EditServiceDialog({
                     currentServiceDetail?.retrievedDate !== null &&
                     currentUser?.role !== "admin"
                   }
-                />
+                /> */}
               </div>
               <DialogFooter>
                 <Button

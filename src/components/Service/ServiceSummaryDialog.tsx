@@ -20,9 +20,9 @@ export default function ServiceSummaryDialog({
 
   const totalExpense = services.reduce((a, b) => a + b.expense, 0);
 
-  const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
+  // const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
 
-  const totalRemain = services.reduce((a, b) => a + b.leftToPay, 0);
+  // const totalRemain = services.reduce((a, b) => a + b.leftToPay, 0);
 
   const totalProfit = services.reduce((a, b) => a + b.profit, 0);
 
@@ -91,7 +91,7 @@ export default function ServiceSummaryDialog({
               <span className=" font-semibold">{totalExpense}</span>
             </div>
 
-            <div
+            {/* <div
               className="flex justify-between items-center p-4"
               style={{
                 backgroundColor: "#6836838f",
@@ -101,9 +101,9 @@ export default function ServiceSummaryDialog({
             >
               <span className="">ပေးငွေ:</span>
               <span className=" font-semibold">{totalPaid}</span>
-            </div>
+            </div> */}
 
-            <div
+            {/* <div
               className="flex justify-between items-center p-4"
               style={{
                 backgroundColor: "#6836838f",
@@ -113,7 +113,7 @@ export default function ServiceSummaryDialog({
             >
               <span className="">ကျန်ငွေ:</span>
               <span className=" font-semibold">{totalRemain}</span>
-            </div>
+            </div> */}
 
             <div
               className="flex justify-between items-center p-4"
@@ -125,17 +125,6 @@ export default function ServiceSummaryDialog({
             >
               <span className="">အမြတ်ငွေ:</span>
               <span className=" font-semibold">{totalProfit}</span>
-            </div>
-            <div
-              className="flex justify-between items-center p-4"
-              style={{
-                backgroundColor: "#6836838f",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-              }}
-            >
-              <span className="">လက်ကျန်ငွေ:</span>
-              <span className=" font-semibold">{totalProfit + partsFees}</span>
             </div>
           </div>
         </div>

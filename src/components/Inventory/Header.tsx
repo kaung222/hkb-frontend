@@ -93,7 +93,7 @@ const Header: React.FC = () => {
 
       <div className="flex gap-4 justify-between items-center">
         {/* Navigation */}
-        <div className="flex gap-4">
+        {/* <div className="flex gap-4">
           <Button
             variant={screen === "sale" ? "default" : "outline"}
             onClick={() => setScreen("sale")}
@@ -118,7 +118,7 @@ const Header: React.FC = () => {
           >
             Item
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
