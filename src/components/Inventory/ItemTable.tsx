@@ -48,11 +48,14 @@ const itemFormSchema = z.object({
     .min(0, { message: "Quantity must be a positive number" }),
   note: z.string().optional(),
   branchId: z.coerce.number(),
+  code: z.string().optional(),
 });
 
 type ItemFormValues = z.infer<typeof itemFormSchema>;
-
-const ItemTable: React.FC = () => {
+type Props = {
+  search: string;
+};
+const ItemTable = (props: Props) => {
   const { data: items, isLoading, error } = useGetItem();
   const { mutate: updateItem } = useUpdateItem();
   const { mutate: deleteItem } = useDeleteItem();
@@ -62,6 +65,13 @@ const ItemTable: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
+  // filter items by search
+  const filteredItems = items?.filter((item) => {
+    return (
+      item.name.toLowerCase().includes(props.search.toLowerCase()) ||
+      item.code?.toLowerCase().includes(props.search.toLowerCase())
+    );
+  });
   const { data: user } = useCurrentUser();
   const form = useForm<ItemFormValues>({
     resolver: zodResolver(itemFormSchema),
@@ -71,6 +81,7 @@ const ItemTable: React.FC = () => {
       quantity: 0,
       note: "",
       branchId: user?.branchId,
+      code: "",
     },
   });
 
@@ -82,6 +93,7 @@ const ItemTable: React.FC = () => {
       quantity: item.quantity,
       note: item.note || "",
       branchId: item.branchId,
+      code: item.code,
     });
     setIsEditDialogOpen(true);
   };
@@ -113,7 +125,7 @@ const ItemTable: React.FC = () => {
           quantity: data.quantity,
           note: data.note,
           total: data.price * data.quantity,
-          serviceId: 212,
+          code: data.code,
           id: selectedItem.id,
         },
         {
@@ -134,7 +146,7 @@ const ItemTable: React.FC = () => {
           quantity: data.quantity,
           note: data.note,
           total: data.price * data.quantity,
-          serviceId: 212,
+          code: data.code,
         },
         {
           onSuccess: () => {
@@ -161,6 +173,7 @@ const ItemTable: React.FC = () => {
               price: 0,
               quantity: 0,
               note: "",
+              code: "",
               branchId: user?.branchId,
             });
             setIsEditDialogOpen(true);
@@ -174,22 +187,26 @@ const ItemTable: React.FC = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>No.</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Price</TableHead>
+              <TableHead>Unit Price</TableHead>
               <TableHead>Quantity</TableHead>
               <TableHead>Total</TableHead>
+              <TableHead>Vr. Code</TableHead>
               <TableHead>Note</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items && items.length > 0 ? (
-              items?.map((item) => (
+            {filteredItems && filteredItems.length > 0 ? (
+              filteredItems?.map((item, index) => (
                 <TableRow key={item.id}>
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell>${item.price.toFixed(2)}</TableCell>
+                  <TableCell>{item.price}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
-                  <TableCell>${item.total.toFixed(2)}</TableCell>
+                  <TableCell>{item.total}</TableCell>
+                  <TableCell>{item.code}</TableCell>
                   <TableCell>{item.note}</TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button
@@ -219,14 +236,14 @@ const ItemTable: React.FC = () => {
           </TableBody>
         </Table>
 
-        <div className="">
+        <div className=" mt-5 p-5">
           <p>
             {" "}
             <b>Total Items:</b> {items?.length}
           </p>
           <p>
-            <b>Total Value:</b> $
-            {items?.reduce((acc, item) => acc + item.total, 0).toFixed(2)}
+            <b>Total Value: </b>
+            MMK {items?.reduce((acc, item) => acc + item.total, 0)}
           </p>
         </div>
       </div>
@@ -264,7 +281,7 @@ const ItemTable: React.FC = () => {
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price</FormLabel>
+                    <FormLabel>Unit Price</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -285,6 +302,23 @@ const ItemTable: React.FC = () => {
                     <FormLabel>Quantity</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="0" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Vr. Code(optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="206154-2025-07-08"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

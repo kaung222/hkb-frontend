@@ -11,7 +11,7 @@ export type Item = {
 
   note: string;
 
-  serviceId?: number;
+  code?: string;
 
   branchId: number;
 

@@ -21,7 +21,7 @@ const InventoryBody: React.FC = () => {
     case "stock":
       return <StockTable />;
     case "item":
-      return <ItemTable />;
+      return <ItemTable search="" />;
     default:
       return <div>Select a category to view details</div>;
   }

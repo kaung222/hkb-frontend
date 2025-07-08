@@ -48,7 +48,7 @@ const ItemDialog: React.FC = ({
     quantity: 1,
     total: 0,
     note: "",
-    serviceId: undefined,
+    code: undefined,
   });
 
   useEffect(() => {

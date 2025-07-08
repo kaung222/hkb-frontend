@@ -57,7 +57,7 @@ const items = [
   //   role: ["admin"],
   // },
   {
-    title: "Inventory",
+    title: "Expenses",
     url: INVENTORY,
     icon: PackagePlusIcon,
     role: ["admin", "technician", "reception"],

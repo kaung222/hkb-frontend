@@ -162,7 +162,7 @@ const Inventory: React.FC = () => {
               <FormLabel>Search</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Search Everything"
+                  placeholder="Search by vr code"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
@@ -173,7 +173,7 @@ const Inventory: React.FC = () => {
         </form>
       </Form>
       {/* <InventoryBody /> */}
-      <ItemTable />
+      <ItemTable search={search} />
     </div>
   );
 };

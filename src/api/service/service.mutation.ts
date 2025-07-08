@@ -14,8 +14,12 @@ export const useAddServiceMutation = () => {
       return api.post(`services`, data).then((res) => res.data);
     },
     onSuccess: async () => {
-      return await queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey,
+        exact: false,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["items"],
         exact: false,
       });
     },
