@@ -56,12 +56,12 @@ const items = [
   //   icon: BadgeDollarSignIcon,
   //   role: ["admin"],
   // },
-  {
-    title: "Expenses",
-    url: INVENTORY,
-    icon: PackagePlusIcon,
-    role: ["admin", "technician", "reception"],
-  },
+  // {
+  //   title: "Expenses",
+  //   url: INVENTORY,
+  //   icon: PackagePlusIcon,
+  //   role: ["admin", "technician", "reception"],
+  // },
   {
     title: "Shops",
     url: SHOP,

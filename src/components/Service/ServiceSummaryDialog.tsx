@@ -30,12 +30,12 @@ export default function ServiceSummaryDialog({
 
   const preUsed = usedServices
     ?.filter(
-      (s) => new Date(s.purchasedDate) < new Date() && s.retrievedDate == null
+      (s) => new Date(s?.purchasedDate) < new Date() && s.retrievedDate == null
     )
     .reduce((a, b) => a + b.expense, 0);
 
   const totalProfit = services.reduce((a, b) => a + b.profit, 0);
-
+  const latest = totalProfit - preUsed + prepaid;
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -104,8 +104,13 @@ export default function ServiceSummaryDialog({
               <span className="">အမြတ်ငွေ:</span>
               <span className=" font-semibold">{totalProfit}</span>
             </div>
+
             {queryMode == "retrievedDate" && (
               <>
+                {" "}
+                <span className="text-white bg-red-500 p-2 rounded-full">
+                  new
+                </span>
                 <div
                   className="flex justify-between items-center p-4"
                   style={{
@@ -117,7 +122,6 @@ export default function ServiceSummaryDialog({
                   <span className="">ကြိုသုံးငွေ:</span>
                   <span className=" font-semibold">{preUsed}</span>
                 </div>
-
                 <div
                   className="flex justify-between items-center p-4"
                   style={{
@@ -129,22 +133,19 @@ export default function ServiceSummaryDialog({
                   <span className="">ပေးပြီးငွေ:</span>
                   <span className=" font-semibold">{prepaid}</span>
                 </div>
+                <div
+                  className="flex justify-between items-center p-4"
+                  style={{
+                    backgroundColor: "#6836838f",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <span className="">လက်ကျန်ငွေ :</span>
+                  <span className=" font-semibold">{latest}</span>
+                </div>
               </>
             )}
-
-            <div
-              className="flex justify-between items-center p-4"
-              style={{
-                backgroundColor: "#6836838f",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-              }}
-            >
-              <span className="">လက်ကျန်ငွေ :</span>
-              <span className=" font-semibold">
-                {totalProfit - preUsed + prepaid}
-              </span>
-            </div>
 
             {/* <div
               className="flex justify-between items-center p-4"
