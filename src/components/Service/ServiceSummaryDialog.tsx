@@ -1,3 +1,4 @@
+import { useGetUnretrivedServices } from "@/api/service/service.query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,29 +11,30 @@ import {
 } from "@/components/ui/dialog";
 import { Service } from "@/types/service";
 import { formatDate } from "date-fns";
+import { useQueryState } from "nuqs";
 
 export default function ServiceSummaryDialog({
   services = [],
 }: {
   services: Service[];
 }) {
+  const { data: usedServices } = useGetUnretrivedServices();
+  const [queryMode] = useQueryState("queryMode");
+
   const totalPrice = services.reduce((a, b) => a + b.price, 0);
 
   const totalExpense = services.reduce((a, b) => a + b.expense, 0);
+  const prepaid = services
+    ?.filter((s) => new Date(s.purchasedDate) < new Date())
+    .reduce((a, b) => a + b.expense, 0);
 
-  // const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
-
-  // const totalRemain = services.reduce((a, b) => a + b.leftToPay, 0);
-
-  const totalProfit = services.reduce((a, b) => a + b.profit, 0);
-
-  const partsFees = services
-    .filter(
-      (service) =>
-        formatDate(service.createdAt, "yyyy-MM-dd") !==
-        formatDate(new Date(), "yyyy-MM-dd")
+  const preUsed = usedServices
+    ?.filter(
+      (s) => new Date(s.purchasedDate) < new Date() && s.retrievedDate == null
     )
     .reduce((a, b) => a + b.expense, 0);
+
+  const totalProfit = services.reduce((a, b) => a + b.profit, 0);
 
   return (
     <Dialog>
@@ -91,7 +93,7 @@ export default function ServiceSummaryDialog({
               <span className=" font-semibold">{totalExpense}</span>
             </div>
 
-            {/* <div
+            <div
               className="flex justify-between items-center p-4"
               style={{
                 backgroundColor: "#6836838f",
@@ -99,9 +101,50 @@ export default function ServiceSummaryDialog({
                 borderRadius: "4px",
               }}
             >
-              <span className="">ပေးငွေ:</span>
-              <span className=" font-semibold">{totalPaid}</span>
-            </div> */}
+              <span className="">အမြတ်ငွေ:</span>
+              <span className=" font-semibold">{totalProfit}</span>
+            </div>
+            {queryMode == "retrievedDate" && (
+              <>
+                <div
+                  className="flex justify-between items-center p-4"
+                  style={{
+                    backgroundColor: "#6836838f",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <span className="">ကြိုသုံးငွေ:</span>
+                  <span className=" font-semibold">{preUsed}</span>
+                </div>
+
+                <div
+                  className="flex justify-between items-center p-4"
+                  style={{
+                    backgroundColor: "#6836838f",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <span className="">ပေးပြီးငွေ:</span>
+                  <span className=" font-semibold">{prepaid}</span>
+                </div>
+              </>
+            )}
+
+            <div
+              className="flex justify-between items-center p-4"
+              style={{
+                backgroundColor: "#6836838f",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+              }}
+            >
+              <span className="">လက်ကျန်ငွေ :</span>
+              <span className=" font-semibold">
+                {totalProfit - preUsed + prepaid}
+              </span>
+            </div>
 
             {/* <div
               className="flex justify-between items-center p-4"
@@ -114,18 +157,6 @@ export default function ServiceSummaryDialog({
               <span className="">ကျန်ငွေ:</span>
               <span className=" font-semibold">{totalRemain}</span>
             </div> */}
-
-            <div
-              className="flex justify-between items-center p-4"
-              style={{
-                backgroundColor: "#6836838f",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-              }}
-            >
-              <span className="">အမြတ်ငွေ:</span>
-              <span className=" font-semibold">{totalProfit}</span>
-            </div>
           </div>
         </div>
         <DialogFooter>

@@ -132,11 +132,6 @@ export function AddServiceDialog() {
   const [spareParts, setSparePares] = useState<SparePart[]>([]);
   const { data: users } = useGetUser();
   const { data: currentUser } = useCurrentUser();
-  const { data: services } = useGetServiceQuery();
-
-  // const code = `HKB_SERVICE_${formatDate(new Date(), "yyyy_MM_dd")}_${
-  //   Math.floor(Math.random() * 1000000) + 1
-  // }`;
 
   const initialState = {
     code: `${Math.floor(100000 + Math.random() * 900000)}`,
@@ -155,6 +150,7 @@ export function AddServiceDialog() {
     price: 0,
     progress: "",
     remark: "",
+    purchasedDate: formatDate(new Date(), "yyyy-MM-dd"),
     status: Status.PENDING,
     serviceReturn: "",
     supplier: "",
@@ -393,6 +389,14 @@ export function AddServiceDialog() {
                 spareParts={spareParts}
                 setSpareParts={setSparePares}
               />
+              <ServiceInput
+                type="date"
+                label="Item purchased Date"
+                placeholder="Item purchased Date"
+                name="purchasedDate"
+                control={form.control}
+              />
+
               {/* <ServiceInput
                 label="Paid"
                 placeholder="0"

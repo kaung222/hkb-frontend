@@ -194,9 +194,9 @@ export function EditServiceDialog({
       technician: currentServiceDetail.technician,
       warranty: currentServiceDetail.warranty,
       retrievedDate: currentServiceDetail.retrievedDate,
+      purchasedDate: formatDate(new Date(), "yyyy-MM-dd"),
     },
   });
-
   const filterTechnicians = technicians.filter(
     (t) =>
       t.branchId === currentServiceDetail.branchId && t.role === "technician"
@@ -225,6 +225,7 @@ export function EditServiceDialog({
         progress: currentServiceDetail.progress || undefined,
         remark: currentServiceDetail.remark || undefined,
         status: currentServiceDetail.status,
+
         serviceReturn:
           currentServiceDetail.serviceRetrun == true
             ? "yes"
@@ -236,6 +237,7 @@ export function EditServiceDialog({
         warranty: currentServiceDetail.warranty || undefined,
         retrievedDate: currentServiceDetail.retrievedDate || undefined,
         createdAt: currentServiceDetail.createdAt || undefined,
+        purchasedDate: currentServiceDetail.purchasedDate || undefined,
       };
       form.reset(payload);
     }
@@ -245,7 +247,7 @@ export function EditServiceDialog({
     const retrievedDate = values.retrievedDate
       ? new Date(values.retrievedDate)
       : new Date();
-    console.log(retrievedDate, "retrieve date");
+
     mutate(
       {
         ...values,
@@ -261,6 +263,7 @@ export function EditServiceDialog({
           price: item.price,
         })),
         retrievedDate,
+        createdAt: new Date(values.createdAt),
       },
       {
         onSuccess: () => {
@@ -565,7 +568,17 @@ export function EditServiceDialog({
                   spareParts={spareParts}
                   setSpareParts={setSpareParts}
                 />
-
+                <ServiceInput
+                  type="date"
+                  label="Item purchased Date"
+                  placeholder="Item purchased Date"
+                  name="purchasedDate"
+                  control={form.control}
+                  disabled={
+                    currentServiceDetail?.retrievedDate !== null &&
+                    currentUser?.role !== "admin"
+                  }
+                />
                 {/* <ServiceInput
                   label="Paid"
                   placeholder="0"

@@ -50,6 +50,7 @@ export const AddServiceSchema = z.object({
   remark: z.string().optional(),
   supplier: z.string().optional(),
   retrievedDate: z.any().optional(),
+  purchasedDate: z.any().optional(),
   price: z
     .preprocess((val) => {
       // Convert input to a number if it's a string
@@ -86,6 +87,7 @@ export const AddServiceSchema = z.object({
     )
     .optional(),
   isRetrieved: z.string().optional(),
+  createdAt: z.any().optional(),
 });
 
 export type AddServiceValuesType = z.infer<typeof AddServiceSchema>;
