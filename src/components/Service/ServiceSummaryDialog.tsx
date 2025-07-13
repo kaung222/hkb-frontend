@@ -105,7 +105,7 @@ export default function ServiceSummaryDialog({
               <span className=" font-semibold">{totalProfit}</span>
             </div>
 
-            {queryMode == "retrievedDate" && (
+            {/* {queryMode == "retrievedDate" && (
               <>
                 {" "}
                 <span className="text-white bg-red-500 p-2 rounded-full">
@@ -145,7 +145,7 @@ export default function ServiceSummaryDialog({
                   <span className=" font-semibold">{latest}</span>
                 </div>
               </>
-            )}
+            )} */}
 
             {/* <div
               className="flex justify-between items-center p-4"
