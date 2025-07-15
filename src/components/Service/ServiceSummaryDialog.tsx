@@ -24,9 +24,17 @@ export default function ServiceSummaryDialog({
   const totalPrice = services.reduce((a, b) => a + b.price, 0);
 
   const totalExpense = services.reduce((a, b) => a + b.expense, 0);
-  const prepaid = services
-    ?.filter((s) => new Date(s.purchasedDate) < new Date())
-    .reduce((a, b) => a + b.expense, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // normalize to midnight
+
+  const paidServices = services?.filter((s) => {
+    if (s.purchasedDate) {
+      const purchasedDate = new Date(s.purchasedDate);
+      purchasedDate.setHours(0, 0, 0, 0); // normalize
+      return purchasedDate < today;
+    }
+  });
+  const prepaid = paidServices.reduce((a, b) => a + b.expense, 0);
 
   const preUsed = usedServices
     ?.filter(
@@ -141,7 +149,9 @@ export default function ServiceSummaryDialog({
                     borderRadius: "4px",
                   }}
                 >
-                  <span className="">လက်ကျန်ငွေ :</span>
+                  <span className="">
+                    လက်ကျန်ငွေ (အမြတ်ငွေ + ရရန်ငွေ - စိုက်ငွေ):
+                  </span>
                   <span className=" font-semibold">{latest}</span>
                 </div>
               </>

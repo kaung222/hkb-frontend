@@ -121,8 +121,8 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                   <CustomTableHead label="ကျသင့်ငွေ" />
                   <CustomTableHead label="ပစ္စည်းဖိုး" />
                   <CustomTableHead label="ပစ္စည်းဝယ်နေ့" />
-                  <CustomTableHead label="ပေးငွေ" />
-                  <CustomTableHead label="ကျန်ငွေ" />
+                  {/* <CustomTableHead label="ပေးငွေ" /> */}
+                  {/* <CustomTableHead label="ကျန်ငွေ" /> */}
                   <CustomTableHead label="အမြတ်ငွေ" />
                   <CustomTableHead label="ပစ္စည်း Supplier" />
                   {/* <CustomTableHead label="ပြန်ပေးနေ့" /> */}
@@ -190,8 +190,8 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                           : ""
                       }
                     />
-                    <CustomTableCell label={item.paidAmount} />
-                    <CustomTableCell label={item.leftToPay} />
+                    {/* <CustomTableCell label={item.paidAmount} /> */}
+                    {/* <CustomTableCell label={item.leftToPay} /> */}
                     <CustomTableCell label={item.profit} />
                     <CustomTableCell label={item.supplier ?? "No"} />
                     {/* <CustomTableCell label={item.return_date} /> */}

@@ -194,7 +194,9 @@ export function EditServiceDialog({
       technician: currentServiceDetail.technician,
       warranty: currentServiceDetail.warranty,
       retrievedDate: currentServiceDetail.retrievedDate,
-      purchasedDate: formatDate(new Date(), "yyyy-MM-dd"),
+      purchasedDate:
+        currentServiceDetail.purchasedDate &&
+        formatDate(new Date(currentServiceDetail.purchasedDate), "yyyy-MM-dd"),
     },
   });
   const filterTechnicians = technicians.filter(
