@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Service } from "@/types/service";
-import { formatDate } from "date-fns";
+import { addDays, formatDate } from "date-fns";
 import { useQueryState } from "nuqs";
 
 export default function ServiceSummaryDialog({
@@ -21,10 +21,12 @@ export default function ServiceSummaryDialog({
   const { data: usedServices } = useGetUnretrivedServices();
   const [queryMode] = useQueryState("queryMode");
 
+  const [date] = useQueryState("date");
+
   const totalPrice = services.reduce((a, b) => a + b.price, 0);
 
   const totalExpense = services.reduce((a, b) => a + b.expense, 0);
-  const today = new Date();
+  const today = new Date(date);
   today.setHours(0, 0, 0, 0); // normalize to midnight
 
   const paidServices = services?.filter((s) => {
@@ -34,12 +36,11 @@ export default function ServiceSummaryDialog({
       return purchasedDate < today;
     }
   });
+  // to collect the used expense in the past day
   const prepaid = paidServices.reduce((a, b) => a + b.expense, 0);
 
   const preUsed = usedServices
-    ?.filter(
-      (s) => new Date(s?.purchasedDate) < new Date() && s.retrievedDate == null
-    )
+    ?.filter((s) => new Date(s?.purchasedDate) < addDays(s.purchasedDate, 1))
     .reduce((a, b) => a + b.expense, 0);
 
   const totalProfit = services.reduce((a, b) => a + b.profit, 0);
