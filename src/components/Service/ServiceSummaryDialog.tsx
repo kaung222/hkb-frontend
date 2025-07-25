@@ -21,7 +21,9 @@ export default function ServiceSummaryDialog({
   const { data: usedServices } = useGetUnretrivedServices();
   const [queryMode] = useQueryState("queryMode");
 
-  const [date] = useQueryState("date");
+  const [date] = useQueryState("date", {
+    defaultValue: formatDate(new Date(), "yyyy-MM-dd"),
+  });
 
   const totalPrice = services.reduce((a, b) => a + b.price, 0);
 
@@ -36,6 +38,7 @@ export default function ServiceSummaryDialog({
       return purchasedDate < today;
     }
   });
+  console.log(today);
   // to collect the used expense in the past day
   const prepaid = paidServices.reduce((a, b) => a + b.expense, 0);
 

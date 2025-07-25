@@ -5,6 +5,7 @@ import {
   AddServicePayloadType,
   AddServiceValuesType,
 } from "@/components/Service/schema/ServiceSchema";
+import { formatDate } from "date-fns";
 
 const queryKey = ["GetServices"];
 export const useAddServiceMutation = () => {
@@ -58,7 +59,8 @@ export const useUpdateService = (id: number) => {
       await api
         .patch(`/services/` + id, {
           ...data,
-          retrieveDate: data.retrievedDate || undefined,
+          retrieveDate:
+            formatDate(data.retrievedDate, "yyyy-MM-dd") || undefined,
         })
         .then((res) => res.data),
     onSuccess: async () => {
