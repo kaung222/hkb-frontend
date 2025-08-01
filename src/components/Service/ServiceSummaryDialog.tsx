@@ -1,4 +1,7 @@
-import { useGetUnretrivedServices } from "@/api/service/service.query";
+import {
+  useGetServiceQuery,
+  useGetUnretrivedServices,
+} from "@/api/service/service.query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,13 +21,15 @@ export default function ServiceSummaryDialog({
 }: {
   services: Service[];
 }) {
-  const { data: usedServices } = useGetUnretrivedServices();
   const [queryMode] = useQueryState("queryMode");
+  const [filterMode] = useQueryState("filterMode");
 
+  const { data: usedServices } = useGetUnretrivedServices();
   const [date] = useQueryState("date", {
     defaultValue: formatDate(new Date(), "yyyy-MM-dd"),
   });
 
+  const { data } = useGetServiceQuery();
   const totalPrice = services.reduce((a, b) => a + b.price, 0);
 
   const totalExpense = services.reduce((a, b) => a + b.expense, 0);
@@ -43,7 +48,11 @@ export default function ServiceSummaryDialog({
   const prepaid = paidServices.reduce((a, b) => a + b.expense, 0);
 
   const preUsed = usedServices
-    ?.filter((s) => new Date(s?.purchasedDate) < addDays(s.purchasedDate, 1))
+    ?.filter(
+      (s) =>
+        formatDate(s.purchasedDate, "yyyy-MM-dd") !==
+          formatDate(s.retrievedDate, "yyyy-MM-dd") || s.retrievedDate == null
+    )
     .reduce((a, b) => a + b.expense, 0);
 
   const totalProfit = services.reduce((a, b) => a + b.profit, 0);

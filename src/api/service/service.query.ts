@@ -50,7 +50,7 @@ export const useGetServiceQuery = () => {
   );
 
   const startDate = startOfMonth(new Date(year, parseInt(month) - 1));
-  const endDate = endOfMonth(new Date(year, parseInt(month) - 1));
+  const endDate = startOfMonth(new Date(year, parseInt(month)));
 
   // const { startDate, endDate } = dateFilter(date);
   const branchId =

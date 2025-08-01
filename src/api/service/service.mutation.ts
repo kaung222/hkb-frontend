@@ -59,8 +59,6 @@ export const useUpdateService = (id: number) => {
       await api
         .patch(`/services/` + id, {
           ...data,
-          retrieveDate:
-            formatDate(data.retrievedDate, "yyyy-MM-dd") || undefined,
         })
         .then((res) => res.data),
     onSuccess: async () => {
