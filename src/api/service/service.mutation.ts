@@ -59,6 +59,7 @@ export const useUpdateService = (id: number) => {
       await api
         .patch(`/services/` + id, {
           ...data,
+          retrieveDate: data.retrievedDate,
         })
         .then((res) => res.data),
     onSuccess: async () => {
