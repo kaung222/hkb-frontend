@@ -36,6 +36,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { RefreshCcw } from "lucide-react";
+import UnretrivedService from "./UnretrivedService";
 
 export enum Status {
   RETRIEVED = "retrieved",
@@ -263,6 +264,9 @@ export default function Service() {
             <div className="flex gap-x-2">
               <AddServiceDialog />
               <ServiceSummaryDialog services={filterService()} />
+              {queryMode === "retrievedDate" && (
+                <UnretrivedService services={filterService()} />
+              )}
             </div>
             <div className="flex gap-x-3">
               <Select value={status} onValueChange={setStatus}>

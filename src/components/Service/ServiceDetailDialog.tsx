@@ -275,6 +275,18 @@ export function EditServiceDialog({
     );
   };
 
+  const isEditable = () => {
+    if (currentUser.role === "admin") return true;
+    if (
+      formatDate(currentServiceDetail.createdAt, "yyyy-MM-dd") !==
+        formatDate(new Date(), "yyyy-MM-dd") ||
+      currentServiceDetail.retrievedDate !== null
+    )
+      return false;
+    return true;
+  };
+  console.log(isEditable(), "is editable");
+
   const handleDeleteService = () => {
     deleteService(
       { id: currentServiceDetail.id },
@@ -581,16 +593,6 @@ export function EditServiceDialog({
                     currentUser?.role !== "admin"
                   }
                 />
-                {/* <ServiceInput
-                  label="Paid"
-                  placeholder="0"
-                  name="paidAmount"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                /> */}
               </div>
               <DialogFooter>
                 <Button
@@ -600,15 +602,6 @@ export function EditServiceDialog({
                   className="transition-colors duration-200 rounded-lg shadow-sm"
                 >
                   Close
-                </Button>
-                <Button
-                  //@ts-expect-error
-                  onClick={() => form.setValue("status", "retrieved")}
-                  type="button"
-                  variant="ghost"
-                  className="transition-colors border border-black duration-200 rounded-lg shadow-sm"
-                >
-                  ယခုရွေးမည်
                 </Button>
                 <AlertDialogApp
                   trigger={
@@ -634,10 +627,7 @@ export function EditServiceDialog({
                 </AlertDialogApp>
 
                 <Button
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
+                  disabled={!isEditable()}
                   type="submit"
                   className="transition-colors duration-200 text-white rounded-lg shadow-sm"
                 >

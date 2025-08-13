@@ -22,14 +22,12 @@ export default function ServiceSummaryDialog({
   services: Service[];
 }) {
   const [queryMode] = useQueryState("queryMode");
-  const [filterMode] = useQueryState("filterMode");
 
   const { data: usedServices } = useGetUnretrivedServices();
   const [date] = useQueryState("date", {
     defaultValue: formatDate(new Date(), "yyyy-MM-dd"),
   });
 
-  const { data } = useGetServiceQuery();
   const totalPrice = services.reduce((a, b) => a + b.price, 0);
 
   const totalExpense = services.reduce((a, b) => a + b.expense, 0);
@@ -43,20 +41,20 @@ export default function ServiceSummaryDialog({
       return purchasedDate < today;
     }
   });
-  console.log(today);
   // to collect the used expense in the past day
   const prepaid = paidServices.reduce((a, b) => a + b.expense, 0);
 
-  const preUsed = usedServices
-    ?.filter(
-      (s) =>
-        formatDate(s.purchasedDate, "yyyy-MM-dd") !==
-          formatDate(s.retrievedDate, "yyyy-MM-dd") || s.retrievedDate == null
-    )
-    .reduce((a, b) => a + b.expense, 0);
-
+  const used = usedServices?.filter(
+    (s) =>
+      formatDate(s.purchasedDate, "yyyy-MM-dd") !==
+        formatDate(s.retrievedDate, "yyyy-MM-dd") || s.retrievedDate == null
+  );
+  console.log(used, "site money");
+  const preUsed = used?.reduce((a, b) => a + b.expense, 0);
   const totalProfit = services.reduce((a, b) => a + b.profit, 0);
   const latest = totalProfit - preUsed + prepaid;
+  console.log("To get", paidServices);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -67,16 +65,6 @@ export default function ServiceSummaryDialog({
           <DialogTitle>Service Summary</DialogTitle>
         </DialogHeader>
         <div className="">
-          {/* <Select value={isRetrieved} onValueChange={setIsRetrived}>
-            <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
-              <SelectValue placeholder="Filter By" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">အားလုံး</SelectItem>
-              <SelectItem value="1">ရွေးပြီး</SelectItem>
-              <SelectItem value="0">မရွေးရသေး</SelectItem>
-            </SelectContent>
-          </Select> */}
           <div className="grid gap-4 py-4">
             {/* Each row */}
             <div
@@ -169,18 +157,6 @@ export default function ServiceSummaryDialog({
                 </div>
               </>
             )}
-
-            {/* <div
-              className="flex justify-between items-center p-4"
-              style={{
-                backgroundColor: "#6836838f",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-              }}
-            >
-              <span className="">ကျန်ငွေ:</span>
-              <span className=" font-semibold">{totalRemain}</span>
-            </div> */}
           </div>
         </div>
         <DialogFooter>
