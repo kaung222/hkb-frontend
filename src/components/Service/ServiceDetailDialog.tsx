@@ -475,25 +475,6 @@ export function EditServiceDialog({
                     currentUser?.role !== "admin"
                   }
                 />
-                {/* <ServiceSelect
-                  label="ရွေးပြီး/မရွေးရသေး"
-                  name="progress"
-                  control={form.control}
-                  defaultValue={
-                    currentServiceDetail.status !== "retrieved"
-                      ? "in_progress"
-                      : currentServiceDetail.status
-                  }
-                  options={[
-                    { label: "မရွေးရသေး", value: Status.IN_PROGRESS },
-                    { label: "ရွေးပြီး", value: "retrieved" },
-                    //  { label: "ရွေးပြီး", value: Status.RETRIEVED },
-                  ]}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                /> */}
 
                 {currentUser.role === "admin" && (
                   <ServiceInput
@@ -588,10 +569,7 @@ export function EditServiceDialog({
                   placeholder="Item purchased Date"
                   name="purchasedDate"
                   control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
+                  disabled={!isEditable()}
                 />
               </div>
               <DialogFooter>
@@ -627,7 +605,10 @@ export function EditServiceDialog({
                 </AlertDialogApp>
 
                 <Button
-                  disabled={!isEditable()}
+                  disabled={
+                    currentServiceDetail?.retrievedDate !== null &&
+                    currentUser?.role !== "admin"
+                  }
                   type="submit"
                   className="transition-colors duration-200 text-white rounded-lg shadow-sm"
                 >
