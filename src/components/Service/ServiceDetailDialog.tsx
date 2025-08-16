@@ -278,14 +278,12 @@ export function EditServiceDialog({
   const isEditable = () => {
     if (currentUser.role === "admin") return true;
     if (
-      formatDate(currentServiceDetail.createdAt, "yyyy-MM-dd") !==
-        formatDate(new Date(), "yyyy-MM-dd") ||
+      currentServiceDetail.items.length > 0 ||
       currentServiceDetail.retrievedDate !== null
     )
       return false;
     return true;
   };
-  console.log(isEditable(), "is editable");
 
   const handleDeleteService = () => {
     deleteService(
