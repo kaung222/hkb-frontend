@@ -35,6 +35,7 @@ import {
 } from "@/api/service/service.mutation";
 import { AlertDialogApp } from "../common/AlertDialogApp";
 import { format, formatDate } from "date-fns";
+import { userInfo } from "os";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -317,186 +318,192 @@ export function EditServiceDialog({
                 <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
                   Basic Information
                 </div>
-                {currentUser?.role === "admin" && (
-                  <ServiceSelect
-                    label="Branch"
-                    name="branchId"
-                    control={form.control}
-                    defaultValue={currentServiceDetail.branchId?.toString()}
-                    options={shops.map((shop) => ({
-                      label: shop.name,
-                      value: shop.id?.toString(),
-                    }))}
-                  />
+                {currentUser.role !== "technician" && (
+                  <>
+                    {currentUser?.role === "admin" && (
+                      <ServiceSelect
+                        label="Branch"
+                        name="branchId"
+                        control={form.control}
+                        defaultValue={currentServiceDetail.branchId?.toString()}
+                        options={shops.map((shop) => ({
+                          label: shop.name,
+                          value: shop.id?.toString(),
+                        }))}
+                      />
+                    )}
+                    <ServiceInput
+                      label="Brand"
+                      placeholder="Brand"
+                      name="brand"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceInput
+                      label="Model"
+                      placeholder="Model"
+                      name="model"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceInput
+                      label="IMEI"
+                      placeholder="IMEI"
+                      name="imeiNumber"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceInput
+                      label="Color"
+                      placeholder="Color"
+                      name="color"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceInput
+                      label="Error"
+                      placeholder="Error"
+                      name="error"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceTextArea
+                      label="မှတ်ချက်"
+                      placeholder="Remark"
+                      name="remark"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                  </>
                 )}
-                <ServiceInput
-                  label="Brand"
-                  placeholder="Brand"
-                  name="brand"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceInput
-                  label="Model"
-                  placeholder="Model"
-                  name="model"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceInput
-                  label="IMEI"
-                  placeholder="IMEI"
-                  name="imeiNumber"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceInput
-                  label="Color"
-                  placeholder="Color"
-                  name="color"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceInput
-                  label="Error"
-                  placeholder="Error"
-                  name="error"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceTextArea
-                  label="မှတ်ချက်"
-                  placeholder="Remark"
-                  name="remark"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
+                {currentUser.role !== "technician" && (
+                  <>
+                    {/* Voucher Information Section */}
+                    <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
+                      Voucher Information
+                    </div>
+                    <ServiceInput
+                      label="Voucher ID"
+                      placeholder="Voucher ID"
+                      name="code"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceInput
+                      label="Customer Name"
+                      placeholder="Customer name"
+                      name="username"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceInput
+                      label="Phone Number"
+                      placeholder="Phone Number"
+                      name="phone"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceSelect
+                      label="Warranty"
+                      name="warranty"
+                      control={form.control}
+                      defaultValue={currentServiceDetail.warranty}
+                      options={[
+                        { label: "Out Warranty", value: "Out" },
+                        { label: "In Warranty", value: "In" },
+                      ]}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceSelect
+                      label="Service Return"
+                      name="serviceReturn"
+                      defaultValue={currentServiceDetail.serviceRetrun}
+                      control={form.control}
+                      options={[
+                        { label: "No", value: "no" },
+                        { label: "Yes", value: "yes" },
+                      ]}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceInput
+                      label="ရက်ချိန်း"
+                      placeholder="yyyy-mm-dd"
+                      type="date"
+                      name="dueDate"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+                    <ServiceInput
+                      label="Total Amount"
+                      placeholder="Total Amount"
+                      name="price"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
 
-                {/* Voucher Information Section */}
-                <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
-                  Voucher Information
-                </div>
-                <ServiceInput
-                  label="Voucher ID"
-                  placeholder="Voucher ID"
-                  name="code"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceInput
-                  label="Customer Name"
-                  placeholder="Customer name"
-                  name="username"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceInput
-                  label="Phone Number"
-                  placeholder="Phone Number"
-                  name="phone"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceSelect
-                  label="Warranty"
-                  name="warranty"
-                  control={form.control}
-                  defaultValue={currentServiceDetail.warranty}
-                  options={[
-                    { label: "Out Warranty", value: "Out" },
-                    { label: "In Warranty", value: "In" },
-                  ]}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceSelect
-                  label="Service Return"
-                  name="serviceReturn"
-                  defaultValue={currentServiceDetail.serviceRetrun}
-                  control={form.control}
-                  options={[
-                    { label: "No", value: "no" },
-                    { label: "Yes", value: "yes" },
-                  ]}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceInput
-                  label="ရက်ချိန်း"
-                  placeholder="yyyy-mm-dd"
-                  type="date"
-                  name="dueDate"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
-                <ServiceInput
-                  label="Total Amount"
-                  placeholder="Total Amount"
-                  name="price"
-                  control={form.control}
-                  disabled={
-                    currentServiceDetail?.retrievedDate !== null &&
-                    currentUser?.role !== "admin"
-                  }
-                />
+                    {currentUser.role === "admin" && (
+                      <ServiceInput
+                        label="ပစ္စည်းအပ်နေ့"
+                        placeholder="ပစ္စည်းအပ်နေ့"
+                        name="createdAt"
+                        control={form.control}
+                        disabled={currentUser?.role !== "admin"}
+                      />
+                    )}
 
-                {currentUser.role === "admin" && (
-                  <ServiceInput
-                    label="ပစ္စည်းအပ်နေ့"
-                    placeholder="ပစ္စည်းအပ်နေ့"
-                    name="createdAt"
-                    control={form.control}
-                    disabled={currentUser?.role !== "admin"}
-                  />
+                    {currentUser.role === "admin" && (
+                      <ServiceInput
+                        label="ပစ္စည်းရွေးနေ့"
+                        placeholder="ပစ္စည်းရွေးနေ့"
+                        name="retrievedDate"
+                        control={form.control}
+                        disabled={
+                          currentServiceDetail?.retrievedDate !== null &&
+                          currentUser?.role !== "admin"
+                        }
+                      />
+                    )}
+                  </>
                 )}
-
-                {currentUser.role === "admin" && (
-                  <ServiceInput
-                    label="ပစ္စည်းရွေးနေ့"
-                    placeholder="ပစ္စည်းရွေးနေ့"
-                    name="retrievedDate"
-                    control={form.control}
-                    disabled={
-                      currentServiceDetail?.retrievedDate !== null &&
-                      currentUser?.role !== "admin"
-                    }
-                  />
-                )}
-
                 {/* Technician and Service Information Section */}
                 <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
                   Technician and Service Information

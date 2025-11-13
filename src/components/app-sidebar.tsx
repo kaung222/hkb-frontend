@@ -42,7 +42,7 @@ const items = [
     title: "Home",
     url: HOME,
     icon: Home,
-    role: ["admin", "technician", "reception"],
+    role: ["admin"],
   },
   {
     title: "Services",

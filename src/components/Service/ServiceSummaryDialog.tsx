@@ -15,6 +15,7 @@ import {
 import { Service } from "@/types/service";
 import { addDays, formatDate } from "date-fns";
 import { useQueryState } from "nuqs";
+import { Separator } from "../ui/separator";
 
 export default function ServiceSummaryDialog({
   services = [],
@@ -116,10 +117,7 @@ export default function ServiceSummaryDialog({
 
             {queryMode == "retrievedDate" && (
               <>
-                {" "}
-                <span className="text-white bg-red-500 p-2 rounded-full">
-                  new
-                </span>
+                <Separator />
                 <div
                   className="flex justify-between items-center p-4"
                   style={{
