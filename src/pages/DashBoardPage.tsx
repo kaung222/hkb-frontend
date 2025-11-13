@@ -33,7 +33,7 @@ const DashBoardPage = () => {
   const { data: user } = useCurrentUser();
   console.log(data);
   if (!data) return null;
-  if (user.role !== "admin")
+  if (user?.role !== "admin")
     return <div className="">Hello welcome to Hlakabar</div>;
   return (
     <div className="p-7">
