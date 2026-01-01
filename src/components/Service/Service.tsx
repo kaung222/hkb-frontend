@@ -86,6 +86,14 @@ export default function Service() {
     { label: "December", value: "12" },
   ];
 
+  const yearOptions = [
+    { label: "2023", value: "2023" },
+    { label: "2024", value: "2024" },
+    { label: "2025", value: "2025" },
+    { label: "2026", value: "2026" },
+    { label: "2027", value: "2027" },
+  ];
+
   const form = useForm();
   const { data: user } = useCurrentUser();
   const { data: technicians, isLoading: isTechnicianLoading } = useGetUser();
@@ -94,6 +102,10 @@ export default function Service() {
   const { data: detailService } = useDataStore();
   const [search, setSearch] = useState("");
   const [isSpinning, setIsSpinning] = useState(false);
+  const [year, setYear] = useQueryState(
+    "year",
+    parseAsString.withDefault(new Date().getFullYear().toString())
+  );
 
   const handleRefresh = async () => {
     setIsSpinning(true);
@@ -179,6 +191,38 @@ export default function Service() {
                       </FormItem>
                     )}
                   />
+
+                  {filterMode === "month" && (
+                    <FormField
+                      control={form.control}
+                      name="yearFilter"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Year Filter</FormLabel>
+                          <Select
+                            {...field}
+                            value={year}
+                            onValueChange={(e) => {
+                              field.onChange(e);
+                              setYear(e);
+                            }}
+                          >
+                            <SelectTrigger className="w-[160px] rounded-lg border-gray-300 shadow-sm">
+                              <SelectValue placeholder="Select Year" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {yearOptions.map((year) => (
+                                <SelectItem key={year.value} value={year.value}>
+                                  {year.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   {filterMode === "day" ? (
                     <>

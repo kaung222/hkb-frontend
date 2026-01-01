@@ -24,7 +24,6 @@ interface GetServiceProps {
 export const useGetServiceQuery = () => {
   const { data: shops } = useGerBraches();
   const { data: user } = useCurrentUser();
-  const year = new Date().getFullYear();
   const [date, setDate] = useQueryState(
     "date",
     parseAsString.withDefault(format(new Date(), "yyyy-MM-dd"))
@@ -39,6 +38,11 @@ export const useGetServiceQuery = () => {
     parseAsString.withDefault("01")
   );
 
+  const [year, setYear] = useQueryState(
+    "year",
+    parseAsString.withDefault(new Date().getFullYear().toString())
+  );
+  const selectedYear = parseInt(year);
   const [filterMode, setFilterMode] = useQueryState(
     "filterMode",
     parseAsString.withDefault("day")
@@ -49,8 +53,8 @@ export const useGetServiceQuery = () => {
     parseAsString.withDefault("createdDate")
   );
 
-  const startDate = startOfMonth(new Date(year, parseInt(month) - 1));
-  const endDate = startOfMonth(new Date(year, parseInt(month)));
+  const startDate = startOfMonth(new Date(selectedYear, parseInt(month) - 1));
+  const endDate = endOfMonth(new Date(selectedYear, parseInt(month) - 1));
 
   // const { startDate, endDate } = dateFilter(date);
   const branchId =
@@ -105,11 +109,15 @@ export const useGetSingleService = () => {
 export const useGetUnretrivedServices = () => {
   const { data: user } = useCurrentUser();
   const { data: shops } = useGerBraches();
-  const year = new Date().getFullYear();
   const [date, setDate] = useQueryState(
     "date",
     parseAsString.withDefault(format(new Date(), "yyyy-MM-dd"))
   );
+  const [year, setYear] = useQueryState(
+    "year",
+    parseAsString.withDefault(new Date().getFullYear().toString())
+  );
+  const selectedYear = parseInt(year);
 
   const [branch, setBranch] = useQueryState(
     "branch",
@@ -130,8 +138,8 @@ export const useGetUnretrivedServices = () => {
     parseAsString.withDefault("createdDate")
   );
 
-  const startDate = startOfMonth(new Date(year, parseInt(month) - 1));
-  const endDate = endOfMonth(new Date(year, parseInt(month) - 1));
+  const startDate = startOfMonth(new Date(selectedYear, parseInt(month) - 1));
+  const endDate = endOfMonth(new Date(selectedYear, parseInt(month) - 1));
 
   // const { startDate, endDate } = dateFilter(date);
   const branchId =
