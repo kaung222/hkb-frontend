@@ -54,8 +54,7 @@ export const useGetServiceQuery = () => {
   );
 
   const startDate = startOfMonth(new Date(selectedYear, parseInt(month) - 1));
-  const endDate = endOfMonth(new Date(selectedYear, parseInt(month) - 1));
-
+  const endDate = startOfMonth(new Date(selectedYear, parseInt(month)));
   // const { startDate, endDate } = dateFilter(date);
   const branchId =
     user?.role === "admin"
@@ -139,7 +138,7 @@ export const useGetUnretrivedServices = () => {
   );
 
   const startDate = startOfMonth(new Date(selectedYear, parseInt(month) - 1));
-  const endDate = endOfMonth(new Date(selectedYear, parseInt(month) - 1));
+  const endDate = startOfMonth(new Date(selectedYear, parseInt(month)));
 
   // const { startDate, endDate } = dateFilter(date);
   const branchId =
