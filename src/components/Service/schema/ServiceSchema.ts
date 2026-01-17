@@ -71,7 +71,7 @@ export const AddServiceSchema = z.object({
       return val;
     }, z.number())
     .optional(),
-  serviceReturn: z.string().optional(),
+  serviceRetrun: z.string().optional(),
   leftToPay: z.string().optional(),
   items: z
     .array(
@@ -83,7 +83,7 @@ export const AddServiceSchema = z.object({
             return val;
           }, z.number())
           .default(0),
-      })
+      }),
     )
     .optional(),
   isRetrieved: z.string().optional(),

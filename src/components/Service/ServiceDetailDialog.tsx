@@ -182,7 +182,7 @@ export function EditServiceDialog({
       dueDate: format(new Date(currentServiceDetail.dueDate), "yyyy-MM-dd"),
       error: currentServiceDetail.error,
       imeiNumber: currentServiceDetail.imeiNumber,
-      serviceReturn: currentServiceDetail.serviceRetrun ? "yes" : "no",
+      serviceReturn: currentServiceDetail.serviceRetrun,
       isRetrieved: currentServiceDetail.isRetrieved,
       model: currentServiceDetail.model,
       paidAmount: currentServiceDetail.paidAmount,
@@ -202,7 +202,7 @@ export function EditServiceDialog({
   });
   const filterTechnicians = technicians.filter(
     (t) =>
-      t.branchId === currentServiceDetail.branchId && t.role === "technician"
+      t.branchId === currentServiceDetail.branchId && t.role === "technician",
   );
 
   useEffect(() => {
@@ -229,12 +229,8 @@ export function EditServiceDialog({
         remark: currentServiceDetail.remark || undefined,
         status: currentServiceDetail.status,
 
-        serviceReturn:
-          currentServiceDetail.serviceRetrun == true
-            ? "yes"
-            : currentServiceDetail.serviceRetrun == false
-            ? "no"
-            : undefined,
+        serviceRetrun:
+          currentServiceDetail.serviceRetrun == true ? "yes" : "no",
         supplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
@@ -255,12 +251,13 @@ export function EditServiceDialog({
       {
         ...values,
         price: values.price,
-        serviceReturn:
-          values.serviceReturn == "yes"
+        //@ts-expect-error
+        serviceRetrun:
+          values.serviceRetrun == "yes"
             ? true
-            : values.serviceReturn == "no"
-            ? false
-            : undefined,
+            : values.serviceRetrun == "no"
+              ? false
+              : undefined,
         items: spareParts.map((item) => ({
           name: item.name,
           price: item.price,
@@ -272,7 +269,7 @@ export function EditServiceDialog({
         onSuccess: () => {
           closeDialog(dialogKeys.serviceDetail);
         },
-      }
+      },
     );
   };
 
@@ -293,7 +290,7 @@ export function EditServiceDialog({
         onSuccess: () => {
           closeDialog(dialogKeys.serviceDetail);
         },
-      }
+      },
     );
   };
 
@@ -446,7 +443,7 @@ export function EditServiceDialog({
                     />
                     <ServiceSelect
                       label="Service Return"
-                      name="serviceReturn"
+                      name="serviceRetrun"
                       defaultValue={currentServiceDetail.serviceRetrun}
                       control={form.control}
                       options={[
