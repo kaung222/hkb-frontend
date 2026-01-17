@@ -181,11 +181,11 @@ export function AddServiceDialog() {
         ...values,
         price: Number(values.price),
         serviceReturn:
-          values.serviceReturn == "yes"
+          values.serviceRetrun == "yes"
             ? true
-            : values.serviceReturn == "no"
-            ? false
-            : undefined,
+            : values.serviceRetrun == "no"
+              ? false
+              : undefined,
         supplier: values.supplier,
         items: spareParts.map((field) => ({
           //@ts-ignore
@@ -200,10 +200,10 @@ export function AddServiceDialog() {
           form.reset();
           form.setValue(
             "code",
-            `${Math.floor(100000 + Math.random() * 900000)}`
+            `${Math.floor(100000 + Math.random() * 900000)}`,
           );
         },
-      }
+      },
     );
   };
 
