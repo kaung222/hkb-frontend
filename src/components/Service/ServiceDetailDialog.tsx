@@ -186,6 +186,7 @@ export function EditServiceDialog({
       isRetrieved: currentServiceDetail.isRetrieved,
       model: currentServiceDetail.model,
       paidAmount: currentServiceDetail.paidAmount,
+      discount: currentServiceDetail.discount || 0,
       phone: currentServiceDetail.phone,
       price: currentServiceDetail.price,
       progress: currentServiceDetail.progress,
@@ -223,6 +224,7 @@ export function EditServiceDialog({
         isRetrieved: currentServiceDetail.isRetrieved || undefined,
         model: currentServiceDetail.model || undefined,
         paidAmount: currentServiceDetail.paidAmount || undefined,
+        discount: currentServiceDetail.discount || 0,
         phone: currentServiceDetail.phone || undefined,
         price: currentServiceDetail.price || undefined,
         progress: currentServiceDetail.progress || undefined,
@@ -241,6 +243,30 @@ export function EditServiceDialog({
       form.reset(payload);
     }
   }, [currentServiceDetail, form]);
+
+  // Auto-calculate paidAmount based on discount and price
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === "discount" || name === "price") {
+        const price =
+          typeof value.price === "number"
+            ? value.price
+            : parseFloat(value.price as string) || 0;
+        const discount =
+          typeof value.discount === "number"
+            ? value.discount
+            : parseFloat(value.discount as string) || 0;
+
+        if (price > 0 && discount >= 0 && discount <= 100) {
+          const discountAmount = (price * discount) / 100;
+          const paidAmount = price - discountAmount;
+          form.setValue("paidAmount", paidAmount);
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   const handleEditService = (values: AddServiceValuesType) => {
     const retrievedDate = values.retrievedDate
@@ -475,6 +501,25 @@ export function EditServiceDialog({
                         currentServiceDetail?.retrievedDate !== null &&
                         currentUser?.role !== "admin"
                       }
+                    />
+
+                    <ServiceInput
+                      label="Discount(%)"
+                      placeholder="10"
+                      name="discount"
+                      control={form.control}
+                      disabled={
+                        currentServiceDetail?.retrievedDate !== null &&
+                        currentUser?.role !== "admin"
+                      }
+                    />
+
+                    <ServiceInput
+                      label="Paid Amount"
+                      placeholder="Paid Amount"
+                      name="paidAmount"
+                      control={form.control}
+                      disabled={true}
                     />
 
                     {currentUser.role === "admin" && (

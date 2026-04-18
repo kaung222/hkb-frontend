@@ -71,6 +71,13 @@ export const AddServiceSchema = z.object({
       return val;
     }, z.number())
     .optional(),
+  discount: z
+    .preprocess((val) => {
+      // Convert input to a number if it's a string
+      if (typeof val === "string") return parseFloat(val);
+      return val;
+    }, z.number())
+    .optional(),
   serviceRetrun: z.string().optional(),
   leftToPay: z.string().optional(),
   items: z

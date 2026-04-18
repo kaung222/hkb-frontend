@@ -146,6 +146,7 @@ export function AddServiceDialog() {
     isRetrieved: Status.IN_PROGRESS,
     model: "",
     paidAmount: 0,
+    discount: 0,
     phone: "",
     price: 0,
     progress: "",
@@ -162,6 +163,30 @@ export function AddServiceDialog() {
     resolver: zodResolver(AddServiceSchema),
     defaultValues: initialState,
   });
+
+  // Auto-calculate paidAmount based on discount and price
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === "discount" || name === "price") {
+        const price =
+          typeof value.price === "number"
+            ? value.price
+            : parseFloat(value.price as string) || 0;
+        const discount =
+          typeof value.discount === "number"
+            ? value.discount
+            : parseFloat(value.discount as string) || 0;
+
+        if (price > 0 && discount >= 0 && discount <= 100) {
+          const discountAmount = (price * discount) / 100;
+          const paidAmount = price - discountAmount;
+          form.setValue("paidAmount", paidAmount);
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   const technicians =
     users?.filter((user) => {
@@ -326,6 +351,18 @@ export function AddServiceDialog() {
                 label="Total Amount"
                 placeholder="Total Amount"
                 name="price"
+                control={form.control}
+              />
+              <ServiceInput
+                label="Discount(%)"
+                placeholder="10"
+                name="discount"
+                control={form.control}
+              />
+              <ServiceInput
+                label="Paid Amount"
+                placeholder="Paid Amount"
+                name="paidAmount"
                 control={form.control}
               />
               <ServiceSelect

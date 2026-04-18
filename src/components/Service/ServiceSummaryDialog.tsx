@@ -48,11 +48,12 @@ export default function ServiceSummaryDialog({
   const used = usedServices?.filter(
     (s) =>
       formatDate(s.purchasedDate, "yyyy-MM-dd") !==
-        formatDate(s.retrievedDate, "yyyy-MM-dd") || s.retrievedDate == null
+        formatDate(s.retrievedDate, "yyyy-MM-dd") || s.retrievedDate == null,
   );
   console.log(used, "site money");
   const preUsed = used?.reduce((a, b) => a + b.expense, 0);
   const totalProfit = services.reduce((a, b) => a + b.profit, 0);
+  const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
   const latest = totalProfit - preUsed + prepaid;
   console.log("To get", paidServices);
 
@@ -113,6 +114,18 @@ export default function ServiceSummaryDialog({
             >
               <span className="">အမြတ်ငွေ:</span>
               <span className=" font-semibold">{totalProfit}</span>
+            </div>
+
+            <div
+              className="flex justify-between items-center p-4"
+              style={{
+                backgroundColor: "#6836838f",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+              }}
+            >
+              <span className="">Discount</span>
+              <span className=" font-semibold">{totalPrice - totalPaid}</span>
             </div>
 
             {queryMode == "retrievedDate" && (

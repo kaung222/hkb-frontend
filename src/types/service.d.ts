@@ -64,6 +64,7 @@ export type Service = {
   retrievedDate?: Date; // optional, as it's nullable
   condition?: string; // optional, as it's nullable
   paidAmount?: number; // optional, as it's nullable
+  discount?: number; // optional, discount percentage
   isRetrieved?: string; // optional, as it's nullable
   leftToPay?: number; // optional, as it's nullable
   createdAt: Date;
