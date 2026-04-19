@@ -40,7 +40,11 @@ const CustomTableCell = ({ label }: TableCellProps) => (
 );
 const getProfit = (item: Service) => {
   const itemPrice = item.items?.reduce((a, b) => a + b.price, 0);
-  return item.paidAmount - itemPrice;
+  const amount =
+    new Date(item.createdAt) > new Date("2026-04-19")
+      ? item.paidAmount
+      : item.price;
+  return amount - itemPrice;
 };
 
 const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
