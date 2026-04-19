@@ -54,8 +54,9 @@ export default function ServiceSummaryDialog({
   const totalProfit = services.reduce((a, b) => {
     const amount =
       new Date(b.createdAt) > new Date("2026-04-19") ? b.paidAmount : b.price;
-
-    return a + amount - b.expense;
+    const expense =
+      new Date(b.createdAt) > new Date("2026-04-19") ? b.expense : 0;
+    return a + amount - expense;
   }, 0);
   // const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
   const latest = totalProfit - preUsed + prepaid;
