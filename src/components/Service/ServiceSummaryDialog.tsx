@@ -50,12 +50,13 @@ export default function ServiceSummaryDialog({
       formatDate(s.purchasedDate, "yyyy-MM-dd") !==
         formatDate(s.retrievedDate, "yyyy-MM-dd") || s.retrievedDate == null,
   );
-  console.log(used, "site money");
   const preUsed = used?.reduce((a, b) => a + b.expense, 0);
-  const totalProfit = services.reduce((a, b) => a + b.profit, 0);
-  const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
+  const totalProfit = services.reduce(
+    (a, b) => a + b.paidAmount - b.expense,
+    0,
+  );
+  // const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
   const latest = totalProfit - preUsed + prepaid;
-  console.log("To get", paidServices);
 
   return (
     <Dialog>
@@ -125,7 +126,9 @@ export default function ServiceSummaryDialog({
               }}
             >
               <span className="">Discount</span>
-              <span className=" font-semibold">{totalPrice - totalPaid}</span>
+              <span className=" font-semibold">
+                {totalPrice - totalProfit - totalExpense}
+              </span>
             </div>
 
             {queryMode == "retrievedDate" && (

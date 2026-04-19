@@ -38,6 +38,10 @@ interface TableCellProps {
 const CustomTableCell = ({ label }: TableCellProps) => (
   <TableCell className="py-4 w-auto text-center">{label}</TableCell>
 );
+const getProfit = (item: Service) => {
+  const itemPrice = item.items?.reduce((a, b) => a + b.price, 0);
+  return item.paidAmount - itemPrice;
+};
 
 const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -166,8 +170,8 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                         item.serviceRetrun == true
                           ? "Yes"
                           : item.serviceRetrun == false
-                          ? "No"
-                          : ""
+                            ? "No"
+                            : ""
                       }
                     />
                     <CustomTableCell label={item.error} />
@@ -192,7 +196,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                     />
                     {/* <CustomTableCell label={item.paidAmount} /> */}
                     {/* <CustomTableCell label={item.leftToPay} /> */}
-                    <CustomTableCell label={item.profit} />
+                    <CustomTableCell label={getProfit(item)} />
                     <CustomTableCell label={item.supplier ?? "No"} />
                     {/* <CustomTableCell label={item.return_date} /> */}
                     <CustomTableCell
@@ -200,7 +204,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                         item.retrievedDate !== null
                           ? `ရွေးပြီး, (${formatDate(
                               item.retrievedDate,
-                              "yy-MM-dd"
+                              "yy-MM-dd",
                             )}) `
                           : "မရွေးရသေး"
                       }

@@ -36,6 +36,7 @@ import {
 import { AlertDialogApp } from "../common/AlertDialogApp";
 import { format, formatDate } from "date-fns";
 import { userInfo } from "os";
+import { defaultDiscount } from "@/api/api";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -186,7 +187,7 @@ export function EditServiceDialog({
       isRetrieved: currentServiceDetail.isRetrieved,
       model: currentServiceDetail.model,
       paidAmount: currentServiceDetail.paidAmount,
-      discount: currentServiceDetail.discount || 0,
+      discount: currentServiceDetail.discount || defaultDiscount,
       phone: currentServiceDetail.phone,
       price: currentServiceDetail.price,
       progress: currentServiceDetail.progress,
@@ -224,7 +225,7 @@ export function EditServiceDialog({
         isRetrieved: currentServiceDetail.isRetrieved || undefined,
         model: currentServiceDetail.model || undefined,
         paidAmount: currentServiceDetail.paidAmount || undefined,
-        discount: currentServiceDetail.discount || 0,
+        discount: currentServiceDetail.discount || defaultDiscount,
         phone: currentServiceDetail.phone || undefined,
         price: currentServiceDetail.price || undefined,
         progress: currentServiceDetail.progress || undefined,
@@ -503,7 +504,7 @@ export function EditServiceDialog({
                       }
                     />
 
-                    <ServiceInput
+                    {/* <ServiceInput
                       label="Discount(%)"
                       placeholder="10"
                       name="discount"
@@ -520,7 +521,7 @@ export function EditServiceDialog({
                       name="paidAmount"
                       control={form.control}
                       disabled={true}
-                    />
+                    /> */}
 
                     {currentUser.role === "admin" && (
                       <ServiceInput

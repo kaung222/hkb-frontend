@@ -33,6 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AddServiceSchema, AddServiceValuesType } from "./schema/ServiceSchema";
 import { SparePart } from "@/types/service";
 import { useGetServiceQuery } from "@/api/service/service.query";
+import { defaultDiscount } from "@/api/api";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -146,7 +147,7 @@ export function AddServiceDialog() {
     isRetrieved: Status.IN_PROGRESS,
     model: "",
     paidAmount: 0,
-    discount: 0,
+    discount: defaultDiscount,
     phone: "",
     price: 0,
     progress: "",
@@ -353,7 +354,7 @@ export function AddServiceDialog() {
                 name="price"
                 control={form.control}
               />
-              <ServiceInput
+              {/* <ServiceInput
                 label="Discount(%)"
                 placeholder="10"
                 name="discount"
@@ -364,7 +365,7 @@ export function AddServiceDialog() {
                 placeholder="Paid Amount"
                 name="paidAmount"
                 control={form.control}
-              />
+              /> */}
               <ServiceSelect
                 label="ရွေးပြီး/မရွေးရသေး"
                 name="isRetrieved"

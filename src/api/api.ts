@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const baseURL = import.meta.env.VITE_API_URL;
+export const defaultDiscount = 10;
 
 const api = axios.create({
   baseURL: `${baseURL}/api/v1`,
@@ -20,7 +21,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Flag to prevent multiple refresh attempts
@@ -74,7 +75,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
