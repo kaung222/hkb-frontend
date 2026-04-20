@@ -504,7 +504,7 @@ export function EditServiceDialog({
                       }
                     />
 
-                    {currentUser.role === "admin" && (
+                    {currentUser?.role === "admin" && (
                       <ServiceInput
                         label="Discount(%)"
                         placeholder="10"
@@ -516,7 +516,7 @@ export function EditServiceDialog({
                         }
                       />
                     )}
-                    {currentUser.role === "admin" && (
+                    {currentUser?.role === "admin" && (
                       <ServiceInput
                         label="ပေးရမည့်ပမာဏ"
                         placeholder="10000"

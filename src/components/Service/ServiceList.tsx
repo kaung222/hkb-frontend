@@ -39,6 +39,7 @@ const CustomTableCell = ({ label }: TableCellProps) => (
   <TableCell className="py-4 w-auto text-center">{label}</TableCell>
 );
 const getProfit = (item: Service) => {
+  console.log(item);
   const itemPrice = item.items?.reduce((a, b) => a + b.price, 0);
   const amount =
     new Date(item.createdAt) > new Date("2026-04-19")

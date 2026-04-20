@@ -354,7 +354,7 @@ export function AddServiceDialog() {
                 name="price"
                 control={form.control}
               />
-              {currentUser.role === "admin" && (
+              {currentUser?.role === "admin" && (
                 <ServiceInput
                   label="Discount(%)"
                   placeholder="10"
@@ -362,7 +362,7 @@ export function AddServiceDialog() {
                   control={form.control}
                 />
               )}
-              {currentUser.role === "admin" && (
+              {currentUser?.role === "admin" && (
                 <ServiceInput
                   label="ပေးရမည့်ပမာဏ"
                   placeholder="10000"
