@@ -504,24 +504,26 @@ export function EditServiceDialog({
                       }
                     />
 
-                    {/* <ServiceInput
-                      label="Discount(%)"
-                      placeholder="10"
-                      name="discount"
-                      control={form.control}
-                      disabled={
-                        currentServiceDetail?.retrievedDate !== null &&
-                        currentUser?.role !== "admin"
-                      }
-                    />
-
-                    <ServiceInput
-                      label="Paid Amount"
-                      placeholder="Paid Amount"
-                      name="paidAmount"
-                      control={form.control}
-                      disabled={true}
-                    /> */}
+                    {currentUser.role === "admin" && (
+                      <ServiceInput
+                        label="Discount(%)"
+                        placeholder="10"
+                        name="discount"
+                        control={form.control}
+                        disabled={
+                          currentServiceDetail?.retrievedDate !== null &&
+                          currentUser?.role !== "admin"
+                        }
+                      />
+                    )}
+                    {currentUser.role === "admin" && (
+                      <ServiceInput
+                        label="ပေးရမည့်ပမာဏ"
+                        placeholder="10000"
+                        name="paidAmount"
+                        control={form.control}
+                      />
+                    )}
 
                     {currentUser.role === "admin" && (
                       <ServiceInput

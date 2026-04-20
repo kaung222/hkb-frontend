@@ -354,18 +354,22 @@ export function AddServiceDialog() {
                 name="price"
                 control={form.control}
               />
-              {/* <ServiceInput
-                label="Discount(%)"
-                placeholder="10"
-                name="discount"
-                control={form.control}
-              />
-              <ServiceInput
-                label="Paid Amount"
-                placeholder="Paid Amount"
-                name="paidAmount"
-                control={form.control}
-              /> */}
+              {currentUser.role === "admin" && (
+                <ServiceInput
+                  label="Discount(%)"
+                  placeholder="10"
+                  name="discount"
+                  control={form.control}
+                />
+              )}
+              {currentUser.role === "admin" && (
+                <ServiceInput
+                  label="ပေးရမည့်ပမာဏ"
+                  placeholder="10000"
+                  name="paidAmount"
+                  control={form.control}
+                />
+              )}
               <ServiceSelect
                 label="ရွေးပြီး/မရွေးရသေး"
                 name="isRetrieved"
