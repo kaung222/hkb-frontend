@@ -42,7 +42,7 @@ const getProfit = (item: Service) => {
   console.log(item);
   const itemPrice = item.items?.reduce((a, b) => a + b.price, 0);
   const amount =
-    new Date(item.createdAt) > new Date("2026-04-19")
+    new Date(item.retrievedDate) > new Date("2026-04-19")
       ? item.paidAmount
       : item.price;
   return amount - itemPrice;
