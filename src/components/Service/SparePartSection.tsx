@@ -68,6 +68,8 @@ export function SparePartsSection({
     "Touch+oca",
     "Usbcom",
     "Speaker",
+    "Back Cover",
+    "Usb",
     "IC",
     "Others",
   ];
@@ -75,8 +77,8 @@ export function SparePartsSection({
   const handlePriceChange = (value: string, index: number) => {
     setSpareParts(
       spareParts.map((part, i) =>
-        i === index ? { ...part, price: Number(value) } : part
-      )
+        i === index ? { ...part, price: Number(value) } : part,
+      ),
     );
   };
 
@@ -118,7 +120,7 @@ export function SparePartsSection({
               <CommandGroup className="max-h-48 overflow-y-auto">
                 {defaultParts
                   .filter((part) =>
-                    part.toLowerCase().includes(searchValue?.toLowerCase())
+                    part.toLowerCase().includes(searchValue?.toLowerCase()),
                   )
                   ?.map((part) => (
                     <CommandItem
@@ -172,7 +174,7 @@ export function SparePartsSection({
                     function (e) {
                       e.preventDefault();
                     },
-                    { passive: false }
+                    { passive: false },
                   )
                 }
               />
