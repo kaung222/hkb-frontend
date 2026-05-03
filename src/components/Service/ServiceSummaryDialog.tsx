@@ -121,7 +121,7 @@ export default function ServiceSummaryDialog({
               <span className=" font-semibold">{totalProfit}</span>
             </div>
 
-            <div
+            {/* <div
               className="flex justify-between items-center p-4"
               style={{
                 backgroundColor: "#6836838f",
@@ -133,7 +133,7 @@ export default function ServiceSummaryDialog({
               <span className=" font-semibold">
                 {totalPrice - totalProfit - totalExpense}
               </span>
-            </div>
+            </div> */}
 
             {queryMode == "retrievedDate" && (
               <>
