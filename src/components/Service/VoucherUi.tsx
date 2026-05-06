@@ -262,30 +262,6 @@ export default function ServiceVoucher({ service }: ServiceVoucherProps) {
               </div>
             </div>
           </div>
-          {service.paidAmount < service.price && (
-            <div className="grid grid-cols-2 border-b">
-              <div className="p-2">
-                <div className="flex items-center">
-                  <span className="font-extrabold mr-1 text-xs">
-                    Discount:{" "}
-                  </span>
-                  <div className="flex-1">
-                    {((service.price - service.paidAmount) / service.price) *
-                      100}
-                    %
-                  </div>
-                </div>
-              </div>
-              <div className="p-2 ">
-                <div className="flex items-center">
-                  <span className="font-extrabold  mr-1 text-xs">
-                    Final Service Fees :
-                  </span>
-                  <div className="flex-1">{service?.paidAmount} MMK</div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Service Center Note */}
           {/* <div className="p-2 text-center text-xs border-b">
