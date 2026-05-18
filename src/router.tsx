@@ -8,6 +8,8 @@ import {
   SETTINGS,
   SHOP,
   USER,
+  CUSTOMER,
+  EXPENSE,
 } from "./constants/pathname.const.ts";
 import Layout from "./components/Layout";
 import DashBoardPage from "./pages/DashBoardPage";
@@ -19,6 +21,8 @@ import ShopPage from "./pages/ShopPage.tsx";
 import UserPage from "./pages/UserPage.tsx";
 import ServiceDetails from "./components/Service/service-detail-for-user.tsx";
 import SettingsPage from "./pages/SettingsPage";
+import CustomerPage from "./pages/CustomerPage";
+import ExpensePage from "./pages/ExpensePage";
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +57,14 @@ export const router = createBrowserRouter([
       {
         element: <SettingsPage />,
         path: SETTINGS,
+      },
+      {
+        element: <CustomerPage />,
+        path: CUSTOMER,
+      },
+      {
+        element: <ExpensePage />,
+        path: EXPENSE,
       },
     ],
   },

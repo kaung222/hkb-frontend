@@ -6,6 +6,8 @@ import {
   Settings,
   ShoppingBagIcon,
   UserPlusIcon,
+  Users,
+  Receipt,
 } from "lucide-react";
 
 import {
@@ -27,6 +29,8 @@ import {
   SETTINGS,
   SHOP,
   USER,
+  CUSTOMER,
+  EXPENSE,
 } from "@/constants/pathname.const";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
@@ -63,10 +67,23 @@ const items = [
   //   role: ["admin", "technician", "reception"],
   // },
   {
-    title: "Shops",
+    title: "Expenses",
+    url: EXPENSE,
+    icon: Receipt,
+    role: ["admin"],
+  },
+  {
+    title: "Branches",
     url: SHOP,
     icon: ShoppingBagIcon,
     role: ["admin"],
+  },
+
+  {
+    title: "Customers",
+    url: CUSTOMER,
+    icon: Users,
+    role: ["admin", "reception"],
   },
   {
     title: "Users",

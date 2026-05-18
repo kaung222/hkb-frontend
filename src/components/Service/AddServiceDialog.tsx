@@ -137,7 +137,7 @@ export function AddServiceDialog() {
   const initialState = {
     code: `${Math.floor(100000 + Math.random() * 900000)}`,
     username: "",
-    branchId: currentUser?.branchId.toString(),
+    branchId: currentUser?.branchId?.toString(),
     brand: "",
     color: "",
     condition: "",
@@ -343,7 +343,7 @@ export function AddServiceDialog() {
                 label="ရက်ချိန်း"
                 placeholder="yyyy-mm-dd"
                 name="dueDate"
-                defaultValue={new Date().toString()}
+                // defaultValue={new Date().toString()}
                 type="date"
                 control={form.control}
               />
