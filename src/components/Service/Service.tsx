@@ -49,26 +49,26 @@ export enum Status {
 export default function Service() {
   const [date, setDate] = useQueryState(
     "date",
-    parseAsString.withDefault(format(new Date(), "yyyy-MM-dd"))
+    parseAsString.withDefault(format(new Date(), "yyyy-MM-dd")),
   );
   const [month, setMonth] = useQueryState(
     "month",
-    parseAsString.withDefault("01")
+    parseAsString.withDefault("01"),
   );
 
   const [queryMode, setQueryMode] = useQueryState(
     "queryMode",
-    parseAsString.withDefault("createdDate")
+    parseAsString.withDefault("createdDate"),
   );
 
   const [filterMode, setFilterMode] = useQueryState(
     "filterMode",
-    parseAsString.withDefault("day")
+    parseAsString.withDefault("day"),
   );
 
   const [status, setStatus] = useQueryState(
     "status",
-    parseAsString.withDefault("all")
+    parseAsString.withDefault("all"),
   );
 
   const monthOptions = [
@@ -104,7 +104,7 @@ export default function Service() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [year, setYear] = useQueryState(
     "year",
-    parseAsString.withDefault(new Date().getFullYear().toString())
+    parseAsString.withDefault(new Date().getFullYear().toString()),
   );
 
   const handleRefresh = async () => {
@@ -130,11 +130,11 @@ export default function Service() {
     switch (status) {
       case "retrived":
         return searchServices?.filter(
-          (service) => service.status === Status.RETRIEVED
+          (service) => service.status === Status.RETRIEVED,
         );
       case "completed":
         return searchServices?.filter(
-          (service) => service.retrievedDate === null
+          (service) => service.retrievedDate === null,
         );
       default:
         return searchServices;
@@ -329,8 +329,8 @@ export default function Service() {
                   <SelectValue placeholder="Created Date" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="createdDate">Created Date</SelectItem>
-                  <SelectItem value="retrievedDate">Retrieved Date</SelectItem>
+                  <SelectItem value="createdDate">ဖန်တီးနေ့</SelectItem>
+                  <SelectItem value="retrievedDate">ရွေးနေ့</SelectItem>
                   {/* <SelectItem value="pending">မရွေးရသေး</SelectItem> */}
                 </SelectContent>
               </Select>

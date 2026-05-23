@@ -274,12 +274,12 @@ export function AddServiceDialog() {
                 name="model"
                 control={form.control}
               />
-              <ServiceInput
+              {/* <ServiceInput
                 label="IMEI"
                 placeholder="IMEI"
                 name="imeiNumber"
                 control={form.control}
-              />
+              /> */}
               <ServiceInput
                 label="Color"
                 placeholder="Color"
@@ -330,7 +330,7 @@ export function AddServiceDialog() {
                   { label: "In Warranty", value: "In" },
                 ]}
               />
-              <ServiceSelect
+              {/* <ServiceSelect
                 label="Service Return"
                 name="serviceReturn"
                 control={form.control}
@@ -338,7 +338,7 @@ export function AddServiceDialog() {
                   { label: "No", value: "no" },
                   { label: "Yes", value: "yes" },
                 ]}
-              />
+              /> */}
               <ServiceInput
                 label="ရက်ချိန်း"
                 placeholder="yyyy-mm-dd"
@@ -370,7 +370,7 @@ export function AddServiceDialog() {
                   control={form.control}
                 />
               )} */}
-              <ServiceSelect
+              {/* <ServiceSelect
                 label="ရွေးပြီး/မရွေးရသေး"
                 name="isRetrieved"
                 control={form.control}
@@ -379,7 +379,7 @@ export function AddServiceDialog() {
                   { label: "ရွေးပြီး", value: "retrieved" },
                   { label: "မရွေးရသေး", value: Status.IN_PROGRESS },
                 ]}
-              />
+              /> */}
 
               {/* Technician and Service Information Section */}
               <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
@@ -433,7 +433,7 @@ export function AddServiceDialog() {
               />
               <ServiceInput
                 type="date"
-                label="Item purchased Date"
+                label="ပစ္စည်းဝယ်နေ့"
                 placeholder="Item purchased Date"
                 name="purchasedDate"
                 control={form.control}
