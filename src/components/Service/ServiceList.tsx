@@ -203,8 +203,18 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                           : ""
                       }
                     />
-                    <CustomTableCell label={item.price - item?.paidAmount} />
-                    <CustomTableCell label={item?.paidAmount} />
+                    <CustomTableCell
+                      label={
+                        item.paidAmount !== 0
+                          ? item.price - item?.paidAmount
+                          : 0
+                      }
+                    />
+                    <CustomTableCell
+                      label={
+                        item.paidAmount !== 0 ? item?.paidAmount : item.price
+                      }
+                    />
                     {/* <CustomTableCell label={item.paidAmount} /> */}
                     {/* <CustomTableCell label={item.leftToPay} /> */}
                     <CustomTableCell label={getProfit(item)} />
