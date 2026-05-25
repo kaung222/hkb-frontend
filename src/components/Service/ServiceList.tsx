@@ -39,11 +39,11 @@ const CustomTableCell = ({ label }: TableCellProps) => (
   <TableCell className="py-4 w-auto text-center">{label}</TableCell>
 );
 const getProfit = (item: Service) => {
-  console.log(item);
   const itemPrice = item.items?.reduce((a, b) => a + b.price, 0);
   const amount =
-    new Date(item.retrievedDate) > new Date("2026-04-20") &&
-    new Date(item.retrievedDate) < new Date("2026-05-01")
+    (new Date(item.retrievedDate) > new Date("2026-04-20") &&
+      new Date(item.retrievedDate) < new Date("2026-05-01")) ||
+    new Date(item.retrievedDate) > new Date("2026-05-26")
       ? item.paidAmount
       : item.price;
   return amount - itemPrice;
@@ -131,8 +131,8 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                   <CustomTableHead label="ကျသင့်ငွေ" />
                   <CustomTableHead label="ပစ္စည်းဖိုး" />
                   <CustomTableHead label="ပစ္စည်းဝယ်နေ့" />
-                  {/* <CustomTableHead label="Discount" />
-                  <CustomTableHead label="ပေးချေ" /> */}
+                  <CustomTableHead label="Discount" />
+                  <CustomTableHead label="ပေးချေ" />
                   {/* <CustomTableHead label="ပေးငွေ" /> */}
                   {/* <CustomTableHead label="ကျန်ငွေ" /> */}
                   <CustomTableHead label="အမြတ်ငွေ" />
@@ -202,8 +202,8 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                           : ""
                       }
                     />
-                    {/* <CustomTableCell label={item.price - item?.paidAmount} />
-                    <CustomTableCell label={item?.paidAmount} /> */}
+                    <CustomTableCell label={item.price - item?.paidAmount} />
+                    <CustomTableCell label={item?.paidAmount} />
                     {/* <CustomTableCell label={item.paidAmount} /> */}
                     {/* <CustomTableCell label={item.leftToPay} /> */}
                     <CustomTableCell label={getProfit(item)} />

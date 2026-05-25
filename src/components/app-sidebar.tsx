@@ -83,7 +83,7 @@ const items = [
     title: "Customers",
     url: CUSTOMER,
     icon: Users,
-    role: ["admin", "reception"],
+    role: ["admin"],
   },
   {
     title: "Users",
