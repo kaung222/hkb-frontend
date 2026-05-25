@@ -7,3 +7,5 @@ export const INVENTORY = `/inventory`;
 export const SHOP = `/shop`;
 export const USER = `/user`;
 export const SETTINGS = "/settings";
+export const CUSTOMER = "/customer";
+export const EXPENSE = "/expense";

@@ -12,3 +12,14 @@ export const useGerBraches = () => {
     refetchOnWindowFocus: false,
   });
 };
+
+export const useMigration = () => {
+  return useQuery({
+    queryKey: ["GetMigration"],
+    queryFn: async () => {
+      return await api.get("/services/run/migration").then((res) => res.data);
+    },
+    staleTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+};

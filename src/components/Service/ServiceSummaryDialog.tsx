@@ -53,8 +53,9 @@ export default function ServiceSummaryDialog({
   const preUsed = used?.reduce((a, b) => a + b.expense, 0);
   const totalProfit = services.reduce((a, b) => {
     const amount =
-      new Date(b.retrievedDate) > new Date("2026-04-20") &&
-      new Date(b.retrievedDate) < new Date("2026-05-01")
+      (new Date(b.retrievedDate) > new Date("2026-04-20") &&
+        new Date(b.retrievedDate) < new Date("2026-05-01")) ||
+      new Date(b.retrievedDate) > new Date("2026-05-26")
         ? b.paidAmount
         : b.price;
     return a + amount - b.expense;

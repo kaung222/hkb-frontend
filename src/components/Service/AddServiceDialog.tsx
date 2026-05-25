@@ -137,7 +137,7 @@ export function AddServiceDialog() {
   const initialState = {
     code: `${Math.floor(100000 + Math.random() * 900000)}`,
     username: "",
-    branchId: currentUser?.branchId.toString(),
+    branchId: currentUser?.branchId?.toString(),
     brand: "",
     color: "",
     condition: "",
@@ -166,28 +166,28 @@ export function AddServiceDialog() {
   });
 
   // Auto-calculate paidAmount based on discount and price
-  // useEffect(() => {
-  //   const subscription = form.watch((value, { name }) => {
-  //     if (name === "discount" || name === "price") {
-  //       const price =
-  //         typeof value.price === "number"
-  //           ? value.price
-  //           : parseFloat(value.price as string) || 0;
-  //       const discount =
-  //         typeof value.discount === "number"
-  //           ? value.discount
-  //           : parseFloat(value.discount as string) || 0;
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === "discount" || name === "price") {
+        const price =
+          typeof value.price === "number"
+            ? value.price
+            : parseFloat(value.price as string) || 0;
+        const discount =
+          typeof value.discount === "number"
+            ? value.discount
+            : parseFloat(value.discount as string) || 0;
 
-  //       if (price > 0 && discount >= 0 && discount <= 100) {
-  //         const discountAmount = (price * discount) / 100;
-  //         const paidAmount = price - discountAmount;
-  //         form.setValue("paidAmount", paidAmount);
-  //       }
-  //     }
-  //   });
+        if (price > 0 && discount >= 0 && discount <= 100) {
+          const discountAmount = (price * discount) / 100;
+          const paidAmount = price - discountAmount;
+          form.setValue("paidAmount", paidAmount);
+        }
+      }
+    });
 
-  //   return () => subscription.unsubscribe();
-  // }, [form]);
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   const technicians =
     users?.filter((user) => {
@@ -343,7 +343,7 @@ export function AddServiceDialog() {
                 label="ရက်ချိန်း"
                 placeholder="yyyy-mm-dd"
                 name="dueDate"
-                defaultValue={new Date().toString()}
+                // defaultValue={new Date().toString()}
                 type="date"
                 control={form.control}
               />
@@ -354,7 +354,7 @@ export function AddServiceDialog() {
                 name="price"
                 control={form.control}
               />
-              {/* {currentUser?.role === "admin" && (
+              {currentUser?.role === "admin" && (
                 <ServiceInput
                   label="Discount(%)"
                   placeholder="10"
@@ -369,7 +369,7 @@ export function AddServiceDialog() {
                   name="paidAmount"
                   control={form.control}
                 />
-              )} */}
+              )}
               {/* <ServiceSelect
                 label="ရွေးပြီး/မရွေးရသေး"
                 name="isRetrieved"
