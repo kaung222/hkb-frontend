@@ -110,17 +110,18 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                 <TableRow className="sticky top-0 z-50 bg-background">
                   <CustomTableHead label="စဥ်" />
                   <CustomTableHead label="ဆိုင်ခွဲ" />
-                  <CustomTableHead label="User" />
+                  <CustomTableHead label="အမည်" />
+
                   <CustomTableHead label="ရက်စွဲ" />
                   <CustomTableHead label="ဘောက်ချာ" />
-                  <CustomTableHead label="အမည်" />
+                  {/* <CustomTableHead label="အမည်" /> */}
                   <CustomTableHead label="ဖုန်းနံပါတ်" />
                   <CustomTableHead label="Brand" />
                   <CustomTableHead label="မော်ဒယ်" />
-                  <CustomTableHead label="IMEI" />
+                  {/* <CustomTableHead label="IMEI" /> */}
                   <CustomTableHead label="အရောင်" />
                   <CustomTableHead label="ဝရန်တီ" />
-                  <CustomTableHead label="Return" />
+                  {/* <CustomTableHead label="Return" /> */}
                   <CustomTableHead label="Error" />
                   <CustomTableHead label="မှတ်ချက်" />
                   <CustomTableHead label="ရက်ချိန်း" />
@@ -166,14 +167,14 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                       label={formatDate(item.createdAt, "yy-MM-dd")}
                     />
                     <CustomTableCell label={item.code} />
-                    <CustomTableCell label={item.username} />
+                    {/* <CustomTableCell label={item.username} /> */}
                     <CustomTableCell label={item.phone} />
                     <CustomTableCell label={item.brand} />
                     <CustomTableCell label={item.model} />
-                    <CustomTableCell label={item.imeiNumber} />
+                    {/* <CustomTableCell label={item.imeiNumber} /> */}
                     <CustomTableCell label={item.color} />
                     <CustomTableCell label={item.warranty} />
-                    <CustomTableCell
+                    {/* <CustomTableCell
                       label={
                         item.serviceRetrun == true
                           ? "Yes"
@@ -181,7 +182,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ service }) => {
                             ? "No"
                             : ""
                       }
-                    />
+                    /> */}
                     <CustomTableCell label={item.error} />
                     <CustomTableCell label={item.remark} />
                     <CustomTableCell

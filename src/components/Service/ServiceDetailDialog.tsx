@@ -199,7 +199,7 @@ export function EditServiceDialog({
       retrievedDate: currentServiceDetail.retrievedDate,
       purchasedDate:
         currentServiceDetail.purchasedDate &&
-        formatDate(new Date(currentServiceDetail.purchasedDate), "yyyy-MM-dd"),
+        formatDate(new Date(currentServiceDetail.purchasedDate), "dd-MM-yyyy"),
     },
   });
   const filterTechnicians = technicians.filter(
@@ -382,7 +382,7 @@ export function EditServiceDialog({
                         currentUser?.role !== "admin"
                       }
                     />
-                    <ServiceInput
+                    {/* <ServiceInput
                       label="IMEI"
                       placeholder="IMEI"
                       name="imeiNumber"
@@ -391,7 +391,7 @@ export function EditServiceDialog({
                         currentServiceDetail?.retrievedDate !== null &&
                         currentUser?.role !== "admin"
                       }
-                    />
+                    /> */}
                     <ServiceInput
                       label="Color"
                       placeholder="Color"
@@ -474,7 +474,7 @@ export function EditServiceDialog({
                         currentUser?.role !== "admin"
                       }
                     />
-                    <ServiceSelect
+                    {/* <ServiceSelect
                       label="Service Return"
                       name="serviceRetrun"
                       defaultValue={currentServiceDetail.serviceRetrun}
@@ -487,7 +487,7 @@ export function EditServiceDialog({
                         currentServiceDetail?.retrievedDate !== null &&
                         currentUser?.role !== "admin"
                       }
-                    />
+                    /> */}
                     <ServiceInput
                       label="ရက်ချိန်း"
                       placeholder="yyyy-mm-dd"
