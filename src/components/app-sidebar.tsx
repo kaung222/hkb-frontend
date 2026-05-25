@@ -66,12 +66,12 @@ const items = [
   //   icon: PackagePlusIcon,
   //   role: ["admin", "technician", "reception"],
   // },
-  {
-    title: "Expenses",
-    url: EXPENSE,
-    icon: Receipt,
-    role: ["admin"],
-  },
+  // {
+  //   title: "Expenses",
+  //   url: EXPENSE,
+  //   icon: Receipt,
+  //   role: ["admin"],
+  // },
   {
     title: "Branches",
     url: SHOP,
@@ -79,12 +79,12 @@ const items = [
     role: ["admin"],
   },
 
-  {
-    title: "Customers",
-    url: CUSTOMER,
-    icon: Users,
-    role: ["admin"],
-  },
+  // {
+  //   title: "Customers",
+  //   url: CUSTOMER,
+  //   icon: Users,
+  //   role: ["admin"],
+  // },
   {
     title: "Users",
     url: USER,
