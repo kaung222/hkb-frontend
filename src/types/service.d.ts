@@ -61,14 +61,14 @@ export type Service = {
   technician?: string; // optional, as it's nullable
   status: Status; // status is mandatory, and it's an enum
   expense?: number; // optional, as it's nullable
-  retrievedDate?: Date; // optional, as it's nullable
+  retrievedDate?: string; // optional, as it's nullable
   condition?: string; // optional, as it's nullable
   paidAmount?: number; // optional, as it's nullable
   discount?: number; // optional, discount percentage
   isRetrieved?: string; // optional, as it's nullable
   leftToPay?: number; // optional, as it's nullable
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   progress: string;
   supplier: string;
   // partsPurchaseDate?: string;

@@ -196,7 +196,9 @@ export function EditServiceDialog({
       supplier: currentServiceDetail.supplier,
       technician: currentServiceDetail.technician,
       warranty: currentServiceDetail.warranty,
-      retrievedDate: currentServiceDetail.retrievedDate,
+      retrievedDate: currentServiceDetail.retrievedDate
+        ? formatDate(new Date(currentServiceDetail.retrievedDate), "yyyy-MM-dd")
+        : undefined,
       purchasedDate:
         currentServiceDetail.purchasedDate &&
         formatDate(new Date(currentServiceDetail.purchasedDate), "dd-MM-yyyy"),
@@ -243,9 +245,21 @@ export function EditServiceDialog({
         supplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
-        retrievedDate: currentServiceDetail.retrievedDate || undefined,
-        createdAt: currentServiceDetail.createdAt || undefined,
-        purchasedDate: currentServiceDetail.purchasedDate || undefined,
+        retrievedDate: currentServiceDetail.retrievedDate
+          ? formatDate(
+              new Date(currentServiceDetail.retrievedDate),
+              "yyyy-MM-dd",
+            )
+          : undefined,
+        createdAt: currentServiceDetail.createdAt
+          ? formatDate(new Date(currentServiceDetail.createdAt), "yyyy-MM-dd")
+          : undefined,
+        purchasedDate: currentServiceDetail.purchasedDate
+          ? formatDate(
+              new Date(currentServiceDetail.purchasedDate),
+              "yyyy-MM-dd",
+            )
+          : undefined,
       };
       form.reset(payload);
     }
@@ -534,6 +548,7 @@ export function EditServiceDialog({
 
                     {currentUser.role === "admin" && (
                       <ServiceInput
+                        type="date"
                         label="ပစ္စည်းအပ်နေ့"
                         placeholder="ပစ္စည်းအပ်နေ့"
                         name="createdAt"
@@ -544,6 +559,7 @@ export function EditServiceDialog({
 
                     {currentUser.role === "admin" && (
                       <ServiceInput
+                        type="date"
                         label="ပစ္စည်းရွေးနေ့"
                         placeholder="ပစ္စည်းရွေးနေ့"
                         name="retrievedDate"
@@ -622,8 +638,8 @@ export function EditServiceDialog({
                 />
                 <ServiceInput
                   type="date"
-                  label="Item purchased Date"
-                  placeholder="Item purchased Date"
+                  label="ပစ္စည်းဝယ်နေ့"
+                  placeholder="ပစ္စည်းဝယ်နေ့"
                   name="purchasedDate"
                   control={form.control}
                   disabled={!isEditable()}
