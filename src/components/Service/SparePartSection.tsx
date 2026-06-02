@@ -88,7 +88,6 @@ export function SparePartsSection({
 
   const handleAddPart = (partName: string) => {
     const existed = spareParts.find((part) => part.name === partName);
-    console.log("existest", existed);
     if (partName && !existed) {
       // append({ name: partName, price: 0 });
       setSpareParts((pre) => [...pre, { name: partName, price: 0 }]);

@@ -53,6 +53,7 @@ export default function ExpenseDialog({ form, dialogKey }: Props) {
       onSuccess: () => {
         console.log("success expense created");
         closeDialog(dialogKeys.addNewExpense);
+        closeDialog(dialogKeys.editExpense);
         form.reset();
       },
     });

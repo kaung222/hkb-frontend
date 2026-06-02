@@ -22,38 +22,49 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { addDays } from "date-fns";
+import {
+  addDays,
+  setHours,
+  setMinutes,
+  setSeconds,
+  setMilliseconds,
+} from "date-fns";
+import { DatePickerDemo } from "../common/DatePicker";
 export const categories = ["general", "accessories", "meal", "transportation"];
 
 const Expenses = () => {
   const { openDialog } = useDialogStore();
-  const [dataRange, setDateRange] = useState<{
-    startDate: string;
-    endDate: string;
-  }>({
-    startDate: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
-    endDate: addDays(new Date(), 1).toISOString(),
-  });
+  const [startDate, setStartDate] = useState<Date>(
+    setHours(setMinutes(setSeconds(setMilliseconds(new Date(), 0), 0), 0), 0),
+  );
+  const [endDate, setEndDate] = useState<Date>(
+    setHours(
+      setMinutes(setSeconds(setMilliseconds(addDays(new Date(), 1), 0), 0), 0),
+      23,
+    ),
+  );
+  const [branch, setBranch] = useState("all");
+  const [category, setCategory] = useState("all");
   const {
     data: expensesResponse,
     isLoading,
     isError,
     error,
   } = useGetExpenses({
-    branchId: undefined,
-    startDate: dataRange.startDate,
-    endDate: dataRange.endDate,
+    branchId: branch === "all" ? undefined : parseInt(branch),
+    category: category === "all" ? undefined : category,
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
   });
-  console.log(new Date());
   const expenses = expensesResponse?.data || [];
+  const totalAmount = expensesResponse?.totalAmount || 0;
   const { data: shops } = useGerBraches();
   const [dialogKey, setDialogKey] = useState("");
-  const [branch, setBranch] = useState("all");
-  const [category, setCategory] = useState("all");
 
   const form = useForm<ExpenseFormData>({
     resolver: zodResolver(ExpenseSchema),
     defaultValues: {
+      id: undefined,
       name: "",
       amount: 0,
       notes: "",
@@ -61,16 +72,12 @@ const Expenses = () => {
     },
   });
 
-  const filterExpenses = () => {
-    // Since filtering is now done on the backend, we just return the expenses
-    return expenses || [];
-  };
-
   const { mutate: deleteExpense } = useDeleteExpense();
   const { mutate: updateExpense } = useUpdateExpense();
 
   const handleEdit = (expense: Expense) => {
     form.reset({
+      id: expense.id,
       name: expense.name,
       amount: expense.amount,
       notes: expense.notes || "",
@@ -87,10 +94,6 @@ const Expenses = () => {
       console.error("Error deleting expense:", err);
     }
   };
-
-  // const categories = Array.from(
-  //   new Set(expenses?.map((exp) => exp.category).filter(Boolean) || []),
-  // );
 
   const columns = [
     {
@@ -146,7 +149,7 @@ const Expenses = () => {
 
   return (
     <div className="mx-auto p-8">
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3 items-center">
         <Button
           variant="outline"
           onClick={() => {
@@ -158,6 +161,39 @@ const Expenses = () => {
           <PlusCircleIcon />
           Add new expense
         </Button>
+
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">From:</span>
+          <DatePickerDemo
+            date={startDate}
+            onChange={(date) => {
+              if (date) {
+                setStartDate(
+                  setHours(
+                    setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0),
+                    0,
+                  ),
+                );
+              }
+            }}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">To:</span>
+          <DatePickerDemo
+            date={endDate}
+            onChange={(date) => {
+              if (date) {
+                setEndDate(
+                  setHours(
+                    setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0),
+                    23,
+                  ),
+                );
+              }
+            }}
+          />
+        </div>
 
         <Select value={branch} onValueChange={setBranch}>
           <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
@@ -186,6 +222,10 @@ const Expenses = () => {
             ))}
           </SelectContent>
         </Select>
+
+        <div className="ml-auto text-lg font-semibold">
+          Total: ${totalAmount.toFixed(2)}
+        </div>
       </div>
 
       <div className="mt-5">
@@ -195,7 +235,7 @@ const Expenses = () => {
           <p>Error: {error.message}</p>
         ) : expenses && expenses.length > 0 ? (
           <VirtualizedTable
-            data={filterExpenses()}
+            data={expenses}
             columns={columns}
             rowKey={(expense) => expense.id}
             onRowClick={(expense) => console.log("Row clicked:", expense)}

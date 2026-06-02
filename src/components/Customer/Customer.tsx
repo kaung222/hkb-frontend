@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -22,13 +22,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useCurrentUser } from "@/api/user/current-user";
 
 const Customers = () => {
   const { openDialog } = useDialogStore();
-  const { data: customers, isLoading, isError, error } = useGetCustomers();
+  const [branch, setBranch] = useState("all");
+  const {
+    data: customersResponse,
+    isLoading,
+    isError,
+    error,
+  } = useGetCustomers({
+    branchId: parseInt(branch),
+    page: 1,
+  });
+  const customers = customersResponse?.data || [];
   const { data: shops } = useGerBraches();
   const [dialogKey, setDialogKey] = useState("");
-  const [branch, setBranch] = useState("all");
+  const { data: user } = useCurrentUser();
   const form = useForm<CustomerFormData>({
     resolver: zodResolver(CustomerSchema),
     defaultValues: {
@@ -38,15 +49,9 @@ const Customers = () => {
       points: 0,
     },
   });
-
-  const filterCustomers = () => {
-    if (branch === "all") {
-      return customers;
-    }
-    return customers?.filter(
-      (customer) => customer.branchId === parseInt(branch),
-    );
-  };
+  useEffect(() => {
+    setBranch(user?.branchId?.toString() || "1");
+  }, [user]);
 
   const { mutate: deleteCustomer } = useDeleteCustomer();
   const { mutate: updateCustomer } = useUpdateCustomer();
@@ -142,7 +147,7 @@ const Customers = () => {
             <SelectValue placeholder="Filter by branch" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Branches</SelectItem>
+            {/* <SelectItem value="all">All Branches</SelectItem> */}
             {shops?.map((shop) => (
               <SelectItem key={shop.id} value={shop.id.toString()}>
                 {shop.name}
@@ -159,7 +164,7 @@ const Customers = () => {
           <p>Error: {error.message}</p>
         ) : customers && customers.length > 0 ? (
           <VirtualizedTable
-            data={filterCustomers()}
+            data={customers}
             columns={columns}
             rowKey={(customer) => customer.id}
             onRowClick={(customer) => console.log("Row clicked:", customer)}

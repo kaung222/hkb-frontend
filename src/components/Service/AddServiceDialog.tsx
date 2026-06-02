@@ -223,6 +223,7 @@ export function AddServiceDialog() {
       {
         onSuccess: () => {
           closeDialog(dialogKeys.addService);
+          setSparePares([]);
           form.reset();
           form.setValue(
             "code",

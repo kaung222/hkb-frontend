@@ -1,14 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../api";
-import { Expense } from "@/types/expense";
-
-export interface ExpensesResponse {
-  data: Expense[];
-  total: number;
-  page: number;
-  startDate: string;
-  endDate: string;
-}
+import { Expense, ExpensesResponse } from "@/types/expense";
 
 export const useGetExpenses = (filters: {
   branchId: number;

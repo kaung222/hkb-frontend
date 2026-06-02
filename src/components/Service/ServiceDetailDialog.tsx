@@ -300,6 +300,7 @@ export function EditServiceDialog({
       },
       {
         onSuccess: () => {
+          setSpareParts([]);
           closeDialog(dialogKeys.serviceDetail);
         },
       },

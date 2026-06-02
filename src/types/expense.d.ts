@@ -11,3 +11,12 @@ export type Expense = {
     name: string;
   };
 };
+
+export type ExpensesResponse = {
+  data: Expense[];
+  totalAmount: number;
+  total: number;
+  page: number;
+  startDate: string;
+  endDate: string;
+};

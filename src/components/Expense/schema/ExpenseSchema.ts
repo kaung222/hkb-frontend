@@ -7,6 +7,7 @@ export const ExpenseSchema = z.object({
   category: z.string().optional(),
   date: z.string().optional(),
   branchId: z.string().min(1, "Branch is required"),
+  id: z.number().optional(),
 });
 
 export type ExpenseFormData = z.infer<typeof ExpenseSchema>;
