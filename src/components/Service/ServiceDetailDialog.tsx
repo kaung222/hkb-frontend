@@ -251,9 +251,9 @@ export function EditServiceDialog({
               "yyyy-MM-dd",
             )
           : undefined,
-        createdAt: currentServiceDetail.createdAt
-          ? formatDate(new Date(currentServiceDetail.createdAt), "yyyy-MM-dd")
-          : undefined,
+        // createdAt: currentServiceDetail.createdAt
+        //   ? formatDate(new Date(currentServiceDetail.createdAt), "yyyy-MM-dd")
+        //   : undefined,
         purchasedDate: currentServiceDetail.purchasedDate
           ? formatDate(
               new Date(currentServiceDetail.purchasedDate),
@@ -310,7 +310,7 @@ export function EditServiceDialog({
           price: item.price,
         })),
         retrievedDate,
-        createdAt: new Date(values.createdAt),
+        // createdAt: new Date(values.createdAt),
       },
       {
         onSuccess: () => {
@@ -546,7 +546,7 @@ export function EditServiceDialog({
                       />
                     )}
 
-                    {currentUser.role === "admin" && (
+                    {/* {currentUser.role === "admin" && (
                       <ServiceInput
                         type="date"
                         label="ပစ္စည်းအပ်နေ့"
@@ -555,7 +555,7 @@ export function EditServiceDialog({
                         control={form.control}
                         disabled={currentUser?.role !== "admin"}
                       />
-                    )}
+                    )} */}
 
                     {currentUser.role === "admin" && (
                       <ServiceInput
