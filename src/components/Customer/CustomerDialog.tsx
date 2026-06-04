@@ -48,6 +48,7 @@ export default function CustomerDialog({ form, dialogKey }: Props) {
       onSuccess: () => {
         console.log("success customer created");
         closeDialog(dialogKeys.addNewCustomer);
+        closeDialog(dialogKeys.editCustomer);
         form.reset();
       },
     });
@@ -121,17 +122,25 @@ export default function CustomerDialog({ form, dialogKey }: Props) {
             <div className="flex gap-4">
               <FormField
                 control={form.control}
-                name="password"
+                name="gender"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter password"
-                        {...field}
-                      />
-                    </FormControl>
+                    <FormLabel>Gender</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -159,7 +168,7 @@ export default function CustomerDialog({ form, dialogKey }: Props) {
               />
             </div>
 
-            <div className="flex gap-4">
+            {/* <div className="flex gap-4">
               <FormField
                 control={form.control}
                 name="profilePicture"
@@ -176,33 +185,24 @@ export default function CustomerDialog({ form, dialogKey }: Props) {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
-                name="gender"
+                name="password"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Gender</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select gender" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter password"
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
+            </div> */}
 
             <FormField
               control={form.control}

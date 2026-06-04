@@ -72,12 +72,6 @@ const items = [
     icon: Receipt,
     role: ["admin"],
   },
-  {
-    title: "Branches",
-    url: SHOP,
-    icon: ShoppingBagIcon,
-    role: ["admin"],
-  },
 
   {
     title: "Customers",
@@ -89,6 +83,12 @@ const items = [
     title: "Users",
     url: USER,
     icon: UserPlusIcon,
+    role: ["admin"],
+  },
+  {
+    title: "Branches",
+    url: SHOP,
+    icon: ShoppingBagIcon,
     role: ["admin"],
   },
   {

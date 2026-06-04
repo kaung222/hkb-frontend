@@ -29,6 +29,7 @@ import { useGerBraches } from "@/api/branch/branch.query";
 import { dialogKeys } from "@/constants/general.const";
 import { Textarea } from "../ui/textarea";
 import { categories } from "./Expense";
+import { useCurrentUser } from "@/api/user/current-user";
 
 interface Props {
   form: UseFormReturn<ExpenseFormData, any, undefined>;
@@ -38,6 +39,7 @@ export default function ExpenseDialog({ form, dialogKey }: Props) {
   const { isOpen, handleDialogChange, closeDialog } = useDialogStore();
   const { data: shops, isLoading } = useGerBraches();
   const { mutate, isPending } = useCreateExpense();
+  const { data: currentUser } = useCurrentUser();
 
   const onSubmit = (data: ExpenseFormData) => {
     const payload = {
@@ -199,41 +201,43 @@ export default function ExpenseDialog({ form, dialogKey }: Props) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="branchId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Branch</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a branch" />
-                      </SelectTrigger>
-                    </FormControl>
-                    {isLoading ? (
-                      <div>loading...</div>
-                    ) : (
-                      <SelectContent>
-                        {shops?.length > 0 &&
-                          shops?.map((branch) => (
-                            <SelectItem
-                              key={branch.id}
-                              value={branch.id.toString()}
-                            >
-                              {branch.name}
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    )}
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {currentUser?.role === "admin" && (
+              <FormField
+                control={form.control}
+                name="branchId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Branch</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a branch" />
+                        </SelectTrigger>
+                      </FormControl>
+                      {isLoading ? (
+                        <div>loading...</div>
+                      ) : (
+                        <SelectContent>
+                          {shops?.length > 0 &&
+                            shops?.map((branch) => (
+                              <SelectItem
+                                key={branch.id}
+                                value={branch.id.toString()}
+                              >
+                                {branch.name}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      )}
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Saving..." : "Save"}
             </Button>

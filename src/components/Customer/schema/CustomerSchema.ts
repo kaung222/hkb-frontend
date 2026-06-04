@@ -9,6 +9,7 @@ export const CustomerSchema = z.object({
   gender: z.string().optional(),
   points: z.number().min(0, "Points must be positive").default(0),
   branchId: z.string().min(1, "Branch is required"),
+  id: z.number().optional(),
 });
 
 export type CustomerFormData = z.infer<typeof CustomerSchema>;

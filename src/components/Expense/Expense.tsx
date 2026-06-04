@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ import {
   setMilliseconds,
 } from "date-fns";
 import { DatePickerDemo } from "../common/DatePicker";
+import { useCurrentUser } from "@/api/user/current-user";
 export const categories = ["general", "accessories", "meal", "transportation"];
 
 const Expenses = () => {
@@ -45,6 +46,7 @@ const Expenses = () => {
   );
   const [branch, setBranch] = useState("all");
   const [category, setCategory] = useState("all");
+  const { data: currentUser } = useCurrentUser();
   const {
     data: expensesResponse,
     isLoading,
@@ -73,7 +75,6 @@ const Expenses = () => {
   });
 
   const { mutate: deleteExpense } = useDeleteExpense();
-  const { mutate: updateExpense } = useUpdateExpense();
 
   const handleEdit = (expense: Expense) => {
     form.reset({
@@ -94,6 +95,10 @@ const Expenses = () => {
       console.error("Error deleting expense:", err);
     }
   };
+
+  useEffect(() => {
+    setBranch(currentUser?.branchId?.toString() || "1");
+  }, [currentUser]);
 
   const columns = [
     {
@@ -195,19 +200,20 @@ const Expenses = () => {
           />
         </div>
 
-        <Select value={branch} onValueChange={setBranch}>
-          <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
-            <SelectValue placeholder="Filter by branch" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Branches</SelectItem>
-            {shops?.map((shop) => (
-              <SelectItem key={shop.id} value={shop.id.toString()}>
-                {shop.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {currentUser?.role === "admin" && (
+          <Select value={branch} onValueChange={setBranch}>
+            <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
+              <SelectValue placeholder="Filter by branch" />
+            </SelectTrigger>
+            <SelectContent>
+              {shops?.map((shop) => (
+                <SelectItem key={shop.id} value={shop.id.toString()}>
+                  {shop.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
 
         <Select value={category} onValueChange={setCategory}>
           <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">

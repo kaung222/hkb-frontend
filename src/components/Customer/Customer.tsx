@@ -44,8 +44,8 @@ const Customers = () => {
     resolver: zodResolver(CustomerSchema),
     defaultValues: {
       username: "",
-      email: "",
-      phone: "",
+      email: undefined,
+      phone: undefined,
       points: 0,
     },
   });
@@ -54,16 +54,16 @@ const Customers = () => {
   }, [user]);
 
   const { mutate: deleteCustomer } = useDeleteCustomer();
-  const { mutate: updateCustomer } = useUpdateCustomer();
-
+  const { data: currentUser } = useCurrentUser();
   const handleEdit = (customer: Customer) => {
     form.reset({
+      id: customer.id,
       username: customer.username,
-      email: customer.email || "",
-      phone: customer.phone || "",
-      profilePicture: customer.profilePicture || "",
-      gender: customer.gender || "",
-      points: customer.points,
+      email: customer.email || undefined,
+      phone: customer.phone || undefined,
+      profilePicture: customer.profilePicture || undefined,
+      gender: customer.gender || undefined,
+      points: customer.points || 0,
       branchId: customer.branchId.toString(),
     });
   };
@@ -122,6 +122,10 @@ const Customers = () => {
           >
             Delete
           </Button>
+
+          <Button variant="outline" onClick={() => console.log("History")}>
+            History
+          </Button>
         </div>
       ),
     },
@@ -142,19 +146,21 @@ const Customers = () => {
           Add new customer
         </Button>
 
-        <Select value={branch} onValueChange={setBranch}>
-          <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
-            <SelectValue placeholder="Filter by branch" />
-          </SelectTrigger>
-          <SelectContent>
-            {/* <SelectItem value="all">All Branches</SelectItem> */}
-            {shops?.map((shop) => (
-              <SelectItem key={shop.id} value={shop.id.toString()}>
-                {shop.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {currentUser?.role === "admin" && (
+          <Select value={branch} onValueChange={setBranch}>
+            <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
+              <SelectValue placeholder="Filter by branch" />
+            </SelectTrigger>
+            <SelectContent>
+              {/* <SelectItem value="all">All Branches</SelectItem> */}
+              {shops?.map((shop) => (
+                <SelectItem key={shop.id} value={shop.id.toString()}>
+                  {shop.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       <div className="mt-5">
