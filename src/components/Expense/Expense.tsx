@@ -31,6 +31,15 @@ import {
 } from "date-fns";
 import { DatePickerDemo } from "../common/DatePicker";
 import { useCurrentUser } from "@/api/user/current-user";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
 export const categories = ["general", "accessories", "meal", "transportation"];
 
 const Expenses = () => {
@@ -46,6 +55,7 @@ const Expenses = () => {
   );
   const [branch, setBranch] = useState("all");
   const [category, setCategory] = useState("all");
+  const [page, setPage] = useState(1);
   const { data: currentUser } = useCurrentUser();
   const {
     data: expensesResponse,
@@ -57,9 +67,12 @@ const Expenses = () => {
     category: category === "all" ? undefined : category,
     startDate: startDate.toISOString(),
     endDate: endDate.toISOString(),
+    page,
   });
   const expenses = expensesResponse?.data || [];
   const totalAmount = expensesResponse?.totalAmount || 0;
+  const total = expensesResponse?.total || 0;
+  const totalPages = Math.ceil(total / 10);
   const { data: shops } = useGerBraches();
   const [dialogKey, setDialogKey] = useState("");
 
@@ -99,6 +112,10 @@ const Expenses = () => {
   useEffect(() => {
     setBranch(currentUser?.branchId?.toString() || "1");
   }, [currentUser]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [branch, category, startDate, endDate]);
 
   const columns = [
     {
@@ -240,12 +257,44 @@ const Expenses = () => {
         ) : isError ? (
           <p>Error: {error.message}</p>
         ) : expenses && expenses.length > 0 ? (
-          <VirtualizedTable
-            data={expenses}
-            columns={columns}
-            rowKey={(expense) => expense.id}
-            onRowClick={(expense) => console.log("Row clicked:", expense)}
-          />
+          <>
+            <VirtualizedTable
+              data={expenses}
+              columns={columns}
+              rowKey={(expense) => expense.id}
+              onRowClick={(expense) => console.log("Row clicked:", expense)}
+            />
+            <div className="mt-4">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setPage(Math.max(1, page - 1))}
+                      disabled={page === 1}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (pageNum) => (
+                      <PaginationItem key={pageNum}>
+                        <PaginationLink
+                          isActive={pageNum === page}
+                          onClick={() => setPage(pageNum)}
+                        >
+                          {pageNum}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ),
+                  )}
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setPage(Math.min(totalPages, page + 1))}
+                      disabled={page === totalPages || totalPages === 0}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </>
         ) : (
           <p>No expenses available.</p>
         )}

@@ -23,10 +23,20 @@ import {
   SelectValue,
 } from "../ui/select";
 import { useCurrentUser } from "@/api/user/current-user";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
 
 const Customers = () => {
   const { openDialog } = useDialogStore();
   const [branch, setBranch] = useState("all");
+  const [page, setPage] = useState(1);
   const {
     data: customersResponse,
     isLoading,
@@ -34,9 +44,11 @@ const Customers = () => {
     error,
   } = useGetCustomers({
     branchId: parseInt(branch),
-    page: 1,
+    page,
   });
   const customers = customersResponse?.data || [];
+  const total = customersResponse?.total || 0;
+  const totalPages = Math.ceil(total / 10);
   const { data: shops } = useGerBraches();
   const [dialogKey, setDialogKey] = useState("");
   const { data: user } = useCurrentUser();
@@ -52,6 +64,10 @@ const Customers = () => {
   useEffect(() => {
     setBranch(user?.branchId?.toString() || "1");
   }, [user]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [branch]);
 
   const { mutate: deleteCustomer } = useDeleteCustomer();
   const { data: currentUser } = useCurrentUser();
@@ -169,12 +185,44 @@ const Customers = () => {
         ) : isError ? (
           <p>Error: {error.message}</p>
         ) : customers && customers.length > 0 ? (
-          <VirtualizedTable
-            data={customers}
-            columns={columns}
-            rowKey={(customer) => customer.id}
-            onRowClick={(customer) => console.log("Row clicked:", customer)}
-          />
+          <>
+            <VirtualizedTable
+              data={customers}
+              columns={columns}
+              rowKey={(customer) => customer.id}
+              onRowClick={(customer) => console.log("Row clicked:", customer)}
+            />
+            <div className="mt-4">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setPage(Math.max(1, page - 1))}
+                      disabled={page === 1}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (pageNum) => (
+                      <PaginationItem key={pageNum}>
+                        <PaginationLink
+                          isActive={pageNum === page}
+                          onClick={() => setPage(pageNum)}
+                        >
+                          {pageNum}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ),
+                  )}
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setPage(Math.min(totalPages, page + 1))}
+                      disabled={page === totalPages || totalPages === 0}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </>
         ) : (
           <p>No customers available.</p>
         )}
