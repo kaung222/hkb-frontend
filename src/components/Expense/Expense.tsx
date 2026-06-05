@@ -40,7 +40,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../ui/pagination";
-export const categories = ["general", "accessories", "meal", "transportation"];
 
 const Expenses = () => {
   const { openDialog } = useDialogStore();
@@ -54,7 +53,6 @@ const Expenses = () => {
     ),
   );
   const [branch, setBranch] = useState("all");
-  const [category, setCategory] = useState("all");
   const [page, setPage] = useState(1);
   const { data: currentUser } = useCurrentUser();
   const {
@@ -64,7 +62,6 @@ const Expenses = () => {
     error,
   } = useGetExpenses({
     branchId: branch === "all" ? undefined : parseInt(branch),
-    category: category === "all" ? undefined : category,
     startDate: startDate.toISOString(),
     endDate: endDate.toISOString(),
     page,
@@ -83,7 +80,7 @@ const Expenses = () => {
       name: "",
       amount: 0,
       notes: "",
-      category: "",
+      items: [],
     },
   });
 
@@ -95,7 +92,7 @@ const Expenses = () => {
       name: expense.name,
       amount: expense.amount,
       notes: expense.notes || "",
-      category: expense.category || "",
+      items: expense.items || [],
       date: expense.date,
       branchId: expense.branchId.toString(),
     });
@@ -115,7 +112,7 @@ const Expenses = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [branch, category, startDate, endDate]);
+  }, [branch, startDate, endDate]);
 
   const columns = [
     {
@@ -127,8 +124,11 @@ const Expenses = () => {
       renderCell: (expense: Expense) => `$${expense.amount.toFixed(2)}`,
     },
     {
-      label: "Category",
-      renderCell: (expense: Expense) => expense.category || "-",
+      label: "Items",
+      renderCell: (expense: Expense) =>
+        expense.items && expense.items.length > 0
+          ? expense.items.map((item) => item.name).join(", ")
+          : "-",
     },
     {
       label: "Date",
@@ -231,20 +231,6 @@ const Expenses = () => {
             </SelectContent>
           </Select>
         )}
-
-        <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className="w-[180px] rounded-lg border-gray-300 shadow-sm">
-            <SelectValue placeholder="Filter by category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((cat) => (
-              <SelectItem key={cat} value={cat}>
-                {cat}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
 
         <div className="ml-auto text-lg font-semibold">
           Total: ${totalAmount.toFixed(2)}

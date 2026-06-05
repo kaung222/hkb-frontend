@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { ExpenseFormData } from "./schema/ExpenseSchema";
 import { useDialogStore } from "@/stores/dialog/useDialogStore";
 import {
@@ -28,8 +28,8 @@ import { useCreateExpense } from "@/api/expense/expense.mutation";
 import { useGerBraches } from "@/api/branch/branch.query";
 import { dialogKeys } from "@/constants/general.const";
 import { Textarea } from "../ui/textarea";
-import { categories } from "./Expense";
 import { useCurrentUser } from "@/api/user/current-user";
+import { PlusCircleIcon } from "lucide-react";
 
 interface Props {
   form: UseFormReturn<ExpenseFormData, any, undefined>;
@@ -41,11 +41,31 @@ export default function ExpenseDialog({ form, dialogKey }: Props) {
   const { mutate, isPending } = useCreateExpense();
   const { data: currentUser } = useCurrentUser();
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "items",
+  });
+
+  const items = form.watch("items") || [];
+  const totalAmount = items.reduce(
+    (sum, item) => sum + (Number(item?.price) || 0),
+    0,
+  );
+
   const onSubmit = (data: ExpenseFormData) => {
+    const normalizedItems = (data.items || []).map((item) => ({
+      name: item.name ?? "",
+      price: Number(item.price) || 0,
+    }));
+    const computedAmount = normalizedItems.reduce(
+      (sum, item) => sum + item.price,
+      0,
+    );
     const payload = {
       ...data,
+      items: normalizedItems,
       branchId: parseInt(data.branchId),
-      amount: parseFloat(data.amount.toString()),
+      amount: computedAmount,
       date: data.date
         ? new Date(data.date).toISOString()
         : new Date().toISOString(),
@@ -91,69 +111,75 @@ export default function ExpenseDialog({ form, dialogKey }: Props) {
                 </FormItem>
               )}
             />
-            <div className="flex gap-4">
-              <FormField
-                control={form.control}
-                name="amount"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Amount</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Enter amount"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
-              {/* <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Category</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter category" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <FormLabel>Items</FormLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => append({ name: "", price: 0 })}
+                >
+                  <PlusCircleIcon className="mr-1 h-4 w-4" />
+                  Add item
+                </Button>
+              </div>
 
-                      <SelectContent>
-                        {categories?.map((branch) => (
-                          <SelectItem key={branch} value={branch}>
-                            {branch}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {fields.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No items added yet.
+                </p>
+              )}
+
+              {fields.map((fieldItem, index) => (
+                <div key={fieldItem.id} className="flex items-start gap-2">
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Input placeholder="Item name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.price`}
+                    render={({ field }) => (
+                      <FormItem className="w-40">
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="Price"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) =>
+                              field.onChange(parseFloat(e.target.value) || 0)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => remove(index)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+
+              <div className="flex justify-end pt-1 text-sm font-semibold">
+                Total Amount: ${totalAmount.toFixed(2)}
+              </div>
             </div>
 
             <FormField

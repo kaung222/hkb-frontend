@@ -1,9 +1,14 @@
+export type ExpenseItem = {
+  name: string;
+  price: number;
+};
+
 export type Expense = {
   id: number;
   name: string;
   amount: number;
   notes?: string;
-  category?: string;
+  items?: ExpenseItem[];
   date: string;
   branchId: number;
   branch?: {

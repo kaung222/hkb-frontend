@@ -4,7 +4,6 @@ import { Expense, ExpensesResponse } from "@/types/expense";
 
 export const useGetExpenses = (filters: {
   branchId: number;
-  category?: string;
   startDate?: string;
   endDate?: string;
   page?: number;
@@ -16,10 +15,6 @@ export const useGetExpenses = (filters: {
 
       if (filters?.branchId) {
         params.append("branchId", filters.branchId.toString());
-      }
-
-      if (filters?.category) {
-        params.append("category", filters.category);
       }
 
       if (filters?.startDate) {
