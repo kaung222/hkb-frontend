@@ -71,6 +71,7 @@ export type Service = {
   updatedAt: string;
   progress: string;
   supplier: string;
+  customerId?: number | string;
   // partsPurchaseDate?: string;
   purchasedDate?: string;
   // add in api

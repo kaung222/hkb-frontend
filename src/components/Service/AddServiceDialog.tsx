@@ -34,6 +34,7 @@ import { AddServiceSchema, AddServiceValuesType } from "./schema/ServiceSchema";
 import { SparePart } from "@/types/service";
 import { useGetServiceQuery } from "@/api/service/service.query";
 import { defaultDiscount } from "@/api/api";
+import { CustomerSelectSection } from "./CustomerSelectSection";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -304,6 +305,7 @@ export function AddServiceDialog() {
               <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
                 Voucher Information
               </div>
+              {/* <CustomerSelectSection form={form} /> */}
               <ServiceInput
                 label="Voucher ID"
                 placeholder="Voucher ID"

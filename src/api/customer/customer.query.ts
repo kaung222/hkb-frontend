@@ -1,6 +1,32 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "../api";
 import { Customer, CustomersResponse } from "@/types/customer";
+
+export const useSearchCustomers = ({
+  branchId,
+  search,
+}: {
+  branchId: number;
+  search: string;
+}) => {
+  console.log(search, branchId, "useSearchCustomers");
+  return useQuery<Customer[]>({
+    queryKey: ["SearchCustomers", { branchId, search }],
+    enabled: !!search,
+    queryFn: async () => {
+      return await api
+        .get(`customers/search`, {
+          params: {
+            branchId,
+            search,
+          },
+        })
+        .then((res) => res.data);
+    },
+    // staleTime: 30 * 60 * 1000,
+    // refetchOnWindowFocus: false,
+  });
+};
 
 export const useGetCustomers = (filters: {
   branchId?: number;

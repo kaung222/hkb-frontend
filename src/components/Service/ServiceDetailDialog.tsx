@@ -37,6 +37,7 @@ import { AlertDialogApp } from "../common/AlertDialogApp";
 import { format, formatDate } from "date-fns";
 import { userInfo } from "os";
 import { defaultDiscount } from "@/api/api";
+import { CustomerSelectSection } from "./CustomerSelectSection";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -196,6 +197,7 @@ export function EditServiceDialog({
       supplier: currentServiceDetail.supplier,
       technician: currentServiceDetail.technician,
       warranty: currentServiceDetail.warranty,
+      // customerId: currentServiceDetail.customerId,
       retrievedDate: currentServiceDetail.retrievedDate
         ? formatDate(new Date(currentServiceDetail.retrievedDate), "yyyy-MM-dd")
         : undefined,
@@ -214,6 +216,14 @@ export function EditServiceDialog({
     }
     return 0;
   };
+
+  useEffect(() => {
+    if (form.watch("condition") === "မပြင်တော့ပါ") {
+      form.setValue("paidAmount", 0);
+    }
+  }, [form.watch("condition")]);
+
+  const isEditablePrice = currentServiceDetail.price === 0;
 
   useEffect(() => {
     if (currentServiceDetail) {
@@ -245,6 +255,7 @@ export function EditServiceDialog({
         supplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
+        customerId: currentServiceDetail.customerId,
         retrievedDate: currentServiceDetail.retrievedDate
           ? formatDate(
               new Date(currentServiceDetail.retrievedDate),
@@ -439,6 +450,7 @@ export function EditServiceDialog({
                     />
                   </>
                 )}
+                {/* <CustomerSelectSection form={form} /> */}
                 {currentUser.role !== "technician" && (
                   <>
                     {/* Voucher Information Section */}
@@ -520,8 +532,7 @@ export function EditServiceDialog({
                       name="price"
                       control={form.control}
                       disabled={
-                        currentServiceDetail?.retrievedDate !== null &&
-                        currentUser?.role !== "admin"
+                        isEditablePrice && currentUser?.role !== "admin"
                       }
                     />
 

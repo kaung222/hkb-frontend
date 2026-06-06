@@ -95,6 +95,13 @@ export const AddServiceSchema = z.object({
     .optional(),
   isRetrieved: z.string().optional(),
   createdAt: z.any().optional(),
+  customerId: z.number().optional(),
+  points: z
+    .preprocess((val) => {
+      if (typeof val === "string") return parseFloat(val);
+      return val;
+    }, z.number())
+    .optional(),
 });
 
 export type AddServiceValuesType = z.infer<typeof AddServiceSchema>;
