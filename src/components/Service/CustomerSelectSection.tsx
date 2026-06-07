@@ -147,13 +147,13 @@ export function CustomerSelectSection({ form }) {
             </>
           )}
 
-          {selected && (
+          {selected && currentUser?.role === "admin" && (
             <FormField
               control={form.control}
               name="points"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Points to add</FormLabel>
+                  <FormLabel>Points</FormLabel>
                   <Input
                     type="number"
                     placeholder="0"

@@ -217,6 +217,7 @@ export function EditServiceDialog({
     return 0;
   };
 
+  console.log(form.formState.errors);
   useEffect(() => {
     if (form.watch("condition") === "မပြင်တော့ပါ") {
       form.setValue("paidAmount", 0);
@@ -255,7 +256,7 @@ export function EditServiceDialog({
         supplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
-        customerId: currentServiceDetail.customerId,
+        // customerId: currentServiceDetail.customerId || undefined,
         retrievedDate: currentServiceDetail.retrievedDate
           ? formatDate(
               new Date(currentServiceDetail.retrievedDate),
