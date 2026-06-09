@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import api from "../api";
 import { Customer, CustomersResponse } from "@/types/customer";
 
@@ -9,7 +9,6 @@ export const useSearchCustomers = ({
   branchId: number;
   search: string;
 }) => {
-  console.log(search, branchId, "useSearchCustomers");
   return useQuery<Customer[]>({
     queryKey: ["SearchCustomers", { branchId, search }],
     enabled: !!search,
@@ -23,8 +22,8 @@ export const useSearchCustomers = ({
         })
         .then((res) => res.data);
     },
-    // staleTime: 30 * 60 * 1000,
-    // refetchOnWindowFocus: false,
+    staleTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 };
 

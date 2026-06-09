@@ -80,6 +80,8 @@ export type Service = {
   paidAmount: number;
   profit: number;
   // isRetrieved: boolean;
+  customer?: Customer;
+  points?: number;
 };
 
 export type SparePart = {

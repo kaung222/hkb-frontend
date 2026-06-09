@@ -31,6 +31,8 @@ const Shop = () => {
       name: "",
       address: "",
       phone: "",
+      pointsRate: 0,
+      discountRate: 0,
       // branchNumber: "",
     },
   });
@@ -75,6 +77,14 @@ const Shop = () => {
     {
       label: "Phone Number",
       renderCell: (shop: Branch) => shop.phone,
+    },
+    {
+      label: "Points Rate",
+      renderCell: (shop: Branch) => shop.pointsRate + "%",
+    },
+    {
+      label: "Discount Rate",
+      renderCell: (shop: Branch) => shop.discountRate + "%",
     },
     {
       label: "Address",

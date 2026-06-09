@@ -35,6 +35,10 @@ export default function ShopDialog({ form, onSubmit, dialogKey }: Props) {
           branchNumber: null,
           name: "",
           phone: "",
+
+          pointsRate: 0,
+
+          discountRate: 0,
         });
       }}
     >
@@ -107,6 +111,43 @@ export default function ShopDialog({ form, onSubmit, dialogKey }: Props) {
                   <FormLabel>Address</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter shop address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="pointsRate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Points Rate</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter points rate"
+                      {...field}
+                      onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="discountRate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discount Rate</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter discount rate"
+                      {...field}
+                      onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
