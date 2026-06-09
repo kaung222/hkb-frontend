@@ -35,9 +35,8 @@ import {
 } from "@/api/service/service.mutation";
 import { AlertDialogApp } from "../common/AlertDialogApp";
 import { format, formatDate } from "date-fns";
-import { userInfo } from "os";
-import { defaultDiscount } from "@/api/api";
 import { CustomerSelectSection } from "./CustomerSelectSection";
+import { useGerBraches } from "@/api/branch/branch.query";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -165,10 +164,11 @@ export function EditServiceDialog({
   const { handleDialogChange, isOpen, openDialog, closeDialog } =
     useDialogStore();
 
+  const [branch, setBranch] = useState<Branch | undefined>(undefined);
   const handleGetVoucher = () => {
     openDialog(dialogKeys.getVoucher);
   };
-
+  const { data: branches } = useGerBraches();
   const [spareParts, setSpareParts] = useState<SparePart[]>([]);
   const { mutate } = useUpdateService(currentServiceDetail.id);
   const { mutate: deleteService } = useDeleteService();
@@ -188,7 +188,7 @@ export function EditServiceDialog({
       isRetrieved: currentServiceDetail.isRetrieved,
       model: currentServiceDetail.model,
       paidAmount: currentServiceDetail.paidAmount,
-      discount: currentServiceDetail.discount || defaultDiscount,
+      discount: currentServiceDetail.discount || 0,
       phone: currentServiceDetail.phone,
       price: currentServiceDetail.price,
       progress: currentServiceDetail.progress,
@@ -227,6 +227,12 @@ export function EditServiceDialog({
   const isEditablePrice = currentServiceDetail.price === 0;
 
   useEffect(() => {
+    setBranch(
+      branches?.find((branch) => branch.id === currentServiceDetail?.branchId),
+    );
+  }, [currentServiceDetail]);
+
+  useEffect(() => {
     if (currentServiceDetail) {
       setSpareParts(currentServiceDetail.items || []);
       const payload = {
@@ -256,7 +262,8 @@ export function EditServiceDialog({
         supplier: currentServiceDetail.supplier || undefined,
         technician: currentServiceDetail.technician || undefined,
         warranty: currentServiceDetail.warranty || undefined,
-        // customerId: currentServiceDetail.customerId || undefined,
+        customerId: currentServiceDetail.customerId || undefined,
+        points: currentServiceDetail.points || undefined,
         retrievedDate: currentServiceDetail.retrievedDate
           ? formatDate(
               new Date(currentServiceDetail.retrievedDate),
@@ -451,7 +458,10 @@ export function EditServiceDialog({
                     />
                   </>
                 )}
-                {/* <CustomerSelectSection form={form} /> */}
+                <CustomerSelectSection
+                  form={form}
+                  customer={currentServiceDetail.customer}
+                />
                 {currentUser.role !== "technician" && (
                   <>
                     {/* Voucher Information Section */}

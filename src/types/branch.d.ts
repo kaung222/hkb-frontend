@@ -3,6 +3,8 @@ export type Branch = {
   address: string;
   phone: string;
   branchNumber: number;
+  discountRate?: number;
+  pointsRate?: number;
   id: number;
   createdAt: string; // ISO 8601 format date string
   updatedAt: string; // ISO 8601 format date string

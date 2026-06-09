@@ -33,8 +33,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AddServiceSchema, AddServiceValuesType } from "./schema/ServiceSchema";
 import { SparePart } from "@/types/service";
 import { useGetServiceQuery } from "@/api/service/service.query";
-import { defaultDiscount } from "@/api/api";
 import { CustomerSelectSection } from "./CustomerSelectSection";
+import { Branch } from "@/types/branch";
 
 enum Status {
   RETRIEVED = "retrieved",
@@ -134,7 +134,10 @@ export function AddServiceDialog() {
   const [spareParts, setSparePares] = useState<SparePart[]>([]);
   const { data: users } = useGetUser();
   const { data: currentUser } = useCurrentUser();
+  const [branch, setBranch] = useState<Branch>();
+  const { data: branches } = useGerBraches();
 
+  console.log(branch, "branch");
   const initialState = {
     code: `${Math.floor(100000 + Math.random() * 900000)}`,
     username: "",
@@ -148,7 +151,7 @@ export function AddServiceDialog() {
     isRetrieved: Status.IN_PROGRESS,
     model: "",
     paidAmount: 0,
-    discount: defaultDiscount,
+    discount: branch?.discountRate || 0,
     phone: "",
     price: 0,
     progress: "",
@@ -165,6 +168,11 @@ export function AddServiceDialog() {
     resolver: zodResolver(AddServiceSchema),
     defaultValues: initialState,
   });
+
+  useEffect(() => {
+    setBranch(branches?.find((branch) => branch.id === currentUser?.branchId));
+    form.setValue("discount", branch?.discountRate || 0);
+  }, [currentUser, branch]);
 
   // Auto-calculate paidAmount based on discount and price
   useEffect(() => {
@@ -263,7 +271,9 @@ export function AddServiceDialog() {
               <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
                 Basic Information
               </div>
-              {currentUser?.role === "admin" && <BranchSelect form={form} />}
+              {currentUser?.role === "admin" && (
+                <BranchSelect form={form} setBranch={setBranch} />
+              )}
               <ServiceInput
                 label="Brand"
                 placeholder="Brand"
@@ -305,7 +315,7 @@ export function AddServiceDialog() {
               <div className="col-span-1 sm:col-span-2 font-semibold text-lg">
                 Voucher Information
               </div>
-              {/* <CustomerSelectSection form={form} /> */}
+              <CustomerSelectSection form={form} />
               <ServiceInput
                 label="Voucher ID"
                 placeholder="Voucher ID"
@@ -477,12 +487,18 @@ export function AddServiceDialog() {
   );
 }
 
-export const BranchSelect = ({ form }) => {
+export const BranchSelect = ({ form, setBranch }) => {
   const { data: shops } = useGerBraches();
   const options = shops.map((shop) => ({
     label: shop.name,
     value: shop.id.toString(),
   }));
+  useEffect(() => {
+    setBranch(
+      shops?.find((branch) => branch.id === Number(form.getValues("branchId"))),
+    );
+  }, [form.getValues("branchId")]);
+
   return (
     <ServiceSelect
       control={form.control}

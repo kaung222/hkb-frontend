@@ -8,12 +8,18 @@ import { useSearchCustomers } from "@/api/customer/customer.query";
 import { Customer } from "@/types/customer";
 import { useCurrentUser } from "@/api/user/current-user";
 
-export function CustomerSelectSection({ form }) {
+export function CustomerSelectSection({
+  form,
+  customer,
+}: {
+  form: any;
+  customer?: Customer;
+}) {
   const { data: currentUser } = useCurrentUser();
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(customer ? true : false);
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<Customer[]>([]);
-  const [selected, setSelected] = useState<Customer | null>(null);
+  const [selected, setSelected] = useState<Customer | null>(customer);
   const [query, setQuery] = useState("");
   const branchId =
     currentUser?.role === "admin"
