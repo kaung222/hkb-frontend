@@ -53,6 +53,8 @@ const Shop = () => {
       address: shop.address,
       phone: shop.phone,
       branchNumber: shop.branchNumber,
+      pointsRate: shop.pointsRate,
+      discountRate: shop.discountRate,
     });
   };
 

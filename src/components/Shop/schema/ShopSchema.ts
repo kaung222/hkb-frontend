@@ -5,8 +5,8 @@ export const ShopSchema = z.object({
   branchNumber: z.number().min(1, "Branch number is required"),
   phone: z.string().min(1, "Phone is required"),
   address: z.string().min(1, "Address is required"),
-  pointsRate: z.number().min(1, "Points rate is required"),
-  discountRate: z.number().min(1, "Discount rate is required"),
+  pointsRate: z.number().min(0, "Points rate is required"),
+  discountRate: z.number().min(0, "Discount rate is required"),
 });
 
 export type ShopFormData = z.infer<typeof ShopSchema>;
