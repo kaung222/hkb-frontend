@@ -38,6 +38,7 @@ export const dialogKeys = {
   editCustomer: "editCustomer",
   addNewExpense: "addNewExpense",
   editExpense: "editExpense",
+  customerHistory: "customerHistory",
 };
 
 export const screenList = ["sale", "item", "stock", "purchase"];
