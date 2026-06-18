@@ -100,12 +100,19 @@ export default function Service() {
   const { data: branches, isLoading: isBranchLoading } = useGerBraches();
   const { data: services, refetch, isPending } = useGetServiceQuery();
   const { data: detailService } = useDataStore();
-  const [search, setSearch] = useState("");
+
   const [isSpinning, setIsSpinning] = useState(false);
   const [year, setYear] = useQueryState(
     "year",
     parseAsString.withDefault(new Date().getFullYear().toString()),
   );
+  // for local search
+  const [query, setQuery] = useQueryState(
+    "query",
+    parseAsString.withDefault(""),
+  );
+
+  const [search, setSearch] = useState<string>(query);
 
   const handleRefresh = async () => {
     setIsSpinning(true);

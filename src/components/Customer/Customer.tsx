@@ -8,6 +8,7 @@ import { CustomerFormData, CustomerSchema } from "./schema/CustomerSchema";
 import { useDialogStore } from "@/stores/dialog/useDialogStore";
 import { dialogKeys } from "@/constants/general.const";
 import CustomerDialog from "./CustomerDialog";
+import CustomerHistoryDialog from "./CustomerHistoryDialog";
 import { PlusCircleIcon } from "lucide-react";
 import VirtualizedTable from "../common/VirtualizedTable";
 import { Customer } from "@/types/customer";
@@ -51,6 +52,7 @@ const Customers = () => {
   const totalPages = Math.ceil(total / 10);
   const { data: shops } = useGerBraches();
   const [dialogKey, setDialogKey] = useState("");
+  const [historyCustomer, setHistoryCustomer] = useState<Customer | null>(null);
   const { data: user } = useCurrentUser();
   const form = useForm<CustomerFormData>({
     resolver: zodResolver(CustomerSchema),
@@ -139,7 +141,13 @@ const Customers = () => {
             Delete
           </Button>
 
-          <Button variant="outline" onClick={() => console.log("History")}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setHistoryCustomer(customer);
+              openDialog(dialogKeys.customerHistory);
+            }}
+          >
             History
           </Button>
         </div>
@@ -229,6 +237,7 @@ const Customers = () => {
       </div>
 
       <CustomerDialog form={form} dialogKey={dialogKey} />
+      {historyCustomer && <CustomerHistoryDialog customer={historyCustomer} />}
     </div>
   );
 };

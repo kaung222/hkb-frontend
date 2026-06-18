@@ -105,6 +105,22 @@ export const useGetSingleService = () => {
   });
 };
 
+export const useGetCustomerServiceHistory = (
+  customerId?: number | null,
+  enabled = true
+) => {
+  return useQuery<Service[]>({
+    queryKey: ["GetCustomerServiceHistory", customerId],
+    queryFn: async () => {
+      return api
+        .get(`/services/${customerId}/history`)
+        .then((res) => res.data);
+    },
+    enabled: enabled && !!customerId,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
 export const useGetUnretrivedServices = () => {
   const { data: user } = useCurrentUser();
   const { data: shops } = useGerBraches();
