@@ -2,6 +2,7 @@ import {
   useGetServiceQuery,
   useGetUnretrivedServices,
 } from "@/api/service/service.query";
+import { useGetExpenses } from "@/api/expense/expense.query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,6 +26,10 @@ export default function ServiceSummaryDialog({
   const [queryMode] = useQueryState("queryMode");
 
   const { data: usedServices } = useGetUnretrivedServices();
+  // expenses of the currently selected date range / branch (non-admin users
+  // are locked to their own branch inside the hook)
+  const { data: expensesResponse } = useGetExpenses();
+  const rangeExpense = expensesResponse?.totalAmount || 0;
   const [date] = useQueryState("date", {
     defaultValue: formatDate(new Date(), "yyyy-MM-dd"),
   });
@@ -61,7 +66,7 @@ export default function ServiceSummaryDialog({
     return a + amount - b.expense;
   }, 0);
   // const totalPaid = services.reduce((a, b) => a + b.paidAmount, 0);
-  const latest = totalProfit - preUsed + prepaid;
+  const latest = totalProfit - preUsed + prepaid - rangeExpense;
 
   return (
     <Dialog>
@@ -110,6 +115,17 @@ export default function ServiceSummaryDialog({
               <span className=" font-semibold">{totalExpense}</span>
             </div>
 
+            <div
+              className="flex justify-between items-center p-4"
+              style={{
+                backgroundColor: "#6836838f",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+              }}
+            >
+              <span className="">အသုံးစရိတ်:</span>
+              <span className=" font-semibold">{rangeExpense}</span>
+            </div>
             <div
               className="flex justify-between items-center p-4"
               style={{
@@ -170,7 +186,7 @@ export default function ServiceSummaryDialog({
                   }}
                 >
                   <span className="">
-                    လက်ကျန်ငွေ (အမြတ်ငွေ + ရရန်ငွေ - စိုက်ငွေ):
+                    လက်ကျန်ငွေ (အမြတ်ငွေ + ရရန်ငွေ - စိုက်ငွေ -အသုံးစရိတ်):
                   </span>
                   <span className=" font-semibold">{latest}</span>
                 </div>

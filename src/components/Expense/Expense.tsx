@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ import VirtualizedTable from "../common/VirtualizedTable";
 import { Expense } from "@/types/expense";
 import { useGetExpenses } from "@/api/expense/expense.query";
 import { useDeleteExpense } from "@/api/expense/expense.mutation";
-import { useUpdateExpense } from "@/api/expense/expense.mutation";
 import { useGerBraches } from "@/api/branch/branch.query";
 import {
   Select,
@@ -22,55 +21,81 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import {
-  addDays,
-  setHours,
-  setMinutes,
-  setSeconds,
-  setMilliseconds,
-} from "date-fns";
+import { format } from "date-fns";
 import { DatePickerDemo } from "../common/DatePicker";
 import { useCurrentUser } from "@/api/user/current-user";
+import { parseAsString, useQueryState } from "nuqs";
+import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "../ui/pagination";
 
+const monthOptions = [
+  { label: "January", value: "01" },
+  { label: "February", value: "02" },
+  { label: "March", value: "03" },
+  { label: "April", value: "04" },
+  { label: "May", value: "05" },
+  { label: "June", value: "06" },
+  { label: "July", value: "07" },
+  { label: "August", value: "08" },
+  { label: "September", value: "09" },
+  { label: "October", value: "10" },
+  { label: "November", value: "11" },
+  { label: "December", value: "12" },
+];
+
+const yearOptions = [
+  { label: "2023", value: "2023" },
+  { label: "2024", value: "2024" },
+  { label: "2025", value: "2025" },
+  { label: "2026", value: "2026" },
+  { label: "2027", value: "2027" },
+];
+
 const Expenses = () => {
   const { openDialog } = useDialogStore();
-  const [startDate, setStartDate] = useState<Date>(
-    setHours(setMinutes(setSeconds(setMilliseconds(new Date(), 0), 0), 0), 0),
-  );
-  const [endDate, setEndDate] = useState<Date>(
-    setHours(
-      setMinutes(setSeconds(setMilliseconds(addDays(new Date(), 1), 0), 0), 0),
-      23,
-    ),
-  );
-  const [branch, setBranch] = useState("all");
-  const [page, setPage] = useState(1);
   const { data: currentUser } = useCurrentUser();
+  const { data: shops } = useGerBraches();
+
+  const [date, setDate] = useQueryState(
+    "date",
+    parseAsString.withDefault(format(new Date(), "yyyy-MM-dd")),
+  );
+  const [branch, setBranch] = useQueryState(
+    "branch",
+    parseAsString.withDefault("1"),
+  );
+  const [month, setMonth] = useQueryState(
+    "month",
+    parseAsString.withDefault("01"),
+  );
+  const [year, setYear] = useQueryState(
+    "year",
+    parseAsString.withDefault(new Date().getFullYear().toString()),
+  );
+  const [filterMode, setFilterMode] = useQueryState(
+    "filterMode",
+    parseAsString.withDefault("day"),
+  );
+  const [page, setPage] = useQueryState("page", parseAsString.withDefault("1"));
+
   const {
     data: expensesResponse,
     isLoading,
     isError,
     error,
-  } = useGetExpenses({
-    branchId: branch === "all" ? undefined : parseInt(branch),
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-    page,
-  });
+  } = useGetExpenses();
   const expenses = expensesResponse?.data || [];
   const totalAmount = expensesResponse?.totalAmount || 0;
   const total = expensesResponse?.total || 0;
   const totalPages = Math.ceil(total / 10);
-  const { data: shops } = useGerBraches();
+  const currentPage = parseInt(page);
   const [dialogKey, setDialogKey] = useState("");
 
   const form = useForm<ExpenseFormData>({
@@ -106,13 +131,10 @@ const Expenses = () => {
     }
   };
 
+  // reset to first page whenever the filters change
   useEffect(() => {
-    setBranch(currentUser?.branchId?.toString() || "1");
-  }, [currentUser]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [branch, startDate, endDate]);
+    setPage("1");
+  }, [branch, date, month, year, filterMode]);
 
   const columns = [
     {
@@ -185,37 +207,66 @@ const Expenses = () => {
         </Button>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">From:</span>
-          <DatePickerDemo
-            date={startDate}
-            onChange={(date) => {
-              if (date) {
-                setStartDate(
-                  setHours(
-                    setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0),
-                    0,
-                  ),
-                );
-              }
+          <span className="text-sm font-medium">Mode:</span>
+          <Select
+            value={filterMode}
+            onValueChange={(value) => {
+              setFilterMode(value);
+              value === "day"
+                ? setDate(format(new Date(), "yyyy-MM-dd"))
+                : setMonth("01");
             }}
-          />
+          >
+            <SelectTrigger className="w-[140px] rounded-lg border-gray-300 shadow-sm">
+              <SelectValue placeholder="Select Mode" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="day">Day</SelectItem>
+              <SelectItem value="month">Month</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">To:</span>
-          <DatePickerDemo
-            date={endDate}
-            onChange={(date) => {
-              if (date) {
-                setEndDate(
-                  setHours(
-                    setMinutes(setSeconds(setMilliseconds(date, 0), 0), 0),
-                    23,
-                  ),
-                );
-              }
-            }}
-          />
-        </div>
+
+        {filterMode === "day" ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Date:</span>
+            <DatePickerDemo
+              date={new Date(date)}
+              onChange={(value) => {
+                if (value) {
+                  setDate(format(value, "yyyy-MM-dd"));
+                }
+              }}
+            />
+          </div>
+        ) : (
+          <>
+            <Select value={year} onValueChange={setYear}>
+              <SelectTrigger className="w-[140px] rounded-lg border-gray-300 shadow-sm">
+                <SelectValue placeholder="Select Year" />
+              </SelectTrigger>
+              <SelectContent>
+                {yearOptions.map((y) => (
+                  <SelectItem key={y.value} value={y.value}>
+                    {y.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={month} onValueChange={setMonth}>
+              <SelectTrigger className="w-[140px] rounded-lg border-gray-300 shadow-sm">
+                <SelectValue placeholder="Select Month" />
+              </SelectTrigger>
+              <SelectContent>
+                {monthOptions.map((m) => (
+                  <SelectItem key={m.value} value={m.value}>
+                    {m.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </>
+        )}
 
         {currentUser?.role === "admin" && (
           <Select value={branch} onValueChange={setBranch}>
@@ -224,7 +275,10 @@ const Expenses = () => {
             </SelectTrigger>
             <SelectContent>
               {shops?.map((shop) => (
-                <SelectItem key={shop.id} value={shop.id.toString()}>
+                <SelectItem
+                  key={shop.id}
+                  value={shop.branchNumber.toString()}
+                >
                   {shop.name}
                 </SelectItem>
               ))}
@@ -255,16 +309,18 @@ const Expenses = () => {
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
-                      onClick={() => setPage(Math.max(1, page - 1))}
-                      disabled={page === 1}
+                      onClick={() =>
+                        setPage(Math.max(1, currentPage - 1).toString())
+                      }
+                      disabled={currentPage === 1}
                     />
                   </PaginationItem>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                     (pageNum) => (
                       <PaginationItem key={pageNum}>
                         <PaginationLink
-                          isActive={pageNum === page}
-                          onClick={() => setPage(pageNum)}
+                          isActive={pageNum === currentPage}
+                          onClick={() => setPage(pageNum.toString())}
                         >
                           {pageNum}
                         </PaginationLink>
@@ -273,8 +329,12 @@ const Expenses = () => {
                   )}
                   <PaginationItem>
                     <PaginationNext
-                      onClick={() => setPage(Math.min(totalPages, page + 1))}
-                      disabled={page === totalPages || totalPages === 0}
+                      onClick={() =>
+                        setPage(
+                          Math.min(totalPages, currentPage + 1).toString(),
+                        )
+                      }
+                      disabled={currentPage === totalPages || totalPages === 0}
                     />
                   </PaginationItem>
                 </PaginationContent>
