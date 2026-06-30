@@ -45,7 +45,7 @@ export default function LogIn() {
       onSuccess(res) {
         localStorage.setItem("accessToken", res.accessToken);
         toast.success(SUCCESS_MSG);
-        navigate("/");
+        navigate("/service");
       },
     });
   };

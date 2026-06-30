@@ -97,17 +97,21 @@ const Expenses = () => {
   const totalPages = Math.ceil(total / 10);
   const currentPage = parseInt(page);
   const [dialogKey, setDialogKey] = useState("");
-
+  const { data: user } = useCurrentUser();
   const form = useForm<ExpenseFormData>({
     resolver: zodResolver(ExpenseSchema),
     defaultValues: {
       id: undefined,
       name: "",
-      amount: 0,
+      // amount: 0,
       notes: "",
       items: [],
     },
   });
+
+  console.log(user);
+  console.log(form.formState.errors);
+  console.log(form.getValues("branchId"));
 
   const { mutate: deleteExpense } = useDeleteExpense();
 
@@ -115,11 +119,11 @@ const Expenses = () => {
     form.reset({
       id: expense.id,
       name: expense.name,
-      amount: expense.amount,
+      // amount: expense.amount,
       notes: expense.notes || "",
       items: expense.items || [],
       date: expense.date,
-      branchId: expense.branchId.toString(),
+      branchId: expense.branchId,
     });
   };
 
@@ -199,7 +203,7 @@ const Expenses = () => {
           onClick={() => {
             setDialogKey(dialogKeys.addNewExpense);
             openDialog(dialogKeys.addNewExpense);
-            form.reset();
+            form.reset({ branchId: user.branchId });
           }}
         >
           <PlusCircleIcon />
@@ -275,10 +279,7 @@ const Expenses = () => {
             </SelectTrigger>
             <SelectContent>
               {shops?.map((shop) => (
-                <SelectItem
-                  key={shop.id}
-                  value={shop.branchNumber.toString()}
-                >
+                <SelectItem key={shop.id} value={shop.branchNumber.toString()}>
                   {shop.name}
                 </SelectItem>
               ))}
