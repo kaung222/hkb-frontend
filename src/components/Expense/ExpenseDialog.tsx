@@ -64,7 +64,7 @@ export default function ExpenseDialog({ form, dialogKey }: Props) {
     const payload = {
       ...data,
       items: normalizedItems,
-      branchId: parseInt(data.branchId),
+      branchId: data.branchId,
       amount: computedAmount,
       date: data.date
         ? new Date(data.date).toISOString()
@@ -236,7 +236,7 @@ export default function ExpenseDialog({ form, dialogKey }: Props) {
                     <FormLabel>Branch</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value.toString()}
                     >
                       <FormControl>
                         <SelectTrigger>
