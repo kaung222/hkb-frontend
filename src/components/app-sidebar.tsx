@@ -70,7 +70,7 @@ const items = [
     title: "Expenses",
     url: EXPENSE,
     icon: Receipt,
-    role: ["admin"],
+    role: ["admin", "reception"],
   },
 
   {
